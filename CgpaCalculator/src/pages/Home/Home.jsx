@@ -177,7 +177,7 @@ function Home() {
                                   onChange={(e) =>
                                     updateCourse(sem.id, course.id, "code", e.target.value.toUpperCase())
                                   }
-                                  placeholder="e.g. MTH101"
+                                  
                                 />
                               </td>
                               <td>
@@ -190,7 +190,7 @@ function Home() {
                                   onChange={(e) =>
                                     updateCourse(sem.id, course.id, "unit", e.target.value)
                                   }
-                                  placeholder="e.g. 3"
+                                  
                                 />
                               </td>
                               <td>
