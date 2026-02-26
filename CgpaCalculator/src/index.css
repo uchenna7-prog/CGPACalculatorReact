@@ -3,7 +3,7 @@
 }
 
 :root {
-  background:var(--bg);
+    background: var(--bg, #0d1210);
 
 }
 
