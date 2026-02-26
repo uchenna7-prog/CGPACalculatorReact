@@ -1,0 +1,68 @@
+.header {
+  width: 100%;
+  height: 70px;
+  background: #0d1210;
+  border-bottom: 1px solid #1a2e22;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  padding: 0 clamp(12px, 3vw, 32px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.brandContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brandIcon {
+  font-size: clamp(20px, 2vw, 26px);
+  color: #3a7a58;
+}
+
+.appTitle {
+  margin: 0;
+  font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+  font-weight: 700;
+  color: #d4ede3;
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  white-space: nowrap;
+}
+
+.menuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  font-size: 20px;
+  color: #a8cfb8;
+
+  padding: 8px;
+  border-radius: 8px;
+
+  transition: all 0.2s ease;
+}
+
+.menuButton:hover {
+  background: #1a2e22;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .header {
+    height: 64px;
+  }
+
+  .appTitle {
+    font-size: clamp(0.8rem, 3vw, 1rem);
+  }
+}

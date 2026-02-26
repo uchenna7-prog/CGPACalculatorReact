@@ -1,0 +1,247 @@
+.sidebar {
+  background: var(--bg, #0d1210);
+  color: var(--textColor, #a8cfb8);
+  width: 280px;
+  height: 100vh;
+  border-right: 1px solid #1a2e22;
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  transition: width 0.3s ease, transform 0.3s ease;
+  position: relative;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.collapsed {
+  width: 72px;
+}
+
+/* ── Header ── */
+.sidebarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 1px solid #1a2e22;
+  height: 72px;
+  flex-shrink: 0;
+}
+
+.mobileSideHeader {
+  flex-direction: row-reverse;
+}
+
+.menuBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+  color: var(--textColor, #a8cfb8);
+}
+
+.menuBtn:hover {
+  background: #1a2e22;
+  border: 1px solid #2e4d3a;
+}
+
+.menuBtn i {
+  color: inherit;
+  font-size: 22px;
+}
+
+.sidebarTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.titleIcon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.sidebarTitle h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+  color: #d4ede3;
+  letter-spacing: 0.02em;
+}
+
+/* ── Nav container ── */
+.navLinksContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 8px;
+  gap: 4px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ── Each nav item card ── */
+.navItem {
+  border-radius: 10px;
+  overflow: hidden;
+  background: #111a16;
+  border: 1px solid #1e2e26;
+  transition: border-color 0.2s ease;
+}
+
+.navItem:hover {
+  border-color: #2e4d3a;
+}
+
+/* ── Row: link + arrow ── */
+.navRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Nav link ── */
+.navBtn {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  flex: 1;
+  color: var(--textColor, #a8cfb8);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s ease, background 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.navBtn:hover {
+  color: #4caf7d;
+}
+
+.navBtn i {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: #3a7a58;
+  transition: color 0.2s ease;
+}
+
+.navBtn:hover i {
+  color: #4caf7d;
+}
+
+/* Collapsed: center icon, hide text */
+.sidebar.collapsed .navItem {
+  border-radius: 10px;
+}
+
+.sidebar.collapsed .navRow {
+  justify-content: center;
+}
+
+.navBtnCollapsed {
+  justify-content: center;
+  padding: 12px 8px;
+  flex: 1;
+}
+
+.sidebar.collapsed .navBtn span {
+  display: none;
+}
+
+/* ── Arrow button ── */
+.arrowBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #3a5446;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.25s ease;
+  border-radius: 0 10px 0 0;
+  align-self: stretch;
+}
+
+.arrowBtn:hover {
+  color: #4caf7d;
+  background: #1a2e22;
+}
+
+.arrowOpen {
+  transform: rotate(180deg);
+  color: #4caf7d;
+}
+
+/* ── Expandable description ── */
+.description {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 14px;
+}
+
+.descriptionOpen {
+  max-height: 130px;
+  padding: 0 14px 12px;
+}
+
+.description p {
+  margin: 0;
+  font-size: 0.775rem;
+  line-height: 1.65;
+  color: #4a7060;
+  border-top: 1px solid #1e2e26;
+  padding-top: 8px;
+}
+
+/* ── Mobile overlay ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+}
+
+/* ── Responsive ── */
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);
+    width: 280px !important;
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .sidebar.mobileOpen {
+    transform: translateX(0);
+  }
+
+  .sidebar.mobileClosed {
+    transform: translateX(-100%);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .sidebar {
+    width: 240px;
+  }
+
+  .sidebar.collapsed {
+    width: 68px;
+  }
+
+  .sidebarTitle h2 {
+    font-size: 0.95rem;
+  }
+}
