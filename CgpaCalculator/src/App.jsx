@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home/Home'
-import GPACalculator from './pages/Calculator/GpaCalculator'
+import GPACalculator from './pages/GpaCalculator/GpaCalculator'
 import CGPAPredictor from './pages/CgpaPredictor/CgpaPredictor'
 import Settings from './pages/Settings/Settings'
 
