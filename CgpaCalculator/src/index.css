@@ -1,0 +1,9 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  background:var(--bg);
+
+}
+
