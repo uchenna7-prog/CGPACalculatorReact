@@ -92,7 +92,7 @@ function GPACalculator() {
                           onChange={(e) =>
                             updateCourse(course.id, "code", e.target.value.toUpperCase())
                           }
-                          placeholder="e.g. MTH101"
+                          
                         />
                       </td>
                       <td>
@@ -105,7 +105,7 @@ function GPACalculator() {
                           onChange={(e) =>
                             updateCourse(course.id, "unit", e.target.value)
                           }
-                          placeholder="e.g. 3"
+                          
                         />
                       </td>
                       <td>
