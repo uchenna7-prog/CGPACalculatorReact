@@ -1,7 +1,7 @@
 import { useState } from "react";
 import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
-import styles from "./GPACalculator.module.css";
+import styles from "./GpaCalculator.module.css";
 
 const GRADES = ["A", "B", "C", "D", "E", "F"];
 const GRADE_POINTS = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
