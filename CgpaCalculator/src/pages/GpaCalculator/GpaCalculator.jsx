@@ -92,7 +92,6 @@ function GPACalculator() {
                           onChange={(e) =>
                             updateCourse(course.id, "code", e.target.value.toUpperCase())
                           }
-                          
                         />
                       </td>
                       <td>
@@ -105,7 +104,6 @@ function GPACalculator() {
                           onChange={(e) =>
                             updateCourse(course.id, "unit", e.target.value)
                           }
-                          
                         />
                       </td>
                       <td>
@@ -138,7 +136,7 @@ function GPACalculator() {
               <p className={styles.noCoursesMsg}>No courses added.</p>
             )}
 
-            {/* Result above buttons */}
+            {/* GPA result above buttons */}
             {error && <p className={styles.errorMsg}>{error}</p>}
             {gpa !== null && (
               <div className={styles.gpaResult}>GPA: {gpa.toFixed(2)}</div>
