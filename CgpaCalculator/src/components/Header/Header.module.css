@@ -14,27 +14,35 @@
   z-index: 1000;
 }
 
+/* Brand container */
 .brandContainer {
   display: flex;
   align-items: center;
   gap: 12px;
+  overflow: hidden; /* Prevents layout breaking */
 }
 
+/* Graduation cap icon */
 .brandIcon {
   font-size: clamp(20px, 2vw, 26px);
   color: #3a7a58;
+  flex-shrink: 0;
 }
 
+/* App title */
 .appTitle {
   margin: 0;
-  font-size: clamp(0.9rem, 1.4vw, 1.2rem);
+  font-size: clamp(0.65rem, 1.5vw, 1.2rem);
   font-weight: 700;
   color: #d4ede3;
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
-  white-space: nowrap;
-  text-transform: uppercase;
+
+  white-space: nowrap;       /* Force single line */
+  text-transform: uppercase; /* Always uppercase */
+  flex-shrink: 0;            /* Prevent shrinking */
 }
 
+/* Menu button */
 .menuButton {
   display: flex;
   align-items: center;
@@ -51,6 +59,7 @@
   border-radius: 8px;
 
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .menuButton:hover {
@@ -58,12 +67,13 @@
   transform: scale(1.05);
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .header {
     height: 64px;
   }
 
   .appTitle {
-    font-size: clamp(0.8rem, 3vw, 1rem);
+    font-size: clamp(0.6rem, 3vw, 1rem);
   }
 }
