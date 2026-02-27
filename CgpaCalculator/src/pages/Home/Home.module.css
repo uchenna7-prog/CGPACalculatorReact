@@ -25,12 +25,16 @@
   color: #4caf7d;
   font-size: 1.1rem;
   margin: 18px 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .semesterHeading {
   color: #4caf7d;
   font-size: 1rem;
   margin: 8px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* ── Semester card ── */
@@ -85,6 +89,11 @@
   color: #4caf7d;
   font-weight: bold;
   font-size: 0.8rem;
+  border-right: 2px solid #2f4f3d; /* Strong vertical separator */
+}
+
+.table th:last-child {
+  border-right: none;
 }
 
 .table td {
@@ -121,7 +130,10 @@
   font-size: 0.8rem;
   transition: opacity 0.2s;
 }
-.deleteRowBtn:hover { opacity: 0.8; }
+
+.deleteRowBtn:hover {
+  opacity: 0.8;
+}
 
 .noCoursesMsg {
   color: #3a7a58;
@@ -156,7 +168,9 @@
 
 .addCourseBtn:hover,
 .deleteAllBtn:hover,
-.calcGpaBtn:hover { opacity: 0.8; }
+.calcGpaBtn:hover {
+  opacity: 0.8;
+}
 
 /* ── CGPA bottom controls ── */
 .cgpaControls {
@@ -186,18 +200,56 @@
 .removeSemBtn { background-color: rgb(249, 115, 22); }
 .calcCgpaBtn  { background-color: rgb(124, 58, 237); }
 
-.removeSemBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+.removeSemBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 .addSemBtn:hover,
 .removeSemBtn:not(:disabled):hover,
-.calcCgpaBtn:hover { opacity: 0.8; }
+.calcCgpaBtn:hover {
+  opacity: 0.8;
+}
 
 /* ── Responsive ── */
 @media (max-width: 600px) {
 
+  .mainContent {
+    padding: 12px;
+  }
+
+  /* Smaller headings */
+  .yearHeading {
+    font-size: 0.9rem;
+  }
+
+  .semesterHeading {
+    font-size: 0.85rem;
+  }
+
+  /* Smaller table text */
   .table th,
   .table td {
     padding: 4px 5px;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
+  }
+
+  .table th {
+    font-size: 0.7rem;
+  }
+
+  /* Smaller buttons */
+  .addCourseBtn,
+  .deleteAllBtn,
+  .calcGpaBtn {
+    font-size: 0.7rem;
+    padding: 5px 3px;
+  }
+
+  .addSemBtn,
+  .removeSemBtn,
+  .calcCgpaBtn {
+    font-size: 0.75rem;
+    padding: 8px 4px;
   }
 }
