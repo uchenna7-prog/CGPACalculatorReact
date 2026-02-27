@@ -63,7 +63,7 @@
 }
 
 .errorMsg {
-  color: rgb(220, 38, 38);
+  color: #ef4444;
   font-weight: bold;
   font-size: 0.85rem;
   margin-bottom: 10px;
@@ -89,7 +89,7 @@
   color: #4caf7d;
   font-weight: bold;
   font-size: 0.8rem;
-  border-right: 2px solid #2f4f3d; /* Strong vertical separator */
+  border-right: 2px solid #2f4f3d;
 }
 
 .table th:last-child {
@@ -121,7 +121,7 @@
 
 /* ── Delete row button ── */
 .deleteRowBtn {
-  background-color: transparent;
+  background: transparent;
   color: #4caf7d;
   border: none;
   border-radius: 5px;
@@ -152,30 +152,31 @@
 .deleteAllBtn,
 .calcGpaBtn {
   border: none;
-  padding: 6px 4px;
-  border-radius: 5px;
-  font-weight: bold;
+  padding: 7px 6px;
+  border-radius: 6px;
+  font-weight: 600;
   font-family: Consolas, monospace;
   cursor: pointer;
   font-size: 0.75rem;
   color: white;
-  transition: opacity 0.2s;
+  transition: all 0.2s ease;
 }
 
-.addCourseBtn { background-color: rgb(251, 191, 36); color: #333; }
-.deleteAllBtn { background-color: rgb(220, 38, 38); }
-.calcGpaBtn   { background-color: rgb(37, 99, 235); }
+/* Improved modern colors */
+.addCourseBtn { background-color: #fbbf24; color: #1f2937; }
+.deleteAllBtn { background-color: #dc2626; }
+.calcGpaBtn   { background-color: #2563eb; }
 
 .addCourseBtn:hover,
 .deleteAllBtn:hover,
 .calcGpaBtn:hover {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* ── CGPA bottom controls ── */
 .cgpaControls {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr; /* Always one line */
   gap: 6px;
   margin-top: 20px;
   padding-top: 16px;
@@ -186,19 +187,19 @@
 .removeSemBtn,
 .calcCgpaBtn {
   border: none;
-  padding: 10px 5px;
-  border-radius: 5px;
-  font-weight: bold;
+  padding: 10px 6px;
+  border-radius: 6px;
+  font-weight: 600;
   font-family: Consolas, monospace;
   cursor: pointer;
   font-size: 0.8rem;
   color: white;
-  transition: opacity 0.2s;
+  transition: all 0.2s ease;
 }
 
-.addSemBtn    { background-color: rgb(34, 197, 94); }
-.removeSemBtn { background-color: rgb(249, 115, 22); }
-.calcCgpaBtn  { background-color: rgb(124, 58, 237); }
+.addSemBtn    { background-color: #16a34a; }
+.removeSemBtn { background-color: #ea580c; }
+.calcCgpaBtn  { background-color: #7c3aed; }
 
 .removeSemBtn:disabled {
   opacity: 0.4;
@@ -208,7 +209,7 @@
 .addSemBtn:hover,
 .removeSemBtn:not(:disabled):hover,
 .calcCgpaBtn:hover {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* ── Responsive ── */
@@ -238,18 +239,23 @@
     font-size: 0.7rem;
   }
 
-  /* Smaller buttons */
+  /* Smaller buttons but same line */
+  .semesterControls,
+  .cgpaControls {
+    gap: 4px;
+  }
+
   .addCourseBtn,
   .deleteAllBtn,
   .calcGpaBtn {
-    font-size: 0.7rem;
-    padding: 5px 3px;
+    font-size: 0.65rem;
+    padding: 5px 4px;
   }
 
   .addSemBtn,
   .removeSemBtn,
   .calcCgpaBtn {
-    font-size: 0.75rem;
-    padding: 8px 4px;
+    font-size: 0.7rem;
+    padding: 7px 4px;
   }
 }
