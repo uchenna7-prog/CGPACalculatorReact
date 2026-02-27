@@ -177,7 +177,6 @@ function Home() {
                                   onChange={(e) =>
                                     updateCourse(sem.id, course.id, "code", e.target.value.toUpperCase())
                                   }
-                                  
                                 />
                               </td>
                               <td>
@@ -190,7 +189,6 @@ function Home() {
                                   onChange={(e) =>
                                     updateCourse(sem.id, course.id, "unit", e.target.value)
                                   }
-                                  
                                 />
                               </td>
                               <td>
@@ -223,6 +221,19 @@ function Home() {
                       <p className={styles.noCoursesMsg}>No courses added.</p>
                     )}
 
+                    {/* GPA result FIRST */}
+                    {sem.gpa === "error" && (
+                      <p className={styles.errorMsg}>
+                        Fill all course units with valid numbers.
+                      </p>
+                    )}
+                    {sem.gpa !== null && sem.gpa !== "error" && (
+                      <div className={styles.gpaResult}>
+                        GPA: {sem.gpa.toFixed(2)}
+                      </div>
+                    )}
+
+                    {/* Semester buttons AFTER result */}
                     <div className={styles.semesterControls}>
                       <button className={styles.addCourseBtn} onClick={() => addCourse(sem.id)}>
                         ADD COURSE
@@ -234,24 +245,21 @@ function Home() {
                         CALCULATE GPA
                       </button>
                     </div>
-
-                    {sem.gpa === "error" && (
-                      <p className={styles.errorMsg}>
-                        Fill all course units with valid numbers.
-                      </p>
-                    )}
-                    {sem.gpa !== null && sem.gpa !== "error" && (
-                      <div className={styles.gpaResult}>
-                        GPA: {sem.gpa.toFixed(2)}
-                      </div>
-                    )}
                   </section>
                 </div>
               ))}
             </div>
           ))}
 
-          {/* CGPA control buttons — at the bottom */}
+          {/* CGPA result FIRST */}
+          {cgpaError && <p className={styles.errorMsg}>{cgpaError}</p>}
+          {cgpa !== null && (
+            <div className={styles.cgpaResult}>
+              CURRENT CGPA: {cgpa.toFixed(2)}
+            </div>
+          )}
+
+          {/* CGPA buttons AFTER result */}
           <div className={styles.cgpaControls}>
             <button className={styles.addSemBtn} onClick={addSemester}>
               ADD SEMESTER
@@ -267,14 +275,6 @@ function Home() {
               CALCULATE CGPA
             </button>
           </div>
-
-          {/* CGPA result */}
-          {cgpaError && <p className={styles.errorMsg}>{cgpaError}</p>}
-          {cgpa !== null && (
-            <div className={styles.cgpaResult}>
-              CURRENT CGPA: {cgpa.toFixed(2)}
-            </div>
-          )}
 
         </main>
       </div>
