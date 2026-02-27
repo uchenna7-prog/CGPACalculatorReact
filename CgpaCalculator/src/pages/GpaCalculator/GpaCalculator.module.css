@@ -27,6 +27,7 @@
   background: #111a16;
   border-radius: 8px;
   padding: 12px;
+  font-size: 0.85rem; /* reduced font size */
 }
 
 /* ── Table ── */
@@ -39,7 +40,7 @@
 
 .table th,
 .table td {
-  border: 1px solid #1e2e26;
+  border-bottom: 1px solid #4caf7d; /* demarcation line */
   padding: 6px 8px;
   text-align: left;
 }
@@ -48,7 +49,7 @@
   background-color: #1a2e22;
   color: #4caf7d;
   font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 0.85rem; /* match header font */
 }
 
 .table td {
@@ -77,7 +78,7 @@
 /* ── Delete row button ── */
 .deleteRowBtn {
   background: transparent;
-  color: white;
+  color: #4caf7d; /* green like previous section */
   border: none;
   border-radius: 5px;
   padding: 4px 8px;
@@ -87,6 +88,7 @@
 }
 .deleteRowBtn:hover { opacity: 0.8; }
 
+/* ── No courses message ── */
 .noCoursesMsg {
   color: #3a7a58;
   font-size: 0.85rem;
@@ -144,5 +146,17 @@
   .table td {
     padding: 4px 5px;
     font-size: 0.78rem;
+  }
+
+  .buttonContainer {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+  }
+
+  .addCourseBtn,
+  .deleteAllBtn,
+  .calcGpaBtn {
+    font-size: 0.7rem;
+    padding: 6px 4px;
   }
 }
