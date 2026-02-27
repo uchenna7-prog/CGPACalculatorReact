@@ -32,6 +32,7 @@
   color: #d4ede3;
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 .menuButton {
