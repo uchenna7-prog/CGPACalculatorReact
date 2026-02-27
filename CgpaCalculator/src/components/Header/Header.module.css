@@ -6,7 +6,7 @@
 
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between; /* Balance left & center */
 
   padding: 0 clamp(12px, 3vw, 32px);
   position: sticky;
@@ -14,22 +14,26 @@
   z-index: 1000;
 }
 
-/* Brand container */
+/* ========================= */
+/* BRAND SECTION (CENTERED) */
+/* ========================= */
+
 .brandContainer {
   display: flex;
   align-items: center;
   gap: 10px;
+
+  flex: 1; /* Take remaining space */
+  justify-content: center; /* Center content horizontally */
   overflow: hidden;
 }
 
-/* Icon */
 .brandIcon {
   font-size: clamp(18px, 2vw, 24px);
   color: #3a7a58;
   flex-shrink: 0;
 }
 
-/* Title */
 .appTitle {
   margin: 0;
   font-size: clamp(0.65rem, 1.4vw, 1.1rem);
@@ -37,12 +41,15 @@
   color: #d4ede3;
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
 
-  white-space: nowrap;
-  text-transform: uppercase;
+  white-space: nowrap;      /* Force single line */
+  text-transform: uppercase; /* Always uppercase */
   flex-shrink: 1;
 }
 
-/* Menu button */
+/* ========================= */
+/* MENU BUTTON (LEFT SIDE)  */
+/* ========================= */
+
 .menuButton {
   display: flex;
   align-items: center;
@@ -74,8 +81,7 @@
 @media (max-width: 768px) {
   .header {
     height: 60px;
-    padding: 0 12px;   /* reduce side padding */
-    gap: 10px;         /* reduce spacing */
+    padding: 0 12px;
   }
 
   .brandContainer {
@@ -91,12 +97,11 @@
   }
 
   .menuButton {
-    font-size: 16px;   /* smaller icon */
-    padding: 4px;      /* smaller clickable area */
+    font-size: 16px;
+    padding: 4px;
   }
 }
 
-/* Extra small phones */
 @media (max-width: 480px) {
   .header {
     padding: 0 8px;
