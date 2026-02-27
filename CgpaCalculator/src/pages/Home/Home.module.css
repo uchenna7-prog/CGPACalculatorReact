@@ -113,7 +113,7 @@
 /* ── Delete row button ── */
 .deleteRowBtn {
   background-color: transparent;
-  color: white;
+  color: #4caf7d;
   border: none;
   border-radius: 5px;
   padding: 4px 8px;
