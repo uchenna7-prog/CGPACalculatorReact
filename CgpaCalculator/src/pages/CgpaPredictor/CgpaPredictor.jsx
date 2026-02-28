@@ -289,7 +289,7 @@ function CGPAPredictor() {
                     DELETE ALL COURSES
                   </button>
                   <button className={styles.predictGpaBtn} onClick={() => predictSemesterGPA(sem.id)}>
-                    PREDICT SEMESTER GPA
+                    PREDICT GPA
                   </button>
                 </div>
               </section>
