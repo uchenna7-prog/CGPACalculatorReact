@@ -97,10 +97,6 @@ function Settings() {
         <Header />
         <main className={styles.mainContent}>
 
-          <h2 className={styles.pageTitle}>
-            <i className="material-icons">settings</i> Settings
-          </h2>
-
           <div className={styles.accordionList}>
 
             {/* ── Appearance ── */}

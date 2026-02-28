@@ -1,5 +1,6 @@
-/* ── Layout ── */
+
 .pageContainer {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
   display: flex;
   height: 100vh;
   overflow: hidden;
@@ -21,27 +22,12 @@
   color: var(--textColor, #a8cfb8);
 }
 
-.pageTitle {
-  color: #4caf7d;
-  font-size: 1.1rem;
-  margin: 0 0 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pageTitle i {
-  font-size: 1.2rem;
-}
-
-/* ── Accordion list ── */
 .accordionList {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* ── Accordion item ── */
 .accordionItem {
   border: 1px solid #1e2e26;
   border-radius: 8px;
@@ -96,7 +82,7 @@
   color: #4caf7d;
 }
 
-/* ── Arrow ── */
+
 .arrow {
   color: #3a5446;
   transition: transform 0.25s ease, color 0.2s;
@@ -108,7 +94,6 @@
   color: #4caf7d;
 }
 
-/* ── Accordion body ── */
 .accordionBody {
   max-height: 0;
   overflow: hidden;

@@ -1,5 +1,6 @@
-/* ── Layout ── */
+
 .pageContainer {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
   display: flex;
   height: 100vh;
   overflow: hidden;
