@@ -4,8 +4,18 @@ import Header from "../../components/Header/Header";
 import styles from "./Home.module.css";
 
 const GRADES = ["A", "B", "C", "D", "E", "F"];
-const GRADE_POINTS = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
-const SEMESTER_NAMES = { 1: "First", 2: "Second" };
+const GRADE_POINTS = { 
+  A: 5,
+  B: 4,
+  C: 3,
+  D: 2,
+  E: 1,
+  F: 0
+};
+const SEMESTER_NAMES = {
+   1: "First",
+  2: "Second" 
+};
 
 function createCourse() {
   return { id: Date.now() + Math.random(), code: "", unit: "", grade: "A" };

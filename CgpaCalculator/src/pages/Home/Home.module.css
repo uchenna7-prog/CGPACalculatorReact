@@ -1,4 +1,5 @@
 .homeContainer {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
   display: flex;
   height: 100vh;
   overflow: hidden;
@@ -20,7 +21,7 @@
   color: var(--textColor, #a8cfb8);
 }
 
-/* ── Year / Semester headings ── */
+
 .yearHeading {
   color: #4caf7d;
   font-size: 1.1rem;
@@ -37,7 +38,7 @@
   letter-spacing: 0.5px;
 }
 
-/* ── Semester card ── */
+
 .semesterCard {
   border: 1px solid #1e2e26;
   background: #111a16;
@@ -46,7 +47,7 @@
   margin-bottom: 10px;
 }
 
-/* ── GPA result ── */
+
 .gpaResult {
   color: #4caf7d;
   font-weight: bold;
@@ -69,7 +70,7 @@
   margin-bottom: 10px;
 }
 
-/* ── Table ── */
+
 .table {
   border-collapse: collapse;
   width: 100%;
@@ -101,7 +102,7 @@
   color: #a8cfb8;
 }
 
-/* ── Inputs ── */
+
 .inputField,
 .selectField {
   width: 100%;
@@ -162,10 +163,17 @@
   transition: all 0.2s ease;
 }
 
-/* Improved modern colors */
-.addCourseBtn { background-color: #fbbf24; color: #1f2937; }
-.deleteAllBtn { background-color: #dc2626; }
-.calcGpaBtn   { background-color: #2563eb; }
+
+.addCourseBtn { 
+  background-color: #fbbf24;
+  color: #1f2937; 
+ }
+.deleteAllBtn { 
+  background-color: #dc2626;
+ }
+.calcGpaBtn   { 
+  background-color: #2563eb;
+ }
 
 .addCourseBtn:hover,
 .deleteAllBtn:hover,
@@ -173,10 +181,10 @@
   opacity: 0.85;
 }
 
-/* ── CGPA bottom controls ── */
+
 .cgpaControls {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* Always one line */
+  grid-template-columns: 1fr 1fr 1fr; 
   gap: 6px;
   margin-top: 20px;
   padding-top: 16px;
@@ -187,19 +195,27 @@
 .removeSemBtn,
 .calcCgpaBtn {
   border: none;
-  padding: 10px 6px;
+  padding: 7px 6px;
   border-radius: 6px;
   font-weight: 600;
   font-family: Consolas, monospace;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: white;
   transition: all 0.2s ease;
 }
 
-.addSemBtn    { background-color: #16a34a; }
-.removeSemBtn { background-color: #ea580c; }
-.calcCgpaBtn  { background-color: #7c3aed; }
+.addSemBtn {
+   background-color: #16a34a; 
+  }
+
+.removeSemBtn { 
+  background-color: #ea580c; 
+  }
+
+.calcCgpaBtn  { 
+  background-color: #7c3aed; 
+  }
 
 .removeSemBtn:disabled {
   opacity: 0.4;
@@ -212,7 +228,7 @@
   opacity: 0.85;
 }
 
-/* ── Responsive ── */
+
 @media (max-width: 600px) {
 
   .mainContent {

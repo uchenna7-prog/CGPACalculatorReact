@@ -21,16 +21,16 @@
   color: var(--textColor, #a8cfb8);
 }
 
-/* ── Details card ── */
+
 .detailsContainer {
   border: 1px solid #1e2e26;
   background: #111a16;
   border-radius: 8px;
   padding: 12px;
-  font-size: 0.85rem; /* reduced font size */
+  font-size: 0.85rem; 
 }
 
-/* ── Table ── */
+
 .table {
   border-collapse: collapse;
   width: 100%;
@@ -40,7 +40,7 @@
 
 .table th,
 .table td {
-  border-bottom: 1px solid #4caf7d; /* demarcation line */
+  border: 1px solid #1e2e26;
   padding: 6px 8px;
   text-align: left;
 }
@@ -49,15 +49,10 @@
   background-color: #1a2e22;
   color: #4caf7d;
   font-weight: bold;
-  font-size: 0.85rem; /* match header font */
+  font-size: 0.8rem;
+  border-right: 2px solid #2f4f3d;
 }
 
-.table td {
-  background-color: #0f1a14;
-  color: #a8cfb8;
-}
-
-/* ── Inputs ── */
 .inputField,
 .selectField {
   width: 100%;
@@ -75,10 +70,10 @@
   color: #a8cfb8;
 }
 
-/* ── Delete row button ── */
+
 .deleteRowBtn {
   background: transparent;
-  color: #4caf7d; /* green like previous section */
+  color: #4caf7d; 
   border: none;
   border-radius: 5px;
   padding: 4px 8px;
@@ -88,14 +83,14 @@
 }
 .deleteRowBtn:hover { opacity: 0.8; }
 
-/* ── No courses message ── */
+
 .noCoursesMsg {
   color: #3a7a58;
   font-size: 0.85rem;
   margin-bottom: 8px;
 }
 
-/* ── Button container ── */
+
 .buttonContainer {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -107,14 +102,14 @@
 .deleteAllBtn,
 .calcGpaBtn {
   border: none;
-  padding: 8px 5px;
-  border-radius: 5px;
-  font-weight: bold;
+  padding: 7px 6px;
+  border-radius: 6px;
+  font-weight: 600;
   font-family: Consolas, monospace;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: white;
-  transition: opacity 0.2s;
+  transition: all 0.2s ease;
 }
 
 .addCourseBtn  { background-color: rgb(251, 191, 36); color: #333; }
