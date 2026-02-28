@@ -4,11 +4,9 @@
   height: 70px;
   background: #0d1210;
   border-bottom: 1px solid #1a2e22;
-
   display: flex;
   align-items: center;
   justify-content: space-between; 
-
   padding: 0 clamp(12px, 3vw, 32px);
   position: sticky;
   top: 0;
@@ -20,7 +18,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-
   flex: 1; 
   justify-content: center;
   overflow: hidden;
@@ -28,7 +25,7 @@
 
 .brandIcon {
   font-size: clamp(18px, 2vw, 24px);
-  color: #3a7a58;
+  color: #a8cfb8;
   flex-shrink: 0;
 }
 
@@ -36,7 +33,7 @@
   margin: 0;
   font-size: clamp(0.65rem, 1.4vw, 1.1rem);
   font-weight: 700;
-  color: #3a7a58;
+  color: #a8cfb8;
   white-space: nowrap;      
   text-transform: uppercase;
   flex-shrink: 1;

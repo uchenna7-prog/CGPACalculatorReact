@@ -1,5 +1,6 @@
-/* ── Layout ── */
+
 .pageContainer {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
   display: flex;
   height: 100vh;
   overflow: hidden;
@@ -47,7 +48,7 @@
 
 .table th {
   background-color: #1a2e22;
-  color: #4caf7d;
+  color: #a8cfb8;
   font-weight: bold;
   font-size: 0.8rem;
   border-right: 2px solid #2f4f3d;
@@ -73,7 +74,7 @@
 
 .deleteRowBtn {
   background: transparent;
-  color: #4caf7d; 
+  color: #a8cfb8; 
   border: none;
   border-radius: 5px;
   padding: 4px 8px;
@@ -81,8 +82,10 @@
   font-size: 0.8rem;
   transition: opacity 0.2s;
 }
-.deleteRowBtn:hover { opacity: 0.8; }
 
+.deleteRowBtn:hover { 
+  opacity: 0.8; 
+}
 
 .noCoursesMsg {
   color: #3a7a58;
@@ -112,9 +115,15 @@
   transition: all 0.2s ease;
 }
 
-.addCourseBtn  { background-color: rgb(251, 191, 36); color: #333; }
-.deleteAllBtn  { background-color: rgb(220, 38, 38); }
-.calcGpaBtn    { background-color: rgb(37, 99, 235); }
+.addCourseBtn  { 
+  background-color: rgb(251, 191, 36);
+ }
+.deleteAllBtn  { 
+  background-color: rgb(220, 38, 38);
+ }
+.calcGpaBtn { 
+  background-color: rgb(37, 99, 235);
+ }
 
 .addCourseBtn:hover,
 .deleteAllBtn:hover,

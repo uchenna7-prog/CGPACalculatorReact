@@ -21,7 +21,7 @@
   color: var(--textColor, #a8cfb8);
 }
 
-/* ── Initial inputs section ── */
+
 .initialInputs {
   background: #111a16;
   border: 1px solid #1e2e26;
@@ -69,14 +69,13 @@
   background: #111a16;
 }
 
-/* ── Semester heading ── */
+
 .semesterHeading {
-  color: #4caf7d;
+  color: #a8cfb8;
   font-size: 1rem;
   margin: 16px 0 6px;
 }
 
-/* ── Semester card ── */
 .semesterCard {
   border: 1px solid #1e2e26;
   background: #111a16;
@@ -85,7 +84,6 @@
   margin-bottom: 10px;
 }
 
-/* ── Table ── */
 .table {
   border-collapse: collapse;
   width: 100%;
@@ -102,17 +100,12 @@
 
 .table th {
   background-color: #1a2e22;
-  color: #4caf7d;
+  color: #a8cfb8;
   font-weight: bold;
   font-size: 0.8rem;
+  border-right: 2px solid #2f4f3d;
 }
 
-.table td {
-  background-color: #0f1a14;
-  color: #a8cfb8;
-}
-
-/* ── Table inputs ── */
 .inputField,
 .selectField {
   width: 100%;
@@ -130,10 +123,10 @@
   color: #a8cfb8;
 }
 
-/* ── Delete row button ── */
+
 .deleteRowBtn {
   background: transparent;
-  color: white;
+  color: #a8cfb8;
   border: none;
   border-radius: 5px;
   padding: 4px 8px;
@@ -149,7 +142,7 @@
   margin-bottom: 8px;
 }
 
-/* ── Per-semester GPA result ── */
+
 .gpaResult {
   color: #4caf7d;
   font-weight: bold;
@@ -157,7 +150,7 @@
   margin-bottom: 8px;
 }
 
-/* ── Semester control buttons ── */
+
 .semesterControls {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -168,25 +161,33 @@
 .deleteAllBtn,
 .predictGpaBtn {
   border: none;
-  padding: 6px 4px;
-  border-radius: 5px;
-  font-weight: bold;
+  padding: 7px 6px;
+  border-radius: 6px;
+  font-weight: 600;
   font-family: Consolas, monospace;
   cursor: pointer;
   font-size: 0.75rem;
   color: white;
-  transition: opacity 0.2s;
+  transition: all 0.2s ease;
 }
 
-.addCourseBtn  { background-color: rgb(251, 191, 36); color: #333; }
-.deleteAllBtn  { background-color: rgb(220, 38, 38); }
-.predictGpaBtn { background-color: rgb(37, 99, 235); }
+.addCourseBtn  { 
+  background-color: rgb(251, 191, 36);
+   color: #333;
+  }
+.deleteAllBtn  { 
+  background-color: rgb(220, 38, 38);
+ }
+.predictGpaBtn { 
+  background-color: rgb(37, 99, 235);
+ }
 
 .addCourseBtn:hover,
 .deleteAllBtn:hover,
-.predictGpaBtn:hover { opacity: 0.8; }
+.predictGpaBtn:hover { 
+  opacity: 0.8;
+ }
 
-/* ── Predict CGPA button ── */
 .predictCgpaBtn {
   display: block;
   width: 100%;
