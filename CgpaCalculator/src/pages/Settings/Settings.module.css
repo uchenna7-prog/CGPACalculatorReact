@@ -56,8 +56,15 @@
 }
 
 .accordionHeader:hover {
-  background: var(--bg);
+  background: var(--bgHover);
+  color: var(--textHover);
 }
+
+.accordionHeader:hover i {
+  color: var(--textHover);
+}
+
+
 
 .accordionOpen .accordionHeader {
   background: #1a2e22;
@@ -174,7 +181,6 @@
   color: #4caf7d;
 }
 
-/* ── Radio group ── */
 .radioGroup {
   display: flex;
   flex-direction: column;
@@ -198,7 +204,7 @@
   height: 15px;
 }
 
-/* ── Grade table ── */
+
 .gradeTableWrap {
   margin-top: 4px;
 }
@@ -359,7 +365,7 @@
 
 .resetBtn:hover {
   border-color: #2e4d3a;
-  color: #a8cfb8;
+  color: var(--textHover);
 }
 
 /* ── Responsive ── */

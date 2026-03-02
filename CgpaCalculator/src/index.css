@@ -6,12 +6,16 @@
     --tableData: #dde0de;
     --textColor:#0f1a14;
     --bg:#d1ebdd;
+    --bgHover: #103f26;
+    --textHover: #add1bf;
     background: var(--bg);
 }
 
 
 :root[data-theme="dark-mode"] {
     --bg: #0d1210;
+    --bgHover: #0a331d;
+    --textHover: #cadfd4;
     --textColor: #a8cfb8;
     --tableData: #0f1a14;
     background: var(--bg);
