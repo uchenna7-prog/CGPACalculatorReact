@@ -4,6 +4,16 @@
 
 :root {
     background: var(--bg, #0d1210);
+    color: var(--textColor, #a8cfb8);
+    --tableData: #0f1a14;
+}
+
+
+:root[data-theme="dark-mode"] {
+    --tableData: #dde0de;
+    --textColor:#54c279;
+    --bg:#d1ebdd;
+    background:var(--bg);
 
 }
 

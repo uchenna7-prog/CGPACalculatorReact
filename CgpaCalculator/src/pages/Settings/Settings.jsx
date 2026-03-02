@@ -2,6 +2,9 @@ import { useState } from "react";
 import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./Settings.module.css";
+import { useTheme } from "../../contexts/ThemeContext";
+
+[]
 
 const gradeScales = {
   "5point": [
@@ -57,7 +60,9 @@ function AccordionSection({ icon, title, isOpen, onToggle, children }) {
 function Settings() {
   const [openSection, setOpenSection] = useState(null);
 
-  const [theme, setTheme] = useState("dark");
+  const { theme, toggleTheme } = useTheme();
+
+  const [themeState, setThemeState] = useState(theme);
   const [gradingScale, setGradingScale] = useState("5point");
   const [decimalPlaces, setDecimalPlaces] = useState("2");
   const [showGradePoints, setShowGradePoints] = useState(true);
@@ -113,14 +118,14 @@ function Settings() {
                 </div>
                 <div className={styles.themeOptions}>
                   {[
-                    { key: "dark", icon: "dark_mode", label: "Dark" },
-                    { key: "light", icon: "light_mode", label: "Light" },
-                    { key: "system", icon: "settings_brightness", label: "System" },
+                    { key: "dark-mode", icon: "dark_mode", label: "Dark" },
+                    { key: "light-mode", icon: "light_mode", label: "Light" },
+                    { key: "system-mode", icon: "settings_brightness", label: "System" },
                   ].map((t) => (
                     <button
                       key={t.key}
-                      className={`${styles.themeBtn} ${theme === t.key ? styles.themeBtnActive : ""}`}
-                      onClick={() => setTheme(t.key)}
+                      className={`${styles.themeBtn} ${themeState === t.key ? styles.themeBtnActive : ""}`}
+                      onClick={toggleTheme}
                     >
                       <i className="material-icons">{t.icon}</i>
                       {t.label}

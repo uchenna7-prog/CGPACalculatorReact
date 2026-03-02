@@ -18,14 +18,14 @@
   overflow-y: auto;
   padding: 16px;
   font-family: Consolas, monospace;
-  background: var(--bg, #0d1210);
-  color: var(--textColor, #a8cfb8);
+  background: var(--bg);
+  color: var(--textColor);
 }
 
 
 .detailsContainer {
   border: 1px solid #1e2e26;
-  background: #111a16;
+  background: var(--tableData);
   border-radius: 8px;
   padding: 12px;
   font-size: 0.85rem; 
@@ -62,13 +62,13 @@
   font-family: Consolas, monospace;
   font-size: 0.85rem;
   background: transparent;
-  color: #a8cfb8;
+  color: var(--textColor);
   padding: 2px 0;
 }
 
 .selectField option {
-  background: #111a16;
-  color: #a8cfb8;
+  background: var(--tableData);
+  color: var(--textColor);
 }
 
 

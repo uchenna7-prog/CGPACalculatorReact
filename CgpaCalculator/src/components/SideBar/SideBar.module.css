@@ -1,6 +1,6 @@
 .sidebar {
-  background: var(--bg, #0d1210);
-  color: var(--textColor, #a8cfb8);
+  background: var(--bg);
+  color: var(--textColor);
   width: 280px;
   height: 100vh;
   border-right: 1px solid #1a2e22;
@@ -41,11 +41,11 @@
   justify-content: center;
   transition: background 0.2s ease;
   flex-shrink: 0;
-  color: var(--textColor, #a8cfb8);
+  color: var(--textColor);
 }
 
 .menuBtn:hover {
-  background: #1a2e22;
+  background: var(--bg);
   border: 1px solid #2e4d3a;
 }
 
@@ -71,7 +71,7 @@
   font-size: 1.05rem;
   font-weight: 700;
   margin: 0;
-  color: #d4ede3;
+  color: var(--textColor);
   letter-spacing: 0.02em;
 }
 
@@ -89,7 +89,7 @@
 .navItem {
   border-radius: 10px;
   overflow: hidden;
-  background: #111a16;
+  background: var(--tableData);
   border: 1px solid #1e2e26;
   transition: border-color 0.2s ease;
 }
