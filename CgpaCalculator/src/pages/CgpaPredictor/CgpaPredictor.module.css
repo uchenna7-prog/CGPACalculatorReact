@@ -41,7 +41,7 @@
 }
 
 .label {
-  color: #4caf7d;
+  color: var(--textColor);
   font-size: 0.85rem;
   font-weight: bold;
 }
@@ -67,12 +67,13 @@
 }
 
 .selectInput option {
-  background: #111a16;
+  background: var(--tableData);
+  color: var(--textColor);
 }
 
 
 .semesterHeading {
-  color: #a8cfb8;
+  color: var(--textColor);
   font-size: 1rem;
   margin: 16px 0 6px;
 }

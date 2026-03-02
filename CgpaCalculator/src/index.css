@@ -4,8 +4,9 @@
 
 :root {
     --tableData: #dde0de;
-    --textColor:#54c279;
+    --textColor:#0f1a14;
     --bg:#d1ebdd;
+    background: var(--bg);
 }
 
 
@@ -13,7 +14,6 @@
     --bg: #0d1210;
     --textColor: #a8cfb8;
     --tableData: #0f1a14;
-
-
+    background: var(--bg);
 }
 

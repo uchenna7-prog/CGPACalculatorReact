@@ -113,7 +113,7 @@
   gap: 14px;
   padding: 12px 14px;
   flex: 1;
-  color: var(--textColor, #a8cfb8);
+  color:var(--textColor);
   font-size: 0.9rem;
   font-weight: 500;
   transition: color 0.2s ease, background 0.2s ease;
@@ -129,7 +129,7 @@
 .navBtn i {
   flex-shrink: 0;
   font-size: 20px;
-  color: #3a7a58;
+  color: var(--textColor);
   transition: color 0.2s ease;
 }
 

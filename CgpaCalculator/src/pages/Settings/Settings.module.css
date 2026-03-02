@@ -75,11 +75,11 @@
 
 .accordionHeaderLeft i {
   font-size: 20px;
-  color: #3a7a58;
+  color: var(--textColor);
 }
 
 .accordionOpen .accordionHeaderLeft i {
-  color: #4caf7d;
+  color: var(--textColor);
 }
 
 
@@ -128,7 +128,7 @@
 .settingLabel {
   font-size: 0.85rem;
   font-weight: bold;
-  color: #d4ede3;
+  color: var(--textColor);
 }
 
 .settingDesc {
@@ -152,7 +152,7 @@
   background: #0d1210;
   border: 1px solid #1e2e26;
   border-radius: 6px;
-  color: #a8cfb8;
+  color: var(--textColor);
   font-family: Consolas, monospace;
   font-size: 0.75rem;
   font-weight: bold;

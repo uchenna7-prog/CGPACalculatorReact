@@ -88,7 +88,7 @@
 
 .table th {
   background-color: #1a2e22;
-  color: var(--textColor);
+  color: #a8cfb8;
   font-weight: bold;
   font-size: 0.8rem;
   border-right: 2px solid #2f4f3d;
@@ -100,7 +100,7 @@
 
 .table td {
   background: var(--tableData);
-  color: #a8cfb8;
+  color: var(--textColor);
 }
 
 
