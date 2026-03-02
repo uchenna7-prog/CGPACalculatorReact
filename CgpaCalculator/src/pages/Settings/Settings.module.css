@@ -56,12 +56,12 @@
 }
 
 .accordionHeader:hover {
-  background: #1a2e22;
+  background: var(--bg);
 }
 
 .accordionOpen .accordionHeader {
   background: #1a2e22;
-  color: var(--textColor);
+  color: #a8cfb8;
   border-bottom: 1px solid #1e2e26;
 }
 
@@ -84,14 +84,14 @@
 
 
 .arrow {
-  color: #3a5446;
+  color: var(--textColor);
   transition: transform 0.25s ease, color 0.2s;
   flex-shrink: 0;
 }
 
 .arrowOpen {
   transform: rotate(180deg);
-  color: #4caf7d;
+  color: var(--textColor);
 }
 
 .accordionBody {
@@ -133,7 +133,7 @@
 
 .settingDesc {
   font-size: 0.74rem;
-  color: #4a7060;
+  color: var(--textColor);
   line-height: 1.4;
 }
 
@@ -149,7 +149,7 @@
   align-items: center;
   gap: 5px;
   padding: 6px 10px;
-  background: #0d1210;
+  background: var(--bg);
   border: 1px solid #1e2e26;
   border-radius: 6px;
   color: var(--textColor);
@@ -160,8 +160,13 @@
   transition: all 0.2s;
 }
 
-.themeBtn i { font-size: 16px; }
-.themeBtn:hover { border-color: #2e4d3a; color: #d4ede3; }
+.themeBtn i { 
+  font-size: 16px; 
+}
+
+.themeBtn:hover { 
+  border-color: #2e4d3a;
+ }
 
 .themeBtnActive {
   background: #1a2e22;
@@ -182,12 +187,12 @@
   align-items: center;
   gap: 8px;
   font-size: 0.82rem;
-  color: #a8cfb8;
+  color: var(--textColor);
   cursor: pointer;
 }
 
 .radioLabel input[type="radio"] {
-  accent-color: #4caf7d;
+  accent-color: var(--textColor);
   cursor: pointer;
   width: 15px;
   height: 15px;
@@ -224,8 +229,8 @@
 }
 
 .table td {
-  background: #0f1a14;
-  color: #a8cfb8;
+  background: var(--tableData);
+  color: var(--textColor);
 }
 
 /* ── Select ── */
