@@ -1,39 +1,131 @@
+/* ───────────────────────────── */
+/* Reset */
+/* ───────────────────────────── */
+
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* ───────── LIGHT MODE (DEFAULT) ───────── */
-:root {
-  --bg: #d1ebdd;
-  --bgHover: #c5e7d5;
-  --textColor: #0f1a14;
-  --textHover: #0f5132;
-  --tableData: #dde0de;
-
-  /* Accordion active (you like dark green) */
-  --accordionActiveBg: #1a2e22;
-  --accordionActiveText: #a8cfb8;
-
-  /* Borders */
-  --borderColor: #1e2e26;
-}
-
-/* ───────── DARK MODE ───────── */
-:root[data-theme="dark-mode"] {
-  --bg: #0d1210;
-  --bgHover: #0a331d;
-  --textColor: #a8cfb8;
-  --textHover: #cadfd4;
-  --tableData: #0f1a14;
-
-  /* Keep same dark green header */
-  --accordionActiveBg: #1a2e22;
-  --accordionActiveText: #a8cfb8;
-
-  --borderColor: #1e2e26;
+html, body, #root {
+  height: 100%;
 }
 
 body {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
   background: var(--bg);
   color: var(--textColor);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* ───────────────────────────── */
+/* LIGHT MODE (DEFAULT) */
+/* ───────────────────────────── */
+
+:root {
+
+  /* Base Colors */
+  --bg: #d1ebdd;
+  --bgHover: #c5e7d5;
+  --tableData: #dde0de;
+
+  --textColor: #0f1a14;
+  --textHover: #0f5132;
+
+  /* Borders */
+  --borderColor: #1e2e26;
+
+  /* Accent */
+  --accentGreen: #4caf7d;
+
+  /* ───── Accordion (Settings Page) ───── */
+
+  /* You like dark green when expanded */
+  --accordionActiveBg: #1a2e22;
+  --accordionActiveText: #a8cfb8;
+
+  /* ───── Sidebar ───── */
+
+  --sidebarActiveBg: #1a2e22;
+  --sidebarActiveText: #a8cfb8;
+  --sidebarBodyBg: #e6f4ec;
+
+  /* ───── Danger Zone ───── */
+
+  --dangerBg: #1a0e0e;
+  --dangerBorder: #3d1515;
+  --dangerText: rgb(220, 38, 38);
+}
+
+/* ───────────────────────────── */
+/* DARK MODE */
+/* ───────────────────────────── */
+
+:root[data-theme="dark-mode"] {
+
+  /* Base Colors */
+  --bg: #0d1210;
+  --bgHover: #0a331d;
+  --tableData: #0f1a14;
+
+  --textColor: #a8cfb8;
+  --textHover: #cadfd4;
+
+  --borderColor: #1e2e26;
+
+  --accentGreen: #4caf7d;
+
+  /* Accordion */
+  --accordionActiveBg: #1a2e22;
+  --accordionActiveText: #a8cfb8;
+
+  /* Sidebar */
+  --sidebarActiveBg: #1a2e22;
+  --sidebarActiveText: #a8cfb8;
+  --sidebarBodyBg: #0f1a14;
+
+  /* Danger */
+  --dangerBg: #1a0e0e;
+  --dangerBorder: #3d1515;
+  --dangerText: rgb(220, 38, 38);
+}
+
+/* ───────────────────────────── */
+/* Scrollbar Styling (Optional but Clean) */
+/* ───────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--borderColor);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accentGreen);
+}
+
+/* ───────────────────────────── */
+/* Utility Classes (Optional) */
+/* ───────────────────────────── */
+
+.text-accent {
+  color: var(--accentGreen);
+}
+
+.border-standard {
+  border: 1px solid var(--borderColor);
+}
+
+.card-surface {
+  background: var(--tableData);
+  border: 1px solid var(--borderColor);
+  border-radius: 8px;
 }
