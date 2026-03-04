@@ -73,7 +73,7 @@
 }
 
 .navRowExpanded {
-  background-color: #2e4d3a; /* exact dark green like Settings header */
+  background-color: #1a2e22;
 }
 
 .navBtn {
@@ -127,7 +127,7 @@
   overflow: hidden;
   transition: max-height 0.35s ease, padding 0.35s ease;
   padding: 0 14px;
-  background-color: #e6f4ec; /* soft whitish green */
+  background-color: var(--bg);
 }
 
 .descriptionOpen {
