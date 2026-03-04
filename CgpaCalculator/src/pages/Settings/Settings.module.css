@@ -1,4 +1,3 @@
-
 .pageContainer {
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   display: flex;
@@ -22,6 +21,8 @@
   color: var(--textColor);
 }
 
+/* ───────── Accordion ───────── */
+
 .accordionList {
   display: flex;
   flex-direction: column;
@@ -29,18 +30,17 @@
 }
 
 .accordionItem {
-  border: 1px solid #1e2e26;
+  border: 1px solid var(--borderColor);
   border-radius: 8px;
   overflow: hidden;
   background: var(--tableData);
-  transition: border-color 0.2s;
+  transition: border-color 0.2s ease;
 }
 
 .accordionOpen {
   border-color: #4caf7d;
 }
 
-/* ── Accordion header (clickable row) ── */
 .accordionHeader {
   width: 100%;
   display: flex;
@@ -52,24 +52,12 @@
   cursor: pointer;
   font-family: Consolas, monospace;
   color: var(--textColor);
-  transition: background 0.2s;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .accordionHeader:hover {
   background: var(--bgHover);
   color: var(--textHover);
-}
-
-.accordionHeader:hover i {
-  color: var(--textHover);
-}
-
-
-
-.accordionOpen .accordionHeader {
-  background: #1a2e22;
-  color: #a8cfb8;
-  border-bottom: 1px solid #1e2e26;
 }
 
 .accordionHeaderLeft {
@@ -85,21 +73,30 @@
   color: var(--textColor);
 }
 
-.accordionOpen .accordionHeaderLeft i {
-  color: var(--textColor);
+/* ───── Expanded Header (Your Dark Green) ───── */
+
+.accordionOpen .accordionHeader {
+  background: var(--accordionActiveBg);
+  color: var(--accordionActiveText);
+  border-bottom: 1px solid var(--borderColor);
 }
 
+.accordionOpen .accordionHeaderLeft i {
+  color: var(--accordionActiveText);
+}
 
 .arrow {
   color: var(--textColor);
-  transition: transform 0.25s ease, color 0.2s;
+  transition: transform 0.25s ease, color 0.2s ease;
   flex-shrink: 0;
 }
 
 .arrowOpen {
   transform: rotate(180deg);
-  color: var(--textColor);
+  color: var(--accordionActiveText);
 }
+
+/* ───────── Body ───────── */
 
 .accordionBody {
   max-height: 0;
@@ -118,7 +115,8 @@
   gap: 16px;
 }
 
-/* ── Setting row ── */
+/* ───────── Settings Rows ───────── */
+
 .settingRow {
   display: flex;
   align-items: center;
@@ -144,7 +142,8 @@
   line-height: 1.4;
 }
 
-/* ── Theme buttons ── */
+/* ───────── Theme Buttons ───────── */
+
 .themeOptions {
   display: flex;
   gap: 6px;
@@ -157,63 +156,27 @@
   gap: 5px;
   padding: 6px 10px;
   background: var(--bg);
-  border: 1px solid #1e2e26;
+  border: 1px solid var(--borderColor);
   border-radius: 6px;
   color: var(--textColor);
   font-family: Consolas, monospace;
   font-size: 0.75rem;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.themeBtn i { 
-  font-size: 16px; 
-}
-
-.themeBtn:hover { 
+.themeBtn:hover {
   border-color: #2e4d3a;
- }
+}
 
 .themeBtnActive {
-  background: #1a2e22;
+  background: var(--accordionActiveBg);
   border-color: #4caf7d;
   color: #4caf7d;
 }
 
-.radioGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.radioLabel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  color: var(--textColor);
-  cursor: pointer;
-}
-
-.radioLabel input[type="radio"] {
-  accent-color: var(--textColor);
-  cursor: pointer;
-  width: 15px;
-  height: 15px;
-}
-
-
-.gradeTableWrap {
-  margin-top: 4px;
-}
-
-.gradeTableTitle {
-  font-size: 0.78rem;
-  color: #4a7060;
-  margin: 0 0 8px;
-}
+/* ───────── Table ───────── */
 
 .table {
   border-collapse: collapse;
@@ -223,13 +186,13 @@
 
 .table th,
 .table td {
-  border: 1px solid #1e2e26;
+  border: 1px solid var(--borderColor);
   padding: 6px 10px;
   text-align: left;
 }
 
 .table th {
-  background: #1a2e22;
+  background: var(--accordionActiveBg);
   color: #4caf7d;
   font-weight: bold;
 }
@@ -239,23 +202,8 @@
   color: var(--textColor);
 }
 
-/* ── Select ── */
-.selectInput {
-  background: #0d1210;
-  border: 1px solid #1e2e26;
-  border-radius: 6px;
-  color: #a8cfb8;
-  font-family: Consolas, monospace;
-  font-size: 0.82rem;
-  padding: 6px 10px;
-  cursor: pointer;
-  outline: none;
-  flex-shrink: 0;
-}
+/* ───────── Toggle ───────── */
 
-.selectInput:focus { border-color: #4caf7d; }
-
-/* ── Toggle ── */
 .toggle {
   width: 44px;
   height: 24px;
@@ -265,7 +213,6 @@
   cursor: pointer;
   position: relative;
   transition: background 0.25s;
-  flex-shrink: 0;
   padding: 0;
 }
 
@@ -283,14 +230,14 @@
   background: white;
   border-radius: 50%;
   transition: transform 0.25s;
-  display: block;
 }
 
 .toggleOn .toggleThumb {
   transform: translateX(20px);
 }
 
-/* ── Danger zone ── */
+/* ───────── Danger Zone ───────── */
+
 .dangerZone {
   border: 1px solid #3d1515;
   border-radius: 8px;
@@ -305,15 +252,6 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: Consolas, monospace;
-}
-
-.dangerTitle i { font-size: 18px; }
-
-.dangerDesc {
-  color: #7a4040;
-  font-size: 0.75rem;
-  margin: 0 0 12px;
 }
 
 .dangerBtn {
@@ -325,17 +263,17 @@
   border: none;
   border-radius: 6px;
   padding: 8px 14px;
-  font-family: Consolas, monospace;
   font-size: 0.8rem;
   font-weight: bold;
   cursor: pointer;
-  transition: opacity 0.2s;
 }
 
-.dangerBtn:hover { opacity: 0.8; }
-.dangerBtn i { font-size: 18px; }
+.dangerBtn:hover {
+  opacity: 0.8;
+}
 
-/* ── Status message ── */
+/* ───────── Status & Reset ───────── */
+
 .statusMsg {
   color: #4caf7d;
   font-size: 0.82rem;
@@ -343,7 +281,6 @@
   margin: 14px 0 0;
 }
 
-/* ── Action row ── */
 .actionRow {
   display: flex;
   justify-content: flex-end;
@@ -352,15 +289,14 @@
 
 .resetBtn {
   background: none;
-  border: 1px solid #1e2e26;
+  border: 1px solid var(--borderColor);
   border-radius: 6px;
   color: #4a7060;
-  font-family: Consolas, monospace;
   font-size: 0.8rem;
   font-weight: bold;
   padding: 8px 16px;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .resetBtn:hover {
@@ -368,7 +304,8 @@
   color: var(--textHover);
 }
 
-/* ── Responsive ── */
+/* ───────── Responsive ───────── */
+
 @media (max-width: 600px) {
   .settingRow {
     flex-direction: column;
