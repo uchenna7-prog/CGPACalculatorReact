@@ -1,262 +1,117 @@
 .sidebar {
-  background: var(--bg);
-  color: var(--textColor);
-  width: 280px;
+  width: 260px;
+  background: var(--tableData);
   height: 100vh;
-  border-right: 1px solid var(--borderColor);
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
-  transition: width 0.3s ease, transform 0.3s ease;
-  position: relative;
-  z-index: 1001;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
+  border-right: 1px solid var(--bgHover);
 }
 
-.sidebar.collapsed {
-  width: 72px;
+.collapsed {
+  width: 70px;
 }
-
-/* ───────── Header ───────── */
 
 .sidebarHeader {
+  height: 60px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0 12px;
-  border-bottom: 1px solid var(--borderColor);
-  height: 70px;
-  flex-shrink: 0;
-}
-
-.mobileSideHeader {
-  flex-direction: row-reverse;
+  padding: 0 16px;
 }
 
 .menuBtn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
   color: var(--textColor);
 }
 
-.menuBtn:hover {
-  background: var(--bgHover);
-}
-
-.menuBtn i {
-  color: inherit;
-  font-size: 22px;
-}
-
-/* ───────── Nav Container ───────── */
-
 .navLinksContainer {
-  display: flex;
-  flex-direction: column;
-  padding: 12px 8px;
-  gap: 8px;
   flex: 1;
-  overflow-y: auto;
+  padding: 10px 0;
 }
-
-/* ───────── Nav Item ───────── */
 
 .navItem {
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--tableData);
-  border: 1px solid var(--borderColor);
-  transition: 
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+  margin-bottom: 6px;
 }
-
-.navItem:hover {
-  border-color: #2e4d3a;
-}
-
-/* ───────── Expanded State ───────── */
-
-.navItemOpen {
-  border-color: #4caf7d;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-/* Dark green header when expanded */
-.navItemOpen .navRow {
-  background: var(--sidebarActiveBg);
-}
-
-/* Light green text */
-.navItemOpen .navBtn {
-  color: var(--sidebarActiveText);
-}
-
-.navItemOpen .navBtn i {
-  color: var(--sidebarActiveText);
-}
-
-.navItemOpen .arrowBtn {
-  color: var(--sidebarActiveText);
-}
-
-/* Soft green body */
-.navItemOpen .description {
-  background: var(--sidebarBodyBg);
-}
-
-/* ───────── Row ───────── */
 
 .navRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: background 0.25s ease;
 }
 
-/* ───────── Main Button ───────── */
-
 .navBtn {
-  text-decoration: none;
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 14px;
-  flex: 1;
+  gap: 12px;
+  padding: 10px 16px;
+  text-decoration: none;
   color: var(--textColor);
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: color 0.2s ease;
-  background: none;
-  border: none;
-  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .navBtn:hover {
+  background: var(--bgHover);
   color: var(--textHover);
-}
-
-.navBtn i {
-  flex-shrink: 0;
-  font-size: 20px;
-  color: var(--textColor);
-  transition: color 0.2s ease;
-}
-
-.navBtn:hover i {
-  color: var(--textHover);
-}
-
-/* Collapsed */
-
-.sidebar.collapsed .navRow {
-  justify-content: center;
 }
 
 .navBtnCollapsed {
   justify-content: center;
-  padding: 12px 8px;
 }
 
-.sidebar.collapsed .navBtn span {
-  display: none;
+.navActive {
+  color: var(--textHover);
+  background: var(--bgHover);
+  font-weight: 600;
 }
-
-/* ───────── Arrow ───────── */
 
 .arrowBtn {
   background: none;
   border: none;
   cursor: pointer;
+  padding: 6px;
   color: var(--textColor);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 10px;
-  transition: transform 0.25s ease, background 0.2s ease, color 0.2s ease;
-  border-radius: 0 12px 0 0;
-  align-self: stretch;
-}
-
-.arrowBtn:hover {
-  background: var(--bgHover);
+  transition: transform 0.3s ease;
 }
 
 .arrowOpen {
   transform: rotate(180deg);
+  color: var(--textHover);
 }
-
-/* ───────── Description Section ───────── */
 
 .description {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.35s ease, padding 0.35s ease, background 0.25s ease;
-  padding: 0 14px;
+  transition: max-height 0.3s ease;
+  padding: 0 16px;
 }
 
 .descriptionOpen {
-  max-height: 320px;
-  padding: 0 14px 14px;
+  max-height: 300px;
+  margin-top: 6px;
 }
 
 .descriptionList {
-  margin: 0;
-  padding: 10px 0 0 18px;
-  list-style-type: disc;
-  border-top: 1px solid var(--borderColor);
-}
-
-.descriptionList li {
-  font-size: 0.75rem;
-  line-height: 1.6;
-  margin-bottom: 6px;
+  padding-left: 18px;
+  font-size: 13px;
   color: var(--textColor);
 }
-
-/* ───────── Overlay (Mobile) ───────── */
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  z-index: 1000;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 998;
 }
 
-/* ───────── Responsive ───────── */
-
-@media (max-width: 767px) {
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    transform: translateX(-100%);
-    width: 280px;
-    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3);
-  }
-
-  .sidebar.mobileOpen {
-    transform: translateX(0);
-  }
-
-  .sidebar.mobileClosed {
-    transform: translateX(-100%);
-  }
+.mobileOpen {
+  position: fixed;
+  z-index: 999;
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
-  .sidebar {
-    width: 240px;
-  }
-
-  .sidebar.collapsed {
-    width: 68px;
-  }
+.mobileClosed {
+  transform: translateX(-100%);
 }
