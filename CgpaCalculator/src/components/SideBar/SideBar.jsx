@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styles from "./SideBar.module.css";
 import { useSideBarContext } from "../../contexts/SideBarContext";
 
@@ -76,19 +76,11 @@ function SideBar() {
       )}
 
       <aside
-        className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ""} ${
-          isMobile
-            ? isOpen
-              ? styles.mobileOpen
-              : styles.mobileClosed
-            : ""
-        }`}
+        className={`${styles.sidebar} 
+          ${isCollapsed ? styles.collapsed : ""} 
+          ${isMobile ? (isOpen ? styles.mobileOpen : styles.mobileClosed) : ""}`}
       >
-        <header
-          className={`${styles.sidebarHeader} ${
-            isMobile ? styles.mobileSideHeader : ""
-          }`}
-        >
+        <header className={styles.sidebarHeader}>
           <button className={styles.menuBtn} onClick={toggleSideBar}>
             <i className="material-icons">
               {isMobile && isOpen ? "close" : "menu"}
@@ -100,16 +92,19 @@ function SideBar() {
           {navItems.map((item) => (
             <div key={item.id} className={styles.navItem}>
               <div className={styles.navRow}>
-                <Link
+                <NavLink
                   to={item.to}
-                  className={`${styles.navBtn} ${
-                    isCollapsed ? styles.navBtnCollapsed : ""
-                  }`}
+                  className={({ isActive }) =>
+                    `${styles.navBtn} 
+                    ${isCollapsed ? styles.navBtnCollapsed : ""} 
+                    ${expanded === item.id ? styles.navActive : ""} 
+                    ${isActive ? styles.navActive : ""}`
+                  }
                   onClick={() => isMobile && toggleSideBar()}
                 >
                   <i className="material-icons">{item.icon}</i>
                   {!isCollapsed && <span>{item.label}</span>}
-                </Link>
+                </NavLink>
 
                 {!isCollapsed && (
                   <button
@@ -139,9 +134,7 @@ function SideBar() {
               {!isCollapsed && (
                 <div
                   className={`${styles.description} ${
-                    expanded === item.id
-                      ? styles.descriptionOpen
-                      : ""
+                    expanded === item.id ? styles.descriptionOpen : ""
                   }`}
                 >
                   <ul className={styles.descriptionList}>
