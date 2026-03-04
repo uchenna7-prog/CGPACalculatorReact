@@ -97,67 +97,72 @@ function SideBar() {
         </header>
 
         <nav className={styles.navLinksContainer}>
-          {navItems.map((item) => (
-            <div
-              key={item.id}
-              className={`${styles.navItem} ${
-                expanded === item.id ? styles.navItemExpanded : ""
-              }`}
-            >
-              <div className={styles.navRow}>
-                <Link
-                  to={item.to}
-                  className={`${styles.navBtn} ${
-                    isCollapsed ? styles.navBtnCollapsed : ""
-                  } ${expanded === item.id ? styles.navBtnExpanded : ""}`}
-                  onClick={() => {
-                    if (isMobile) toggleSideBar();
-                  }}
-                >
-                  <i className="material-icons">{item.icon}</i>
-                  {!isCollapsed && <span>{item.label}</span>}
-                </Link>
-
-                {!isCollapsed && (
-                  <button
-                    className={`${styles.arrowBtn} ${
-                      expanded === item.id ? styles.arrowOpen : ""
-                    }`}
-                    onClick={() => toggle(item.id)}
-                  >
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                    >
-                      <path
-                        d="M3 6L8 11L13 6"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button>
-                )}
-              </div>
-
-              {!isCollapsed && (
+          {navItems.map((item) => {
+            const isExpanded = expanded === item.id;
+            return (
+              <div
+                key={item.id}
+                className={`${styles.navItem} ${
+                  isExpanded ? styles.navItemExpanded : ""
+                }`}
+              >
                 <div
-                  className={`${styles.description} ${
-                    expanded === item.id ? styles.descriptionOpen : ""
+                  className={`${styles.navRow} ${
+                    isExpanded ? styles.navRowExpanded : ""
                   }`}
                 >
-                  <ul className={styles.descriptionList}>
-                    {item.description.map((point, index) => (
-                      <li key={index}>{point}</li>
-                    ))}
-                  </ul>
+                  <Link
+                    to={item.to}
+                    className={`${styles.navBtn} ${
+                      isCollapsed ? styles.navBtnCollapsed : ""
+                    }`}
+                    onClick={() => isMobile && toggleSideBar()}
+                  >
+                    <i className="material-icons">{item.icon}</i>
+                    {!isCollapsed && <span>{item.label}</span>}
+                  </Link>
+
+                  {!isCollapsed && (
+                    <button
+                      className={`${styles.arrowBtn} ${
+                        isExpanded ? styles.arrowOpen : ""
+                      }`}
+                      onClick={() => toggle(item.id)}
+                    >
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                      >
+                        <path
+                          d="M3 6L8 11L13 6"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </button>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
+
+                {!isCollapsed && (
+                  <div
+                    className={`${styles.description} ${
+                      isExpanded ? styles.descriptionOpen : ""
+                    }`}
+                  >
+                    <ul className={styles.descriptionList}>
+                      {item.description.map((point, index) => (
+                        <li key={index}>{point}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
       </aside>
     </>
