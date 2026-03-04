@@ -9,33 +9,52 @@ const navItems = [
     to: "/",
     icon: "school",
     label: "CGPA Calculator",
-    description:
-      "Calculate your Cumulative GPA across all semesters. Input grades and credit units for every semester to get your overall academic standing.",
+    description: [
+      "Automatically structures semesters from Year 1 onward",
+      "Add unlimited semesters across your academic journey",
+      "Calculate GPA for each individual semester",
+      "Instantly compute your cumulative CGPA",
+      "View a complete academic summary",
+      "Saves your records locally for future access",
+    ],
   },
   {
     id: "gpa",
     to: "/gpaCalculator",
     icon: "calculate",
     label: "GPA Calculator",
-    description:
-      "Calculate your GPA for a single semester. Add your courses, credit units, and grades to instantly see your semester result.",
+    description: [
+      "Calculate GPA for a single semester",
+      "Add courses with grades and credit units",
+      "Instantly compute semester GPA",
+      "Fast and simple quick calculation tool",
+    ],
   },
-
-  { id: "predictor",
+  {
+    id: "predictor",
     to: "/cgpaPredictor",
     icon: "trending_up",
     label: "CGPA Predictor",
-    description: "Know your current CGPA and total credit units completed? Enter your expected courses and grades for upcoming semesters to see what your CGPA could be in the future."
-
+    description: [
+      "Enter your current CGPA and total credit units",
+      "Choose how many future semesters to predict",
+      "Add projected courses for each semester",
+      "Predict GPA for upcoming semesters",
+      "See your projected final CGPA instantly",
+    ],
   },
-
   {
     id: "settings",
     to: "/settings",
     icon: "settings",
     label: "Settings",
-    description:
-      "Customize your calculator experience. Switch theme mode, adjust grading scale, reset saved data, and manage preferences.",
+    description: [
+      "Toggle light and dark theme",
+      "Select grading scale (4.0 or 5.0 system)",
+      "Choose preferred decimal precision",
+      "Reset or manage saved academic data",
+      "Customize calculation preferences",
+    ],
   },
 ];
 
@@ -125,7 +144,11 @@ function SideBar() {
                       : ""
                   }`}
                 >
-                  <p>{item.description}</p>
+                  <ul className={styles.descriptionList}>
+                    {item.description.map((point, index) => (
+                      <li key={index}>{point}</li>
+                    ))}
+                  </ul>
                 </div>
               )}
             </div>
