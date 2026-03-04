@@ -91,16 +91,17 @@
   border: none;
 }
 
+
 .navRowExpanded .navBtn {
-  color: #0f1a14;
+  color: #a8cfb8;
 }
   
 .navRowExpanded .navBtn i {
-  color:#0f1a14 ;
+  color:#a8cfb8 ;
 }
 
 .navRowExpanded .arrowBtn{
-  color: #0f1a14;
+  color: #a8cfb8;
 }
 
 .navBtnCollapsed {
