@@ -3,7 +3,7 @@
   color: var(--textColor);
   width: 280px;
   height: 100vh;
-  border-right: 1px solid #1a2e22;
+  border-right: 1px solid var(--borderColor);
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   transition: width 0.3s ease, transform 0.3s ease;
   position: relative;
@@ -16,12 +16,14 @@
   width: 72px;
 }
 
+/* ───────── Header ───────── */
+
 .sidebarHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 12px;
-  border-bottom: 1px solid #1a2e22;
+  border-bottom: 1px solid var(--borderColor);
   height: 70px;
   flex-shrink: 0;
 }
@@ -40,13 +42,11 @@
   align-items: center;
   justify-content: center;
   transition: background 0.2s ease;
-  flex-shrink: 0;
   color: var(--textColor);
 }
 
 .menuBtn:hover {
-  background: var(--bg);
-  border: 1px solid #2e4d3a;
+  background: var(--bgHover);
 }
 
 .menuBtn i {
@@ -54,33 +54,74 @@
   font-size: 22px;
 }
 
+/* ───────── Nav Container ───────── */
+
 .navLinksContainer {
   display: flex;
   flex-direction: column;
   padding: 12px 8px;
-  gap: 6px;
+  gap: 8px;
   flex: 1;
   overflow-y: auto;
 }
+
+/* ───────── Nav Item ───────── */
 
 .navItem {
   border-radius: 12px;
   overflow: hidden;
   background: var(--tableData);
-  border: 1px solid #1e2e26;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  border: 1px solid var(--borderColor);
+  transition: 
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .navItem:hover {
   border-color: #2e4d3a;
-  background: var(--bgHover);
 }
+
+/* ───────── Expanded State ───────── */
+
+.navItemOpen {
+  border-color: #4caf7d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Dark green header when expanded */
+.navItemOpen .navRow {
+  background: var(--sidebarActiveBg);
+}
+
+/* Light green text */
+.navItemOpen .navBtn {
+  color: var(--sidebarActiveText);
+}
+
+.navItemOpen .navBtn i {
+  color: var(--sidebarActiveText);
+}
+
+.navItemOpen .arrowBtn {
+  color: var(--sidebarActiveText);
+}
+
+/* Soft green body */
+.navItemOpen .description {
+  background: var(--sidebarBodyBg);
+}
+
+/* ───────── Row ───────── */
 
 .navRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: background 0.25s ease;
 }
+
+/* ───────── Main Button ───────── */
 
 .navBtn {
   text-decoration: none;
@@ -113,6 +154,8 @@
   color: var(--textHover);
 }
 
+/* Collapsed */
+
 .sidebar.collapsed .navRow {
   justify-content: center;
 }
@@ -126,6 +169,8 @@
   display: none;
 }
 
+/* ───────── Arrow ───────── */
+
 .arrowBtn {
   background: none;
   border: none;
@@ -135,7 +180,7 @@
   align-items: center;
   justify-content: center;
   padding: 8px 10px;
-  transition: transform 0.25s ease, background 0.2s ease;
+  transition: transform 0.25s ease, background 0.2s ease, color 0.2s ease;
   border-radius: 0 12px 0 0;
   align-self: stretch;
 }
@@ -148,17 +193,17 @@
   transform: rotate(180deg);
 }
 
-/* Description Section */
+/* ───────── Description Section ───────── */
 
 .description {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.35s ease, padding 0.35s ease;
+  transition: max-height 0.35s ease, padding 0.35s ease, background 0.25s ease;
   padding: 0 14px;
 }
 
 .descriptionOpen {
-  max-height: 280px;
+  max-height: 320px;
   padding: 0 14px 14px;
 }
 
@@ -166,7 +211,7 @@
   margin: 0;
   padding: 10px 0 0 18px;
   list-style-type: disc;
-  border-top: 1px solid #1e2e26;
+  border-top: 1px solid var(--borderColor);
 }
 
 .descriptionList li {
@@ -176,7 +221,7 @@
   color: var(--textColor);
 }
 
-/* Overlay */
+/* ───────── Overlay (Mobile) ───────── */
 
 .overlay {
   position: fixed;
@@ -185,7 +230,7 @@
   z-index: 1000;
 }
 
-/* Responsive */
+/* ───────── Responsive ───────── */
 
 @media (max-width: 767px) {
   .sidebar {
