@@ -54,49 +54,26 @@
   font-size: 22px;
 }
 
-.sidebarTitle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.titleIcon {
-  font-size: 1.25rem;
-  flex-shrink: 0;
-}
-
-.sidebarTitle h2 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--textColor);
-  letter-spacing: 0.02em;
-}
-
-
 .navLinksContainer {
   display: flex;
   flex-direction: column;
   padding: 12px 8px;
-  gap: 4px;
+  gap: 6px;
   flex: 1;
   overflow-y: auto;
 }
 
 .navItem {
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   background: var(--tableData);
   border: 1px solid #1e2e26;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .navItem:hover {
   border-color: #2e4d3a;
   background: var(--bgHover);
-
 }
 
 .navRow {
@@ -112,10 +89,10 @@
   gap: 14px;
   padding: 12px 14px;
   flex: 1;
-  color:var(--textColor);
+  color: var(--textColor);
   font-size: 0.9rem;
   font-weight: 500;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: color 0.2s ease;
   background: none;
   border: none;
   cursor: pointer;
@@ -136,11 +113,6 @@
   color: var(--textHover);
 }
 
-
-.sidebar.collapsed .navItem {
-  border-radius: 10px;
-}
-
 .sidebar.collapsed .navRow {
   justify-content: center;
 }
@@ -148,13 +120,11 @@
 .navBtnCollapsed {
   justify-content: center;
   padding: 12px 8px;
-  flex: 1;
 }
 
 .sidebar.collapsed .navBtn span {
   display: none;
 }
-
 
 .arrowBtn {
   background: none;
@@ -165,44 +135,49 @@
   align-items: center;
   justify-content: center;
   padding: 8px 10px;
-  transition: color 0.2s ease, background 0.2s ease, transform 0.25s ease;
-  border-radius: 0 10px 0 0;
+  transition: transform 0.25s ease, background 0.2s ease;
+  border-radius: 0 12px 0 0;
   align-self: stretch;
 }
 
 .arrowBtn:hover {
-  color: var(--textHover);
   background: var(--bgHover);
 }
 
 .arrowOpen {
   transform: rotate(180deg);
-  color: var(--textColor);
 }
 
+/* Description Section */
 
 .description {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
+  transition: max-height 0.35s ease, padding 0.35s ease;
   padding: 0 14px;
 }
 
 .descriptionOpen {
-  max-height: 130px;
-  padding: 0 14px 12px;
+  max-height: 280px;
+  padding: 0 14px 14px;
 }
 
-.description p {
+.descriptionList {
   margin: 0;
-  font-size: 0.775rem;
-  line-height: 1.65;
-  color: var(--textColor);
+  padding: 10px 0 0 18px;
+  list-style-type: disc;
   border-top: 1px solid #1e2e26;
-  padding-top: 8px;
 }
 
-/* ── Mobile overlay ── */
+.descriptionList li {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  margin-bottom: 6px;
+  color: var(--textColor);
+}
+
+/* Overlay */
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -210,7 +185,8 @@
   z-index: 1000;
 }
 
-/* ── Responsive ── */
+/* Responsive */
+
 @media (max-width: 767px) {
   .sidebar {
     position: fixed;
@@ -237,9 +213,5 @@
 
   .sidebar.collapsed {
     width: 68px;
-  }
-
-  .sidebarTitle h2 {
-    font-size: 0.95rem;
   }
 }
