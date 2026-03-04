@@ -92,15 +92,15 @@
 }
 
 .navRowExpanded .navBtn {
-  color: #fff;
+  color: var(--textColor);
 }
 
 .navRowExpanded .navBtn i {
-  color: #fff;
+  color: var(--textColor);
 }
 
 .navRowExpanded .arrowBtn{
-  color: #fff;
+  color: var(--textColor);
 }
 
 .navBtnCollapsed {
