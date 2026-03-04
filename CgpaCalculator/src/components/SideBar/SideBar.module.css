@@ -99,6 +99,10 @@
   color: #fff;
 }
 
+.navRowExpanded .navBtn .arrowBtn{
+  color: #fff;
+}
+
 .navBtnCollapsed {
   justify-content: center;
   padding: 12px 8px;
