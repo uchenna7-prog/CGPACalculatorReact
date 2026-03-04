@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from "./SideBar.module.css";
 import { useSideBarContext } from "../../contexts/SideBarContext";
 
@@ -76,11 +76,19 @@ function SideBar() {
       )}
 
       <aside
-        className={`${styles.sidebar} 
-          ${isCollapsed ? styles.collapsed : ""} 
-          ${isMobile ? (isOpen ? styles.mobileOpen : styles.mobileClosed) : ""}`}
+        className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ""} ${
+          isMobile
+            ? isOpen
+              ? styles.mobileOpen
+              : styles.mobileClosed
+            : ""
+        }`}
       >
-        <header className={styles.sidebarHeader}>
+        <header
+          className={`${styles.sidebarHeader} ${
+            isMobile ? styles.mobileSideHeader : ""
+          }`}
+        >
           <button className={styles.menuBtn} onClick={toggleSideBar}>
             <i className="material-icons">
               {isMobile && isOpen ? "close" : "menu"}
@@ -90,21 +98,25 @@ function SideBar() {
 
         <nav className={styles.navLinksContainer}>
           {navItems.map((item) => (
-            <div key={item.id} className={styles.navItem}>
+            <div
+              key={item.id}
+              className={`${styles.navItem} ${
+                expanded === item.id ? styles.navItemExpanded : ""
+              }`}
+            >
               <div className={styles.navRow}>
-                <NavLink
+                <Link
                   to={item.to}
-                  className={({ isActive }) =>
-                    `${styles.navBtn} 
-                    ${isCollapsed ? styles.navBtnCollapsed : ""} 
-                    ${expanded === item.id ? styles.navActive : ""} 
-                    ${isActive ? styles.navActive : ""}`
-                  }
-                  onClick={() => isMobile && toggleSideBar()}
+                  className={`${styles.navBtn} ${
+                    isCollapsed ? styles.navBtnCollapsed : ""
+                  } ${expanded === item.id ? styles.navBtnExpanded : ""}`}
+                  onClick={() => {
+                    if (isMobile) toggleSideBar();
+                  }}
                 >
                   <i className="material-icons">{item.icon}</i>
                   {!isCollapsed && <span>{item.label}</span>}
-                </NavLink>
+                </Link>
 
                 {!isCollapsed && (
                   <button
