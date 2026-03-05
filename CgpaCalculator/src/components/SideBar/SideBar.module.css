@@ -171,6 +171,14 @@
     width: 280px;
     box-shadow: 4px 0 16px rgba(0,0,0,0.3);
   }
+  .sidebarHeader {
+    justify-content: flex-start;
+  }
+
+  .sidebar.mobileOpen .sidebarHeader {
+    justify-content: flex-end;
+  }
+   
   .sidebar.mobileOpen { transform: translateX(0); }
   .sidebar.mobileClosed { transform: translateX(-100%); }
 }
