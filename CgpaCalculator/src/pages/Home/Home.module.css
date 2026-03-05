@@ -16,8 +16,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 16px;
-  padding-bottom: 90px;
-  font-family: Consolas, monospace;
+  padding-bottom: 100px;
   background: var(--bg);
   color: var(--textColor);
 }
@@ -234,7 +233,7 @@
 
   .mainContent {
     padding: 12px;
-    padding-bottom: 90px;
+    padding-bottom: 100px;
   }
 
   /* Smaller headings */
