@@ -1,7 +1,3 @@
-/* ───────────────────────────── */
-/* Reset */
-/* ───────────────────────────── */
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -19,13 +15,8 @@ body {
   transition: background 0.25s ease, color 0.25s ease;
 }
 
-/* ───────────────────────────── */
-/* LIGHT MODE (DEFAULT) */
-/* ───────────────────────────── */
-
 :root {
 
-  /* Base Colors */
   --bg: #d1ebdd;
   --bgHover: #c5e7d5;
   --tableData: #dde0de;
@@ -33,38 +24,25 @@ body {
   --textColor: #0f1a14;
   --textHover: #0f5132;
 
-  /* Borders */
   --borderColor: #1e2e26;
 
-  /* Accent */
   --accentGreen: #4caf7d;
 
-  /* ───── Accordion (Settings Page) ───── */
-
-  /* You like dark green when expanded */
   --accordionActiveBg: #1a2e22;
   --accordionActiveText: #a8cfb8;
-
-  /* ───── Sidebar ───── */
 
   --sidebarActiveBg: #1a2e22;
   --sidebarActiveText: #a8cfb8;
   --sidebarBodyBg: #e6f4ec;
-
-  /* ───── Danger Zone ───── */
 
   --dangerBg: #1a0e0e;
   --dangerBorder: #3d1515;
   --dangerText: rgb(220, 38, 38);
 }
 
-/* ───────────────────────────── */
-/* DARK MODE */
-/* ───────────────────────────── */
 
 :root[data-theme="dark-mode"] {
 
-  /* Base Colors */
   --bg: #0d1210;
   --bgHover: #0a331d;
   --tableData: #0f1a14;
@@ -76,24 +54,18 @@ body {
 
   --accentGreen: #4caf7d;
 
-  /* Accordion */
   --accordionActiveBg: #1a2e22;
   --accordionActiveText: #a8cfb8;
 
-  /* Sidebar */
   --sidebarActiveBg: #1a2e22;
   --sidebarActiveText: #a8cfb8;
   --sidebarBodyBg: #0f1a14;
 
-  /* Danger */
   --dangerBg: #1a0e0e;
   --dangerBorder: #3d1515;
   --dangerText: rgb(220, 38, 38);
 }
 
-/* ───────────────────────────── */
-/* Scrollbar Styling (Optional but Clean) */
-/* ───────────────────────────── */
 
 ::-webkit-scrollbar {
   width: 8px;
@@ -111,10 +83,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accentGreen);
 }
-
-/* ───────────────────────────── */
-/* Utility Classes (Optional) */
-/* ───────────────────────────── */
 
 .text-accent {
   color: var(--accentGreen);
