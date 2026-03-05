@@ -349,7 +349,7 @@ const headerTitleStyle = {
 };
 const closeStyle = {
   background: "transparent", border: "none",
-  color: "var(--textColor)", cursor: "pointer",
+  color:"#a8cfb8", cursor: "pointer",
   display: "flex", alignItems: "center", justifyContent: "center",
   padding: 4, borderRadius: 6,
   opacity: 0.6,
