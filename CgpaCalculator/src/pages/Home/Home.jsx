@@ -104,10 +104,10 @@ function FloatingSummaryButton({ onClick }) {
         touchAction: "none",
       }}
     >
-      <i
-        className="fa-solid fa-chart-line"
-        style={{ fontSize: "1.2rem", color: "#fff", pointerEvents: "none" }}
-      />
+      <span
+        className="material-icons"
+        style={{ fontSize: "1.5rem", color: "#fff", pointerEvents: "none" }}
+      >insights</span>
       <span style={{
         fontSize: "0.5rem",
         color: "#c8f0d8",
@@ -530,4 +530,4 @@ function Home() {
         </main>
       </div>
 
-      {/* Floating 
+      {/* 
