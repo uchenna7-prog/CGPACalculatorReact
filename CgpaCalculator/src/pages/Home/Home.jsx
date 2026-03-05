@@ -72,7 +72,7 @@ function FloatingSummaryButton({ onClick }) {
 
   const positionStyle = dragPos
     ? { position: "fixed", left: dragPos.x, top: dragPos.y }
-    : { position: "fixed", right: 16, bottom: 20 };
+    : { position: "fixed", right: 16, bottom: 30 };
 
   if (!mounted) return null;
 
@@ -714,6 +714,9 @@ function Home() {
               CALCULATE CGPA
             </button>
           </div>
+
+          {/* Spacer so floating summary button never overlaps CGPA controls */}
+          <div style={{ height: 80 }} />
 
         </main>
       </div>
