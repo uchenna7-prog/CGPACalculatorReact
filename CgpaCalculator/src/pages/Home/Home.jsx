@@ -337,7 +337,7 @@ const modalHeaderStyle = {
   padding: "14px 18px",
   borderBottom: "1px solid var(--borderColor)",
   background: "#1a2e22",
-  color: "white",
+  color:"#a8cfb8",
   flexShrink: 0,
 };
 const headerTitleStyle = {
@@ -345,7 +345,7 @@ const headerTitleStyle = {
   fontSize: "0.8rem",
   fontWeight: 700,
   letterSpacing: 1.5,
-  color: "var(--textColor)",
+  color:"#a8cfb8",
 };
 const closeStyle = {
   background: "transparent", border: "none",
