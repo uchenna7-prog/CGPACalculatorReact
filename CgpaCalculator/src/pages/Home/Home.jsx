@@ -41,7 +41,7 @@ function FloatingSummaryButton({ onClick }) {
   useEffect(() => {
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const initial = { x: vw - 80, y: vh - 160 };
+    const initial = { x: vw - 80, y: vh - 90 };
     pos.current = initial;
     setCoords(initial);
   }, []);
