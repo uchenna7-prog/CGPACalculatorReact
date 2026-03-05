@@ -336,7 +336,8 @@ const modalHeaderStyle = {
   display: "flex", justifyContent: "space-between", alignItems: "center",
   padding: "14px 18px",
   borderBottom: "1px solid var(--borderColor)",
-  background: "var(--tableData)",
+  background-color: "#1a2e22",
+  color: "white",
   flexShrink: 0,
 };
 const headerTitleStyle = {
