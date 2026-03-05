@@ -39,10 +39,10 @@ function FloatingSummaryButton({ onClick }) {
   const [coords, setCoords] = useState({ x: null, y: null });
 
   useEffect(() => {
-    // Default bottom-right position
+    // Default: right side, vertically centered — never covers bottom buttons
     const vw = window.innerWidth;
     const vh = window.innerHeight;
-    const initial = { x: vw - 76, y: vh - 100 };
+    const initial = { x: vw - 80, y: vh / 2 - 32 };
     pos.current = initial;
     setCoords(initial);
   }, []);
@@ -64,8 +64,8 @@ function FloatingSummaryButton({ onClick }) {
     const dx = e.clientX - startPos.current.px;
     const dy = e.clientY - startPos.current.py;
     if (Math.abs(dx) > 4 || Math.abs(dy) > 4) dragging.current = true;
-    const newX = Math.max(8, Math.min(window.innerWidth - 68, startPos.current.bx + dx));
-    const newY = Math.max(8, Math.min(window.innerHeight - 68, startPos.current.by + dy));
+    const newX = Math.max(8, Math.min(window.innerWidth - 72, startPos.current.bx + dx));
+    const newY = Math.max(8, Math.min(window.innerHeight - 72, startPos.current.by + dy));
     pos.current = { x: newX, y: newY };
     setCoords({ x: newX, y: newY });
   };
@@ -87,24 +87,37 @@ function FloatingSummaryButton({ onClick }) {
         position: "fixed",
         left: coords.x,
         top: coords.y,
-        width: 56,
-        height: 56,
-        borderRadius: "50%",
+        width: 58,
+        height: 58,
+        borderRadius: "12px",
         background: "linear-gradient(135deg, #4caf7d 0%, #2d7a52 100%)",
         border: "2px solid #1e2e26",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(76,175,125,0.3)",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(76,175,125,0.25)",
         cursor: "grab",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "1.3rem",
+        gap: 3,
         zIndex: 1000,
         userSelect: "none",
         touchAction: "none",
-        transition: "box-shadow 0.2s",
       }}
     >
-      📊
+      <i
+        className="fa-solid fa-chart-line"
+        style={{ fontSize: "1.2rem", color: "#fff", pointerEvents: "none" }}
+      />
+      <span style={{
+        fontSize: "0.5rem",
+        color: "#c8f0d8",
+        fontFamily: "Consolas, monospace",
+        fontWeight: 700,
+        letterSpacing: 0.5,
+        pointerEvents: "none",
+      }}>
+        SUMMARY
+      </span>
     </button>
   );
 }
@@ -517,19 +530,4 @@ function Home() {
         </main>
       </div>
 
-      {/* Floating draggable summary button */}
-      <FloatingSummaryButton onClick={() => setShowSummary(true)} />
-
-      {/* Summary modal */}
-      {showSummary && (
-        <SummaryModal
-          semesters={semesters}
-          cgpa={cgpa}
-          onClose={() => setShowSummary(false)}
-        />
-      )}
-    </div>
-  );
-}
-
-export default Home;
+      {/* Floating 
