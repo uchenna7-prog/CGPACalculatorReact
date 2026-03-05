@@ -117,9 +117,17 @@ function FloatingSummaryButton({ onClick }) {
 function SummaryModal({ semesters, cgpa, onClose }) {
   const honours = getHonours(cgpa);
 
+  // Check if there is anything meaningful to show
+  const hasData = cgpa !== null || semesters.some(
+    (s) => s.gpa !== null && s.gpa !== "error"
+  );
+
+  // Compute per-semester GPAs (auto-calc even if user hasn't hit Calculate GPA)
   const computedSemesters = semesters.map((s) => {
-    const valid = s.courses.every((c) => c.unit !== "" && !isNaN(parseFloat(c.unit)));
-    if (!valid || s.courses.length === 0) return { ...s, computedGpa: null };
+    const valid = s.courses.length > 0 && s.courses.every(
+      (c) => c.unit !== "" && !isNaN(parseFloat(c.unit))
+    );
+    if (!valid) return { ...s, computedGpa: null };
     const totalUnits = s.courses.reduce((sum, c) => sum + parseFloat(c.unit), 0);
     const totalPoints = s.courses.reduce(
       (sum, c) => sum + parseFloat(c.unit) * GRADE_POINTS[c.grade], 0
@@ -137,127 +145,157 @@ function SummaryModal({ semesters, cgpa, onClose }) {
   const totalUnitsAll = semesters.reduce(
     (sum, s) => sum + s.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0), 0
   );
+  const totalYears = Object.keys(byYear).length;
 
   return (
     <div style={overlayStyle} onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div style={modalStyle}>
+      <div className="modal-surface" style={modalStyle}>
 
-        {/* Header */}
-        <div style={modalHeaderStyle}>
-          <span style={{ fontSize: "1.1rem", fontWeight: 700, letterSpacing: 1, fontFamily: "Consolas, monospace", color: "#a8cfb8" }}>
-            ACADEMIC SUMMARY
-          </span>
-          <button onClick={onClose} style={closeStyle}>✕</button>
+        {/* ── Header ── */}
+        <div className="modal-header-bar" style={modalHeaderStyle}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span className="material-icons" style={{ color: "var(--accentGreen)", fontSize: "1.2rem" }}>
+              insights
+            </span>
+            <span style={headerTitleStyle}>ACADEMIC SUMMARY</span>
+          </div>
+          <button onClick={onClose} style={closeStyle} title="Close">
+            <span className="material-icons" style={{ fontSize: "1.1rem" }}>close</span>
+          </button>
         </div>
 
-        {/* CGPA Hero */}
-        <div style={heroStyle}>
-          {cgpa !== null ? (
-            <>
-              <div style={{ fontSize: "3rem", fontWeight: 800, color: "#4caf7d", fontFamily: "Consolas, monospace", lineHeight: 1 }}>
-                {cgpa.toFixed(2)}
-              </div>
-              <div style={{ fontSize: "0.75rem", color: "#5a8a6a", marginTop: 4, letterSpacing: 1, fontFamily: "Consolas, monospace" }}>
-                CUMULATIVE GPA
-              </div>
-              {honours && (
-                <div style={{
-                  marginTop: 12,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "rgba(76,175,125,0.12)",
-                  border: `1px solid ${honours.color}55`,
-                  borderRadius: 20,
-                  padding: "6px 16px",
-                }}>
-                  <span style={{ fontSize: "1rem" }}>{honours.emoji}</span>
-                  <span style={{ color: honours.color, fontWeight: 700, fontSize: "0.85rem", fontFamily: "Consolas, monospace" }}>
-                    {honours.label}
-                  </span>
+        {!hasData ? (
+          /* ── Empty State ── */
+          <div style={emptyStateStyle}>
+            <span className="material-icons" style={{ fontSize: "3rem", color: "var(--accentGreen)", opacity: 0.5 }}>
+              pending_actions
+            </span>
+            <p style={emptyTitleStyle}>Nothing to show yet</p>
+            <p style={emptySubStyle}>
+              Add your courses, then calculate GPA for each semester and your CGPA to see your full academic summary here.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* ── Honours Badge ── */}
+            {honours && (
+              <div style={honoursBannerStyle(honours.color)}>
+                <span style={{ fontSize: "1.6rem" }}>{honours.emoji}</span>
+                <div>
+                  <div style={honoursLabelStyle}>{honours.label}</div>
+                  <div style={cgpaValueStyle}>CGPA: {cgpa.toFixed(2)}</div>
                 </div>
-              )}
-            </>
-          ) : (
-            <div style={{ color: "#5a8a6a", fontSize: "0.85rem", fontFamily: "Consolas, monospace" }}>
-              Calculate CGPA to see your classification
+              </div>
+            )}
+            {cgpa !== null && !honours && (
+              <div style={honoursBannerStyle("#a78bfa")}>
+                <span style={{ fontSize: "1.6rem" }}>📄</span>
+                <div>
+                  <div style={honoursLabelStyle}>Pass</div>
+                  <div style={cgpaValueStyle}>CGPA: {cgpa.toFixed(2)}</div>
+                </div>
+              </div>
+            )}
+
+            {/* ── Stats Grid ── */}
+            <div style={statsGridStyle}>
+              {[
+                { label: "YEARS", value: totalYears },
+                { label: "SEMESTERS", value: semesters.length },
+                { label: "COURSES", value: totalCourses },
+                { label: "TOTAL UNITS", value: totalUnitsAll },
+              ].map(({ label, value }) => (
+                <div key={label} className="card-surface" style={statCardStyle}>
+                  <div style={statValueStyle}>{value}</div>
+                  <div style={statLabelStyle}>{label}</div>
+                </div>
+              ))}
             </div>
-          )}
-        </div>
 
-        {/* Stats Row */}
-        <div style={statsRowStyle}>
-          <div style={statBoxStyle}>
-            <div style={statNumStyle}>{semesters.length}</div>
-            <div style={statLabelStyle}>SEMESTERS</div>
-          </div>
-          <div style={statBoxStyle}>
-            <div style={statNumStyle}>{totalCourses}</div>
-            <div style={statLabelStyle}>COURSES</div>
-          </div>
-          <div style={statBoxStyle}>
-            <div style={statNumStyle}>{totalUnitsAll}</div>
-            <div style={statLabelStyle}>TOTAL UNITS</div>
-          </div>
-          <div style={statBoxStyle}>
-            <div style={statNumStyle}>{Object.keys(byYear).length}</div>
-            <div style={statLabelStyle}>YEARS</div>
-          </div>
-        </div>
-
-        {/* Per-semester breakdown */}
-        <div style={{ overflowY: "auto", maxHeight: 300, padding: "12px 20px 16px" }}>
-          {Object.entries(byYear).map(([year, yearSems]) => (
-            <div key={year} style={{ marginBottom: 12 }}>
-              <div style={yearLabelStyle}>YEAR {year}</div>
-              {yearSems.map((sem) => {
-                const gpaVal =
-                  sem.gpa !== null && sem.gpa !== "error"
-                    ? sem.gpa
-                    : sem.computedGpa;
-                const semUnits = sem.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0);
-                return (
-                  <div key={sem.id} style={semRowStyle}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontFamily: "Consolas, monospace", fontSize: "0.82rem", color: "#a8cfb8" }}>
-                        {SEMESTER_NAMES[sem.semesterNum]} Semester
-                      </span>
-                      <span style={{
-                        fontFamily: "Consolas, monospace",
-                        fontWeight: 700,
-                        fontSize: "0.9rem",
-                        color: gpaVal !== null ? getGpaColor(gpaVal) : "#5a8a6a",
-                      }}>
-                        {gpaVal !== null ? `GPA: ${gpaVal.toFixed(2)}` : "—"}
-                      </span>
-                    </div>
-                    <div style={{ display: "flex", gap: 12, marginTop: 4 }}>
-                      <span style={semStatStyle}>{sem.courses.length} courses</span>
-                      <span style={semStatStyle}>{semUnits} units</span>
-                    </div>
-                    {sem.courses.length > 0 && (
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 6 }}>
-                        {sem.courses.map((c) => (
-                          <span key={c.id} style={courseTagStyle}>
-                            {c.code || "—"} ({c.unit || "?"}) {c.grade}
+            {/* ── Per-Semester Breakdown ── */}
+            <div style={semesterListStyle}>
+              {Object.entries(byYear).map(([year, yearSems]) => (
+                <div key={year}>
+                  <div style={yearChipStyle}>YEAR {year}</div>
+                  {yearSems.map((sem) => {
+                    const gpaVal =
+                      sem.gpa !== null && sem.gpa !== "error"
+                        ? sem.gpa
+                        : sem.computedGpa;
+                    const semUnits = sem.courses.reduce(
+                      (u, c) => u + (parseFloat(c.unit) || 0), 0
+                    );
+                    return (
+                      <div key={sem.id} className="card-surface" style={semCardStyle}>
+                        <div style={semTopRowStyle}>
+                          <span style={semNameStyle}>
+                            {SEMESTER_NAMES[sem.semesterNum]} Semester
                           </span>
-                        ))}
+                          <span style={{
+                            ...semGpaStyle,
+                            color: gpaVal !== null ? getGpaColor(gpaVal) : "var(--textColor)",
+                            opacity: gpaVal !== null ? 1 : 0.35,
+                          }}>
+                            {gpaVal !== null ? gpaVal.toFixed(2) : "—"}
+                          </span>
+                        </div>
+                        <div style={semMetaRowStyle}>
+                          <span style={semMetaStyle}>
+                            <span className="material-icons" style={{ fontSize: "0.75rem", verticalAlign: "middle" }}>book</span>
+                            {" "}{sem.courses.length} courses
+                          </span>
+                          <span style={semMetaStyle}>
+                            <span className="material-icons" style={{ fontSize: "0.75rem", verticalAlign: "middle" }}>straighten</span>
+                            {" "}{semUnits} units
+                          </span>
+                          {gpaVal !== null && (
+                            <span style={{ ...semMetaStyle, marginLeft: "auto" }}>
+                              <GpaBar gpa={gpaVal} />
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* Footer */}
-        <div style={{ padding: "12px 20px", borderTop: "1px solid #1e2e26", fontSize: "0.72rem", color: "#3a7a58", fontFamily: "Consolas, monospace" }}>
-          Based on Nigerian 5-point grading scale · A=5, B=4, C=3, D=2, E=1, F=0
-        </div>
+            {/* ── Footer ── */}
+            <div style={footerStyle}>
+              Nigerian 5-point scale · A=5 B=4 C=3 D=2 E=1 F=0
+            </div>
+          </>
+        )}
 
       </div>
     </div>
+  );
+}
+
+// Small GPA progress bar
+function GpaBar({ gpa }) {
+  const pct = Math.min((gpa / 5) * 100, 100);
+  const color = getGpaColor(gpa);
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+      <span style={{
+        display: "inline-block",
+        width: 48,
+        height: 4,
+        borderRadius: 2,
+        background: "var(--borderColor)",
+        overflow: "hidden",
+      }}>
+        <span style={{
+          display: "block",
+          width: `${pct}%`,
+          height: "100%",
+          background: color,
+          borderRadius: 2,
+        }} />
+      </span>
+    </span>
   );
 }
 
@@ -269,82 +307,149 @@ function getGpaColor(gpa) {
   return "#a78bfa";
 }
 
-// ── Modal inline styles ────────────────────────────────────────────────────
+// ── Modal styles (use CSS variables for theme awareness) ──────────────────
 const overlayStyle = {
   position: "fixed", inset: 0,
-  background: "rgba(0,0,0,0.75)",
-  backdropFilter: "blur(4px)",
+  background: "rgba(0,0,0,0.55)",
+  backdropFilter: "blur(6px)",
   display: "flex", alignItems: "center", justifyContent: "center",
   zIndex: 1001, padding: 16,
 };
 const modalStyle = {
-  background: "#0d1f16",
-  border: "1px solid #1e2e26",
-  borderRadius: 12,
-  width: "100%", maxWidth: 520,
-  maxHeight: "90vh",
+  background: "var(--bg)",
+  border: "1px solid var(--borderColor)",
+  borderRadius: 14,
+  width: "100%", maxWidth: 480,
+  maxHeight: "88vh",
   display: "flex", flexDirection: "column",
-  boxShadow: "0 20px 60px rgba(0,0,0,0.8)",
+  boxShadow: "0 24px 64px rgba(0,0,0,0.45)",
   overflow: "hidden",
 };
 const modalHeaderStyle = {
   display: "flex", justifyContent: "space-between", alignItems: "center",
-  padding: "16px 20px",
-  borderBottom: "1px solid #1e2e26",
-  background: "#0a1a10",
+  padding: "14px 18px",
+  borderBottom: "1px solid var(--borderColor)",
+  background: "var(--tableData)",
+  flexShrink: 0,
+};
+const headerTitleStyle = {
+  fontFamily: "Consolas, monospace",
+  fontSize: "0.8rem",
+  fontWeight: 700,
+  letterSpacing: 1.5,
+  color: "var(--textColor)",
 };
 const closeStyle = {
   background: "transparent", border: "none",
-  color: "#5a8a6a", cursor: "pointer",
-  fontSize: "1rem", padding: "2px 6px",
-  borderRadius: 4,
+  color: "var(--textColor)", cursor: "pointer",
+  display: "flex", alignItems: "center", justifyContent: "center",
+  padding: 4, borderRadius: 6,
+  opacity: 0.6,
 };
-const heroStyle = {
-  padding: "24px 20px 16px",
+const emptyStateStyle = {
+  display: "flex", flexDirection: "column",
+  alignItems: "center", justifyContent: "center",
+  gap: 12, padding: "48px 32px",
   textAlign: "center",
-  borderBottom: "1px solid #1e2e26",
-  background: "linear-gradient(180deg, #0a1a10 0%, #0d1f16 100%)",
 };
-const statsRowStyle = {
+const emptyTitleStyle = {
+  fontFamily: "Consolas, monospace",
+  fontSize: "1rem", fontWeight: 700,
+  color: "var(--textColor)",
+};
+const emptySubStyle = {
+  fontSize: "0.82rem",
+  color: "var(--textColor)",
+  opacity: 0.55,
+  lineHeight: 1.6,
+  maxWidth: 280,
+};
+const honoursBannerStyle = (color) => ({
+  display: "flex", alignItems: "center", gap: 14,
+  padding: "16px 20px",
+  background: `${color}18`,
+  borderBottom: `2px solid ${color}44`,
+  flexShrink: 0,
+});
+const honoursLabelStyle = {
+  fontFamily: "Consolas, monospace",
+  fontWeight: 700, fontSize: "0.95rem",
+  color: "var(--textColor)",
+};
+const cgpaValueStyle = {
+  fontFamily: "Consolas, monospace",
+  fontSize: "0.75rem",
+  color: "var(--accentGreen)",
+  marginTop: 2,
+  letterSpacing: 0.5,
+};
+const statsGridStyle = {
   display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr",
-  gap: 1,
-  borderBottom: "1px solid #1e2e26",
-  background: "#1e2e26",
+  gap: 8, padding: "14px 16px",
+  borderBottom: "1px solid var(--borderColor)",
+  flexShrink: 0,
 };
-const statBoxStyle = {
-  background: "#0d1f16", padding: "14px 8px",
+const statCardStyle = {
+  padding: "10px 6px",
   textAlign: "center",
+  borderRadius: 8,
 };
-const statNumStyle = {
-  fontFamily: "Consolas, monospace", fontSize: "1.4rem",
-  fontWeight: 800, color: "#4caf7d",
+const statValueStyle = {
+  fontFamily: "Consolas, monospace",
+  fontSize: "1.35rem", fontWeight: 800,
+  color: "var(--accentGreen)",
 };
 const statLabelStyle = {
-  fontSize: "0.6rem", color: "#3a7a58",
-  fontFamily: "Consolas, monospace", marginTop: 2, letterSpacing: 0.5,
-};
-const yearLabelStyle = {
-  fontSize: "0.65rem", fontWeight: 700,
-  color: "#3a7a58", letterSpacing: 2,
   fontFamily: "Consolas, monospace",
-  marginBottom: 6, marginTop: 4,
+  fontSize: "0.55rem", letterSpacing: 0.8,
+  color: "var(--textColor)", opacity: 0.5,
+  marginTop: 3,
 };
-const semRowStyle = {
-  background: "#0a1a10",
-  border: "1px solid #1e2e26",
-  borderRadius: 6,
-  padding: "10px 12px",
-  marginBottom: 6,
+const semesterListStyle = {
+  overflowY: "auto",
+  padding: "12px 16px 16px",
+  display: "flex", flexDirection: "column", gap: 6,
 };
-const semStatStyle = {
-  fontSize: "0.7rem", color: "#3a7a58",
+const yearChipStyle = {
   fontFamily: "Consolas, monospace",
+  fontSize: "0.6rem", fontWeight: 700,
+  letterSpacing: 2, color: "var(--accentGreen)",
+  opacity: 0.7, marginBottom: 4, marginTop: 6,
 };
-const courseTagStyle = {
-  background: "#1a2e22", border: "1px solid #1e2e26",
-  borderRadius: 4, padding: "2px 6px",
-  fontSize: "0.65rem", color: "#7ab898",
+const semCardStyle = {
+  padding: "10px 14px",
+  borderRadius: 8,
+};
+const semTopRowStyle = {
+  display: "flex", justifyContent: "space-between", alignItems: "center",
+};
+const semNameStyle = {
   fontFamily: "Consolas, monospace",
+  fontSize: "0.82rem", fontWeight: 600,
+  color: "var(--textColor)",
+};
+const semGpaStyle = {
+  fontFamily: "Consolas, monospace",
+  fontSize: "1.1rem", fontWeight: 800,
+};
+const semMetaRowStyle = {
+  display: "flex", alignItems: "center",
+  gap: 10, marginTop: 5,
+};
+const semMetaStyle = {
+  fontFamily: "Consolas, monospace",
+  fontSize: "0.68rem",
+  color: "var(--textColor)", opacity: 0.55,
+  display: "flex", alignItems: "center", gap: 2,
+};
+const footerStyle = {
+  padding: "10px 18px",
+  borderTop: "1px solid var(--borderColor)",
+  fontFamily: "Consolas, monospace",
+  fontSize: "0.65rem",
+  color: "var(--textColor)", opacity: 0.35,
+  flexShrink: 0,
+  background: "var(--tableData)",
 };
 
 // ── Main Component ─────────────────────────────────────────────────────────
