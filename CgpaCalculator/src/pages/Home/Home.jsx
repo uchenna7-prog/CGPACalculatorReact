@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./Home.module.css";
@@ -35,24 +35,17 @@ function FloatingSummaryButton({ onClick }) {
   const btnRef = useRef(null);
   const dragging = useRef(false);
   const startPos = useRef({});
-  const pos = useRef({ x: null, y: null });
-  const [coords, setCoords] = useState({ x: null, y: null });
-
-  useEffect(() => {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const initial = { x: vw - 80, y: vh - 75 };
-    pos.current = initial;
-    setCoords(initial);
-  }, []);
+  // null = use default bottom/right anchor; set after user drags
+  const [dragPos, setDragPos] = useState(null);
 
   const onPointerDown = (e) => {
     dragging.current = false;
+    const rect = btnRef.current.getBoundingClientRect();
     startPos.current = {
       px: e.clientX,
       py: e.clientY,
-      bx: pos.current.x,
-      by: pos.current.y,
+      bx: rect.left,
+      by: rect.top,
     };
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
@@ -65,8 +58,7 @@ function FloatingSummaryButton({ onClick }) {
     if (Math.abs(dx) > 4 || Math.abs(dy) > 4) dragging.current = true;
     const newX = Math.max(8, Math.min(window.innerWidth - 72, startPos.current.bx + dx));
     const newY = Math.max(8, Math.min(window.innerHeight - 72, startPos.current.by + dy));
-    pos.current = { x: newX, y: newY };
-    setCoords({ x: newX, y: newY });
+    setDragPos({ x: newX, y: newY });
   };
 
   const onPointerUp = () => {
@@ -75,7 +67,9 @@ function FloatingSummaryButton({ onClick }) {
     if (!dragging.current) onClick();
   };
 
-  if (coords.x === null) return null;
+  const positionStyle = dragPos
+    ? { position: "fixed", left: dragPos.x, top: dragPos.y }
+    : { position: "fixed", right: 16, bottom: 20 };
 
   return (
     <button
@@ -83,9 +77,7 @@ function FloatingSummaryButton({ onClick }) {
       onPointerDown={onPointerDown}
       title="View Summary"
       style={{
-        position: "fixed",
-        left: coords.x,
-        top: coords.y,
+        ...positionStyle,
         width: 58,
         height: 58,
         borderRadius: "12px",
