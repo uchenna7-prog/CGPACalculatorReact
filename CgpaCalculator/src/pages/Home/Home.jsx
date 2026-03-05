@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./Home.module.css";
@@ -35,8 +36,10 @@ function FloatingSummaryButton({ onClick }) {
   const btnRef = useRef(null);
   const dragging = useRef(false);
   const startPos = useRef({});
-  // null = use default bottom/right anchor; set after user drags
   const [dragPos, setDragPos] = useState(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const onPointerDown = (e) => {
     dragging.current = false;
@@ -71,7 +74,9 @@ function FloatingSummaryButton({ onClick }) {
     ? { position: "fixed", left: dragPos.x, top: dragPos.y }
     : { position: "fixed", right: 16, bottom: 20 };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <button
       ref={btnRef}
       onPointerDown={onPointerDown}
@@ -90,7 +95,7 @@ function FloatingSummaryButton({ onClick }) {
         alignItems: "center",
         justifyContent: "center",
         gap: 3,
-        zIndex: 1000,
+        zIndex: 9999,
         userSelect: "none",
         touchAction: "none",
       }}
@@ -109,7 +114,8 @@ function FloatingSummaryButton({ onClick }) {
       }}>
         SUMMARY
       </span>
-    </button>
+    </button>,
+    document.body
   );
 }
 
@@ -180,10 +186,11 @@ function SummaryModal({ semesters, cgpa, onClose }) {
             {/* ── Honours Badge ── */}
             {honours && (
               <div style={honoursBannerStyle(honours.color)}>
-                <span style={{ fontSize: "1.6rem" }}>{honours.emoji}</span>
+                <span style={{ fontSize: "2.8rem", lineHeight: 1 }}>{honours.emoji}</span>
                 <div>
+                  <div style={cgpaValueStyle}>{cgpa.toFixed(2)}</div>
+                  <div style={{ fontFamily: "Consolas, monospace", fontSize: "0.65rem", color: "var(--accentGreen)", opacity: 0.7, marginTop: 2, letterSpacing: 0.5 }}>CGPA</div>
                   <div style={honoursLabelStyle}>{honours.label}</div>
-                  <div style={cgpaValueStyle}>CGPA: {cgpa.toFixed(2)}</div>
                 </div>
               </div>
             )}
@@ -365,23 +372,27 @@ const emptySubStyle = {
   maxWidth: 280,
 };
 const honoursBannerStyle = (color) => ({
-  display: "flex", alignItems: "center", gap: 14,
-  padding: "16px 20px",
+  display: "flex", alignItems: "center", gap: 18,
+  padding: "22px 20px",
   background: `${color}18`,
   borderBottom: `2px solid ${color}44`,
   flexShrink: 0,
 });
 const honoursLabelStyle = {
   fontFamily: "Consolas, monospace",
-  fontWeight: 700, fontSize: "0.95rem",
+  fontWeight: 700, fontSize: "0.78rem",
   color: "var(--textColor)",
+  letterSpacing: 1,
+  opacity: 0.75,
+  textTransform: "uppercase",
+  marginBottom: 4,
 };
 const cgpaValueStyle = {
   fontFamily: "Consolas, monospace",
-  fontSize: "0.75rem",
+  fontSize: "2.8rem",
+  fontWeight: 900,
   color: "var(--accentGreen)",
-  marginTop: 2,
-  letterSpacing: 0.5,
+  lineHeight: 1,
 };
 const statsGridStyle = {
   display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr",
