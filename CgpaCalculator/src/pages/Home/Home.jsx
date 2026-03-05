@@ -455,6 +455,8 @@ const semMetaStyle = {
   display: "flex", alignItems: "center", gap: 2,
 };
 const footerStyle = {
+  display: "flex",
+  flexDirection: "column",
   padding: "10px 18px",
   borderTop: "1px solid var(--borderColor)",
   fontFamily: "DM Sans, Segoe UI, sans-serif",
