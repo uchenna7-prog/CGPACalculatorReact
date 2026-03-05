@@ -341,7 +341,7 @@ const modalHeaderStyle = {
   flexShrink: 0,
 };
 const headerTitleStyle = {
-  fontFamily: "Consolas, monospace",
+  fontFamily: "DM Sans, Segoe UI, sans-serif",
   fontSize: "0.8rem",
   fontWeight: 700,
   letterSpacing: 1.5,
@@ -361,7 +361,7 @@ const emptyStateStyle = {
   textAlign: "center",
 };
 const emptyTitleStyle = {
-  fontFamily: "Consolas, monospace",
+  fontFamily: "DM Sans, Segoe UI, sans-serif",
   fontSize: "1rem", fontWeight: 700,
   color: "var(--textColor)",
 };
@@ -380,8 +380,8 @@ const honoursBannerStyle = (color) => ({
   flexShrink: 0,
 });
 const honoursLabelStyle = {
-  fontFamily: "Consolas, monospace",
-  fontWeight: 700, fontSize: "0.78rem",
+  
+  fontFamily: "DM Sans, Segoe UI, sans-serif",fontWeight: 700, fontSize: "0.78rem",
   color: "var(--textColor)",
   letterSpacing: 1,
   opacity: 0.75,
@@ -389,8 +389,8 @@ const honoursLabelStyle = {
   marginBottom: 4,
 };
 const cgpaValueStyle = {
-  fontFamily: "Consolas, monospace",
-  fontSize: "2.8rem",
+
+  fontFamily: "DM Sans, Segoe UI, sans-serif",  fontSize: "2.8rem",
   fontWeight: 900,
   color: "var(--accentGreen)",
   lineHeight: 1,
@@ -407,12 +407,12 @@ const statCardStyle = {
   borderRadius: 8,
 };
 const statValueStyle = {
-  fontFamily: "Consolas, monospace",
+    fontFamily: "DM Sans, Segoe UI, sans-serif",
   fontSize: "1.35rem", fontWeight: 800,
   color: "var(--accentGreen)",
 };
 const statLabelStyle = {
-  fontFamily: "Consolas, monospace",
+   fontFamily: "DM Sans, Segoe UI, sans-serif" ,
   fontSize: "0.55rem", letterSpacing: 0.8,
   color: "var(--textColor)", opacity: 0.5,
   marginTop: 3,
@@ -423,7 +423,7 @@ const semesterListStyle = {
   display: "flex", flexDirection: "column", gap: 6,
 };
 const yearChipStyle = {
-  fontFamily: "Consolas, monospace",
+   fontFamily: "DM Sans, Segoe UI, sans-serif" ,
   fontSize: "0.6rem", fontWeight: 700,
   letterSpacing: 2, color: "var(--accentGreen)",
   opacity: 0.7, marginBottom: 4, marginTop: 6,
@@ -436,12 +436,12 @@ const semTopRowStyle = {
   display: "flex", justifyContent: "space-between", alignItems: "center",
 };
 const semNameStyle = {
-  fontFamily: "Consolas, monospace",
+    fontFamily: "DM Sans, Segoe UI, sans-serif",
   fontSize: "0.82rem", fontWeight: 600,
   color: "var(--textColor)",
 };
 const semGpaStyle = {
-  fontFamily: "Consolas, monospace",
+    fontFamily: "DM Sans, Segoe UI, sans-serif",
   fontSize: "1.1rem", fontWeight: 800,
 };
 const semMetaRowStyle = {
@@ -449,7 +449,7 @@ const semMetaRowStyle = {
   gap: 10, marginTop: 5,
 };
 const semMetaStyle = {
-  fontFamily: "Consolas, monospace",
+   fontFamily: "DM Sans, Segoe UI, sans-serif" ,
   fontSize: "0.68rem",
   color: "var(--textColor)", opacity: 0.55,
   display: "flex", alignItems: "center", gap: 2,
@@ -457,7 +457,7 @@ const semMetaStyle = {
 const footerStyle = {
   padding: "10px 18px",
   borderTop: "1px solid var(--borderColor)",
-  fontFamily: "Consolas, monospace",
+  fontFamily: "DM Sans, Segoe UI, sans-serif",
   fontSize: "0.65rem",
   color: "var(--textColor)", opacity: 0.35,
   flexShrink: 0,
