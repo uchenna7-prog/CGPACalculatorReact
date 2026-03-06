@@ -225,7 +225,7 @@ function CGPAPredictor() {
       <FloatingButton
         onClick={() => navigate("/cgpaPredictorSummary")}
         icon="trending_up"
-        label="PREDICT"
+        label="SUMMARY"
         gradient="linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%)"
       />
     </div>
