@@ -5,15 +5,18 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { SideBarProvider } from './contexts/SideBarContext.jsx'
 import { ThemeProvider } from './contexts/ThemeContext.jsx'
+import { GpaProvider } from './contexts/GpaContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
         <SideBarProvider>
-          <App />
+          <GpaProvider>
+            <App />
+          </GpaProvider>
         </SideBarProvider>
       </ThemeProvider>
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 )
