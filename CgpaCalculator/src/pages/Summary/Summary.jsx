@@ -92,6 +92,7 @@ function Summary() {
             <span className="material-icons" style={{ fontSize: "1rem" }}>arrow_back</span>
             <span>CGPA Calculator</span>
           </button>
+          <h2 className={styles.pageTitle}>Academic Summary</h2>
         </div>
 
         <main className={styles.mainContent}>
