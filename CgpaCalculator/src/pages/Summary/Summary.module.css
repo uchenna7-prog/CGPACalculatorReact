@@ -1,1 +1,307 @@
-. summary{}
+/* ── Page Shell ── */
+.pageContainer {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+}
+
+.mainWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.mainContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px 40px;
+  background: var(--bg);
+  color: var(--textColor);
+}
+
+/* ── Empty State ── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 64px 32px;
+  text-align: center;
+  height: 100%;
+  min-height: 60vh;
+}
+
+.emptyTitle {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--textColor);
+  margin: 0;
+}
+
+.emptySub {
+  font-size: 0.85rem;
+  color: var(--textColor);
+  opacity: 0.5;
+  line-height: 1.7;
+  max-width: 300px;
+  margin: 0;
+}
+
+/* ── Honours Hero Banner ── */
+.honoursBanner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 20px;
+  border: 1px solid;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.honoursEmoji {
+  font-size: 3.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.honoursMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cgpaNumber {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.cgpaLabel {
+  font-family: Consolas, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: var(--textColor);
+  opacity: 0.45;
+  margin-top: 2px;
+  margin-bottom: 6px;
+}
+
+.honoursLabel {
+  font-family: Consolas, monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── Stats Grid ── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.statCard {
+  background: var(--tableData);
+  border: 1px solid var(--borderColor);
+  border-radius: 10px;
+  padding: 14px 8px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.statIcon {
+  font-size: 1rem !important;
+  color: var(--accentGreen);
+  opacity: 0.6;
+}
+
+.statValue {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accentGreen);
+  line-height: 1;
+}
+
+.statLabel {
+  font-family: Consolas, monospace;
+  font-size: 0.5rem;
+  letter-spacing: 1px;
+  color: var(--textColor);
+  opacity: 0.45;
+  text-transform: uppercase;
+}
+
+/* ── Semester Section ── */
+.semesterSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sectionTitle {
+  font-family: Consolas, monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--textColor);
+  opacity: 0.4;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.yearGroup {
+  margin-bottom: 12px;
+}
+
+.yearChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: Consolas, monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accentGreen);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  opacity: 0.75;
+}
+
+.semCards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.semCard {
+  background: var(--tableData);
+  border: 1px solid var(--borderColor);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.semLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+}
+
+.semName {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--textColor);
+}
+
+.semMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.semMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-family: Consolas, monospace;
+  font-size: 0.68rem;
+  color: var(--textColor);
+  opacity: 0.5;
+}
+
+/* GPA bar */
+.gpaBarTrack {
+  width: 80px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--borderColor);
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.gpaBarFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.semGpa {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  line-height: 1;
+  flex-shrink: 0;
+  letter-spacing: -0.5px;
+}
+
+/* ── Footer ── */
+.footer {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid var(--borderColor);
+  font-family: Consolas, monospace;
+  font-size: 0.65rem;
+  color: var(--textColor);
+  opacity: 0.3;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .mainContent {
+    padding: 14px 12px 32px;
+  }
+
+  .honoursBanner {
+    padding: 18px 16px;
+    gap: 14px;
+  }
+
+  .honoursEmoji {
+    font-size: 2.4rem;
+  }
+
+  .cgpaNumber {
+    font-size: 2.2rem;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .statValue {
+    font-size: 1.3rem;
+  }
+
+  .semCard {
+    padding: 12px 14px;
+  }
+
+  .semGpa {
+    font-size: 1.3rem;
+  }
+
+  .gpaBarTrack {
+    width: 60px;
+  }
+}
