@@ -7,6 +7,7 @@ import { SideBarProvider } from './contexts/SideBarContext.jsx'
 import { ThemeProvider } from './contexts/ThemeContext.jsx'
 import { GpaProvider } from './contexts/GpaContext.jsx'
 import { PredictionProvider } from './contexts/PredictionContext.jsx'
+import { GpaCalculatorProvider } from './contexts/GpaCalculatorContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,7 +16,9 @@ createRoot(document.getElementById('root')).render(
         <SideBarProvider>
           <GpaProvider>
             <PredictionProvider>
-              <App />
+              <GpaCalculatorProvider>
+                <App />
+              </GpaCalculatorProvider>
             </PredictionProvider>
           </GpaProvider>
         </SideBarProvider>
