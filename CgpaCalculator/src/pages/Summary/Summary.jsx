@@ -38,9 +38,15 @@ function GpaBar({ gpa }) {
 function Summary({ semesters, cgpa }) {
   const honours = getHonours(cgpa);
 
+  // Show data if CGPA is calculated, OR if any semester has valid courses
+  // (computedSemesters auto-calculates GPA from course data so we just need courses)
   const hasData =
     cgpa !== null ||
-    semesters.some((s) => s.gpa !== null && s.gpa !== "error");
+    semesters.some(
+      (s) =>
+        s.courses.length > 0 &&
+        s.courses.every((c) => c.unit !== "" && !isNaN(parseFloat(c.unit)))
+    );
 
   const computedSemesters = semesters.map((s) => {
     const valid =
