@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./Home.module.css";
-import { useGpa } from "../../context/GpaContext";
+import { useGpa } from "../../contexts/GpaContext";
 
 const GRADES = ["A", "B", "C", "D", "E", "F"];
 const SEMESTER_NAMES = { 1: "First", 2: "Second" };
