@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom'
-import { GpaProvider } from './context/GpaContext'
 import Home from './pages/Home/Home'
 import GPACalculator from './pages/GpaCalculator/GpaCalculator'
 import CGPAPredictor from './pages/CgpaPredictor/CgpaPredictor'
@@ -8,15 +7,13 @@ import Summary from './pages/Summary/Summary'
 
 function App() {
   return (
-    <GpaProvider>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/gpaCalculator" element={<GPACalculator />} />
-        <Route path="/cgpaPredictor" element={<CGPAPredictor />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/summary" element={<Summary />} />
-      </Routes>
-    </GpaProvider>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/gpaCalculator" element={<GPACalculator />} />
+      <Route path="/cgpaPredictor" element={<CGPAPredictor />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/summary" element={<Summary />} />
+    </Routes>
   )
 }
 
