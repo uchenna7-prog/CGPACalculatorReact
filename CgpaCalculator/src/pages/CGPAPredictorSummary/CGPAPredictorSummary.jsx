@@ -153,7 +153,7 @@ function CGPAPredictorSummary() {
         <div className={styles.backBar}>
           <button className={styles.backBtn} onClick={() => navigate("/cgpaPredictor")}>
             <span className="material-icons" style={{ fontSize: "1rem" }}>arrow_back</span>
-            <span>CGPA Predictor</span>
+            <span>Back</span>
           </button>
         </div>
 
