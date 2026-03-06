@@ -92,10 +92,15 @@ function Summary() {
             <span className="material-icons" style={{ fontSize: "1rem" }}>arrow_back</span>
             <span>CGPA Calculator</span>
           </button>
-          <h2 className={styles.pageTitle}>Academic Summary</h2>
         </div>
 
         <main className={styles.mainContent}>
+          {/* Page title */}
+          <div className={styles.pageTitle}>
+            <span className="material-icons" style={{ fontSize: "1.3rem" }}>insights</span>
+            <h2>Academic Summary</h2>
+          </div>
+
           {!hasData ? (
             <div className={styles.emptyState}>
               <span
