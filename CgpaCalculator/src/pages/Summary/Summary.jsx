@@ -88,11 +88,29 @@ function Summary() {
 
         {/* Back bar */}
         <div className={styles.backBar}>
-          <button className={styles.backBtn} onClick={() => navigate("/")}>
-            <span className="material-icons" style={{ fontSize: "1rem" }}>arrow_back</span>
-            <span>Back</span>
-          </button>
-        </div>
+  
+  <div className={styles.leftActions}>
+    <button className={styles.backBtn} onClick={() => navigate("/")}>
+      <span className="material-icons">arrow_back</span>
+      <span>Back</span>
+    </button>
+  </div>
+
+  <div className={styles.rightActions}>
+    
+    <button className={styles.actionBtn}>
+      <span className="material-icons">download</span>
+      <span>Export</span>
+    </button>
+
+    <button className={styles.actionBtn}>
+      <span className="material-icons">share</span>
+      <span>Share</span>
+    </button>
+
+  </div>
+
+</div>
 
         <main className={styles.mainContent}>
           {/* Page title */}
