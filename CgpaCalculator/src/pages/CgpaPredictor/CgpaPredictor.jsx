@@ -112,6 +112,109 @@ function FloatingButton({ onClick, icon, label, gradient }) {
 }
 
 // ── Prediction Summary Modal ───────────────────────────────────────────────
+function CgpaTrajectoryChart({ dataPoints }) {
+  // dataPoints: [{ label, value, color }]
+  const maxVal = 5;
+  const chartH = 100;
+  const chartW = 300;
+  const padL = 28;
+  const padB = 24;
+  const padT = 10;
+  const padR = 12;
+  const innerW = chartW - padL - padR;
+  const innerH = chartH - padT - padB;
+  const n = dataPoints.length;
+
+  const xPos = (i) => padL + (i / (n - 1)) * innerW;
+  const yPos = (v) => padT + innerH - (v / maxVal) * innerH;
+
+  // build polyline points
+  const pts = dataPoints.map((d, i) => `${xPos(i)},${yPos(d.value)}`).join(" ");
+
+  // honour threshold lines
+  const thresholds = [
+    { label: "1st", value: 4.5, color: "#fbbf2460" },
+    { label: "2:1", value: 3.5, color: "#34d39960" },
+    { label: "2:2", value: 2.4, color: "#60a5fa60" },
+    { label: "3rd", value: 1.5, color: "#f8717160" },
+  ];
+
+  return (
+    <svg
+      viewBox={`0 0 ${chartW} ${chartH}`}
+      style={{ width: "100%", height: "auto", display: "block" }}
+    >
+      {/* Threshold lines */}
+      {thresholds.map((t) => (
+        <g key={t.label}>
+          <line
+            x1={padL} y1={yPos(t.value)}
+            x2={chartW - padR} y2={yPos(t.value)}
+            stroke={t.color} strokeWidth="1" strokeDasharray="3 3"
+          />
+          <text
+            x={padL - 4} y={yPos(t.value) + 3.5}
+            textAnchor="end"
+            style={{ fontSize: 7, fill: t.color.replace("60", "cc"), fontFamily: "Consolas, monospace" }}
+          >
+            {t.label}
+          </text>
+        </g>
+      ))}
+
+      {/* X axis */}
+      <line x1={padL} y1={padT + innerH} x2={chartW - padR} y2={padT + innerH}
+        stroke="var(--borderColor)" strokeWidth="1" />
+
+      {/* Gradient fill under line */}
+      <defs>
+        <linearGradient id="cgpaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#4caf7d" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#4caf7d" stopOpacity="0.02" />
+        </linearGradient>
+      </defs>
+      <polygon
+        points={`${padL},${padT + innerH} ${pts} ${xPos(n - 1)},${padT + innerH}`}
+        fill="url(#cgpaGrad)"
+      />
+
+      {/* Line */}
+      <polyline
+        points={pts}
+        fill="none"
+        stroke="#4caf7d"
+        strokeWidth="2"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
+
+      {/* Points + labels */}
+      {dataPoints.map((d, i) => (
+        <g key={i}>
+          <circle
+            cx={xPos(i)} cy={yPos(d.value)} r={4}
+            fill={d.color} stroke="var(--bg)" strokeWidth="1.5"
+          />
+          <text
+            x={xPos(i)} y={yPos(d.value) - 7}
+            textAnchor="middle"
+            style={{ fontSize: 8, fill: d.color, fontFamily: "Consolas, monospace", fontWeight: "bold" }}
+          >
+            {d.value.toFixed(2)}
+          </text>
+          <text
+            x={xPos(i)} y={padT + innerH + 13}
+            textAnchor="middle"
+            style={{ fontSize: 7, fill: "var(--textColor)", opacity: 0.5, fontFamily: "Consolas, monospace" }}
+          >
+            {d.label}
+          </text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 function PredictionSummaryModal({ currentCgpa, totalUnits, semesters, predictedCgpa, onClose }) {
   const hasData = predictedCgpa !== null;
   const currentVal = parseFloat(currentCgpa);
@@ -135,6 +238,29 @@ function PredictionSummaryModal({ currentCgpa, totalUnits, semesters, predictedC
   const futureUnits = semesters.reduce(
     (sum, s) => sum + s.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0), 0
   );
+
+  // Build trajectory chart data: start = current CGPA, then rolling CGPA after each semester
+  const chartPoints = (() => {
+    if (!hasData || isNaN(currentVal)) return [];
+    const points = [{ label: "Now", value: currentVal, color: getGpaColor(currentVal) }];
+    let cumulativePoints = currentVal * parseFloat(totalUnits);
+    let cumulativeUnits = parseFloat(totalUnits);
+    semSummaries.forEach((s, i) => {
+      const gpaVal = s.gpa !== null && s.gpa !== "error" ? s.gpa : s.computedGpa;
+      const semUnits = s.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0);
+      if (gpaVal !== null && semUnits > 0) {
+        cumulativePoints += gpaVal * semUnits;
+        cumulativeUnits += semUnits;
+        const rollingCgpa = cumulativePoints / cumulativeUnits;
+        points.push({
+          label: `S${i + 1}`,
+          value: parseFloat(rollingCgpa.toFixed(3)),
+          color: getGpaColor(rollingCgpa),
+        });
+      }
+    });
+    return points;
+  })();
 
   return createPortal(
     <div style={overlayStyle} onClick={(e) => e.target === e.currentTarget && onClose()}>
@@ -162,7 +288,8 @@ function PredictionSummaryModal({ currentCgpa, totalUnits, semesters, predictedC
             </p>
           </div>
         ) : (
-          <>
+          <div style={{ overflowY: "auto", display: "flex", flexDirection: "column" }}>
+
             {/* Predicted CGPA hero */}
             <div style={{
               display: "flex", alignItems: "center", gap: 16,
@@ -199,11 +326,11 @@ function PredictionSummaryModal({ currentCgpa, totalUnits, semesters, predictedC
               </div>
             </div>
 
-            {/* Current vs Predicted + diff */}
+            {/* Current vs Predicted vs Change */}
             <div style={{
               display: "grid", gridTemplateColumns: "1fr 1fr 1fr",
               gap: 8, padding: "14px 16px",
-              borderBottom: "1px solid var(--borderColor)", flexShrink: 0,
+              borderBottom: "1px solid var(--borderColor)",
             }}>
               <div style={statCardStyle}>
                 <div style={{ ...statValueStyle, color: !isNaN(currentVal) ? getGpaColor(currentVal) : "var(--accentGreen)" }}>
@@ -228,37 +355,41 @@ function PredictionSummaryModal({ currentCgpa, totalUnits, semesters, predictedC
               </div>
             </div>
 
-            {/* Classification change */}
+            {/* Classification change banner */}
             {currentHonours && predictedHonours && currentHonours.label !== predictedHonours.label && (
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
                 gap: 10, padding: "10px 16px",
                 borderBottom: "1px solid var(--borderColor)",
-                flexShrink: 0,
+                background: `${predictedColor}0d`,
               }}>
-                <span style={{
-                  fontFamily: "Consolas, monospace", fontSize: "0.7rem",
-                  color: getGpaColor(currentVal), fontWeight: 700,
-                }}>
-                  {currentHonours.label}
+                <span style={{ fontFamily: "Consolas, monospace", fontSize: "0.68rem", color: getGpaColor(currentVal), fontWeight: 700 }}>
+                  {currentHonours.emoji} {currentHonours.label}
                 </span>
-                <span className="material-icons" style={{ fontSize: "1rem", color: "var(--accentGreen)", opacity: 0.6 }}>
+                <span className="material-icons" style={{ fontSize: "0.9rem", color: "var(--accentGreen)", opacity: 0.6 }}>
                   arrow_forward
                 </span>
-                <span style={{
-                  fontFamily: "Consolas, monospace", fontSize: "0.7rem",
-                  color: predictedColor, fontWeight: 700,
-                }}>
-                  {predictedHonours.label}
+                <span style={{ fontFamily: "Consolas, monospace", fontSize: "0.68rem", color: predictedColor, fontWeight: 700 }}>
+                  {predictedHonours.emoji} {predictedHonours.label}
                 </span>
               </div>
             )}
 
-            {/* Stats */}
+            {/* CGPA Trajectory Chart */}
+            {chartPoints.length >= 2 && (
+              <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--borderColor)" }}>
+                <div style={sectionLabelStyle}>CGPA TRAJECTORY</div>
+                <div style={{ marginTop: 10, padding: "8px 4px 0" }}>
+                  <CgpaTrajectoryChart dataPoints={chartPoints} />
+                </div>
+              </div>
+            )}
+
+            {/* Stats grid */}
             <div style={{
               display: "grid", gridTemplateColumns: "1fr 1fr",
               gap: 8, padding: "14px 16px",
-              borderBottom: "1px solid var(--borderColor)", flexShrink: 0,
+              borderBottom: "1px solid var(--borderColor)",
             }}>
               {[
                 { label: "FUTURE SEMESTERS", value: semesters.length },
@@ -274,40 +405,47 @@ function PredictionSummaryModal({ currentCgpa, totalUnits, semesters, predictedC
             </div>
 
             {/* Per-semester breakdown */}
-            <div style={{ padding: "14px 16px", overflowY: "auto" }}>
+            <div style={{ padding: "14px 16px" }}>
               <div style={sectionLabelStyle}>SEMESTER BREAKDOWN</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 10 }}>
                 {semSummaries.map((sem) => {
                   const gpaVal = sem.gpa !== null && sem.gpa !== "error" ? sem.gpa : sem.computedGpa;
                   const semUnits = sem.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0);
                   const gpaCol = gpaVal !== null ? getGpaColor(gpaVal) : "var(--textColor)";
+                  const pct = gpaVal !== null ? (gpaVal / 5) * 100 : 0;
                   return (
                     <div key={sem.id} style={{
-                      display: "flex", justifyContent: "space-between", alignItems: "center",
                       background: "var(--tableData)", border: "1px solid var(--borderColor)",
                       borderRadius: 8, padding: "10px 14px",
                     }}>
-                      <div>
-                        <div style={{
-                          fontFamily: "Consolas, monospace", fontSize: "0.82rem",
-                          fontWeight: 600, color: "var(--textColor)",
-                        }}>
-                          Semester {sem.num}
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <div>
+                          <div style={{
+                            fontFamily: "Consolas, monospace", fontSize: "0.82rem",
+                            fontWeight: 600, color: "var(--textColor)",
+                          }}>
+                            Semester {sem.num}
+                          </div>
+                          <div style={{
+                            fontFamily: "Consolas, monospace", fontSize: "0.65rem",
+                            color: "var(--textColor)", opacity: 0.5, marginTop: 2,
+                          }}>
+                            {sem.courses.length} courses · {semUnits} units
+                          </div>
                         </div>
                         <div style={{
-                          fontFamily: "Consolas, monospace", fontSize: "0.65rem",
-                          color: "var(--textColor)", opacity: 0.5, marginTop: 2,
+                          fontFamily: "DM Sans, sans-serif", fontSize: "1.3rem",
+                          fontWeight: 900, color: gpaCol,
+                          opacity: gpaVal !== null ? 1 : 0.3,
                         }}>
-                          {sem.courses.length} courses · {semUnits} units
+                          {gpaVal !== null ? gpaVal.toFixed(2) : "—"}
                         </div>
                       </div>
-                      <div style={{
-                        fontFamily: "DM Sans, sans-serif", fontSize: "1.3rem",
-                        fontWeight: 900, color: gpaCol,
-                        opacity: gpaVal !== null ? 1 : 0.3,
-                      }}>
-                        {gpaVal !== null ? gpaVal.toFixed(2) : "—"}
-                      </div>
+                      {gpaVal !== null && (
+                        <div style={{ marginTop: 8, height: 4, borderRadius: 2, background: "var(--borderColor)", overflow: "hidden" }}>
+                          <div style={{ width: `${pct}%`, height: "100%", background: gpaCol, borderRadius: 2 }} />
+                        </div>
+                      )}
                     </div>
                   );
                 })}
@@ -316,7 +454,7 @@ function PredictionSummaryModal({ currentCgpa, totalUnits, semesters, predictedC
 
             {/* Footer */}
             <div style={footerStyle}>Nigerian 5-point scale · A=5 B=4 C=3 D=2 E=1 F=0</div>
-          </>
+          </div>
         )}
       </div>
     </div>,
