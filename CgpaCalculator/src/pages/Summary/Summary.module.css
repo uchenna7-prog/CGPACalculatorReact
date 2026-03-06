@@ -1,307 +1,342 @@
-/* ── Page Shell ── */
+/* ───────────────── PAGE SHELL ───────────────── */
+
 .pageContainer {
-  display: flex;
-  height: 100vh;
-  overflow: hidden;
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+display: flex;
+height: 100vh;
+overflow: hidden;
+font-family: "DM Sans", "Segoe UI", sans-serif;
 }
 
 .mainWrapper {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow: hidden;
+display: flex;
+flex-direction: column;
+flex: 1;
+overflow: hidden;
 }
 
 .mainContent {
-  flex: 1;
-  overflow-y: auto;
-  padding: 20px 16px 40px;
-  background: var(--bg);
-  color: var(--textColor);
+flex: 1;
+overflow-y: auto;
+padding: 28px 22px 48px;
+background: var(--bg);
+color: var(--textColor);
+display: flex;
+flex-direction: column;
 }
 
-/* ── Empty State ── */
+/* ───────────────── EMPTY STATE ───────────────── */
+
 .emptyState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 64px 32px;
-  text-align: center;
-  height: 100%;
-  min-height: 60vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 16px;
+text-align: center;
+min-height: 65vh;
+padding: 40px 20px;
 }
 
 .emptyTitle {
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--textColor);
-  margin: 0;
+font-size: 1.25rem;
+font-weight: 800;
+color: var(--textColor);
+margin: 0;
 }
 
 .emptySub {
-  font-size: 0.85rem;
-  color: var(--textColor);
-  opacity: 0.5;
-  line-height: 1.7;
-  max-width: 300px;
-  margin: 0;
+font-size: 0.9rem;
+color: var(--textColor);
+opacity: 0.55;
+line-height: 1.7;
+max-width: 340px;
+margin: 0;
 }
 
-/* ── Honours Hero Banner ── */
+/* ───────────────── HONOURS HERO ───────────────── */
+
 .honoursBanner {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 24px 20px;
-  border: 1px solid;
-  border-radius: 12px;
-  margin-bottom: 16px;
+display: flex;
+align-items: center;
+gap: 22px;
+padding: 26px 22px;
+border-radius: 14px;
+border: 1px solid;
+margin-bottom: 22px;
 }
 
 .honoursEmoji {
-  font-size: 3.2rem;
-  line-height: 1;
-  flex-shrink: 0;
+font-size: 3.5rem;
+flex-shrink: 0;
 }
 
 .honoursMeta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+display: flex;
+flex-direction: column;
 }
 
 .cgpaNumber {
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
-  font-size: 3rem;
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: -1px;
+font-size: 3.2rem;
+font-weight: 900;
+letter-spacing: -1px;
+line-height: 1;
 }
 
 .cgpaLabel {
-  font-family: Consolas, monospace;
-  font-size: 0.65rem;
-  letter-spacing: 2px;
-  color: var(--textColor);
-  opacity: 0.45;
-  margin-top: 2px;
-  margin-bottom: 6px;
+font-family: Consolas, monospace;
+font-size: 0.65rem;
+letter-spacing: 2px;
+opacity: 0.5;
+margin: 4px 0 6px;
 }
 
 .honoursLabel {
-  font-family: Consolas, monospace;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
+font-family: Consolas, monospace;
+font-size: 0.75rem;
+font-weight: 700;
+letter-spacing: 1px;
+text-transform: uppercase;
 }
 
-/* ── Stats Grid ── */
+/* ───────────────── STATS GRID ───────────────── */
+
 .statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-bottom: 20px;
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 12px;
+margin-bottom: 26px;
 }
 
 .statCard {
-  background: var(--tableData);
-  border: 1px solid var(--borderColor);
-  border-radius: 10px;
-  padding: 14px 8px 12px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+background: var(--tableData);
+border: 1px solid var(--borderColor);
+border-radius: 12px;
+padding: 18px 10px 16px;
+
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 6px;
+
+text-align: center;
+
+transition: all 0.2s ease;
+}
+
+.statCard:hover {
+transform: translateY(-2px);
 }
 
 .statIcon {
-  font-size: 1rem !important;
-  color: var(--accentGreen);
-  opacity: 0.6;
+font-size: 1.1rem !important;
+color: var(--accentGreen);
+opacity: 0.7;
 }
 
 .statValue {
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--accentGreen);
-  line-height: 1;
+font-size: 1.6rem;
+font-weight: 900;
+color: var(--accentGreen);
+line-height: 1;
 }
 
 .statLabel {
-  font-family: Consolas, monospace;
-  font-size: 0.5rem;
-  letter-spacing: 1px;
-  color: var(--textColor);
-  opacity: 0.45;
-  text-transform: uppercase;
+font-family: Consolas, monospace;
+font-size: 0.55rem;
+letter-spacing: 1.4px;
+text-transform: uppercase;
+opacity: 0.5;
 }
 
-/* ── Semester Section ── */
+/* ───────────────── SEMESTER SECTION ───────────────── */
+
 .semesterSection {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+display: flex;
+flex-direction: column;
+gap: 12px;
 }
 
 .sectionTitle {
-  font-family: Consolas, monospace;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 2.5px;
-  color: var(--textColor);
-  opacity: 0.4;
-  margin: 0 0 10px;
-  text-transform: uppercase;
+font-family: Consolas, monospace;
+font-size: 0.7rem;
+font-weight: 700;
+letter-spacing: 2.6px;
+opacity: 0.45;
+text-transform: uppercase;
+margin-bottom: 8px;
 }
 
+/* ───────────────── YEAR GROUP ───────────────── */
+
 .yearGroup {
-  margin-bottom: 12px;
+margin-bottom: 16px;
 }
 
 .yearChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: Consolas, monospace;
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: var(--accentGreen);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-  opacity: 0.75;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+
+font-family: Consolas, monospace;
+font-size: 0.65rem;
+font-weight: 700;
+letter-spacing: 2px;
+
+color: var(--accentGreen);
+
+text-transform: uppercase;
+margin-bottom: 8px;
+opacity: 0.8;
 }
 
+/* ───────────────── SEMESTER CARDS ───────────────── */
+
 .semCards {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+display: flex;
+flex-direction: column;
+gap: 10px;
 }
 
 .semCard {
-  background: var(--tableData);
-  border: 1px solid var(--borderColor);
-  border-radius: 10px;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+background: var(--tableData);
+border: 1px solid var(--borderColor);
+border-radius: 12px;
+
+padding: 16px 18px;
+
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 14px;
+
+transition: all 0.2s ease;
+}
+
+.semCard:hover {
+transform: translateY(-2px);
 }
 
 .semLeft {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  flex: 1;
-  min-width: 0;
+display: flex;
+flex-direction: column;
+gap: 6px;
+flex: 1;
 }
 
 .semName {
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--textColor);
+font-size: 0.92rem;
+font-weight: 700;
 }
 
 .semMeta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+display: flex;
+align-items: center;
+gap: 14px;
 }
 
 .semMetaItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-family: Consolas, monospace;
-  font-size: 0.68rem;
-  color: var(--textColor);
-  opacity: 0.5;
+display: inline-flex;
+align-items: center;
+gap: 4px;
+
+font-family: Consolas, monospace;
+font-size: 0.7rem;
+opacity: 0.55;
 }
 
-/* GPA bar */
+/* ───────────────── GPA BAR ───────────────── */
+
 .gpaBarTrack {
-  width: 80px;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--borderColor);
-  overflow: hidden;
-  margin-top: 2px;
+width: 90px;
+height: 5px;
+border-radius: 3px;
+background: var(--borderColor);
+overflow: hidden;
+margin-top: 3px;
 }
 
 .gpaBarFill {
-  height: 100%;
-  border-radius: 2px;
-  transition: width 0.4s ease;
+height: 100%;
+border-radius: 3px;
+transition: width 0.4s ease;
 }
 
 .semGpa {
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
-  font-size: 1.6rem;
-  font-weight: 900;
-  line-height: 1;
-  flex-shrink: 0;
-  letter-spacing: -0.5px;
+font-size: 1.8rem;
+font-weight: 900;
+letter-spacing: -0.5px;
+flex-shrink: 0;
 }
 
-/* ── Footer ── */
+/* ───────────────── FOOTER ───────────────── */
+
 .footer {
-  margin-top: 24px;
-  padding-top: 14px;
-  border-top: 1px solid var(--borderColor);
-  font-family: Consolas, monospace;
-  font-size: 0.65rem;
-  color: var(--textColor);
-  opacity: 0.3;
-  text-align: center;
-  letter-spacing: 0.3px;
+margin-top: 30px;
+padding-top: 16px;
+
+border-top: 1px solid var(--borderColor);
+
+font-family: Consolas, monospace;
+font-size: 0.68rem;
+
+text-align: center;
+letter-spacing: 0.4px;
+
+opacity: 0.4;
 }
 
-/* ── Responsive ── */
+/* ───────────────── SCROLLBAR ───────────────── */
+
+.mainContent::-webkit-scrollbar {
+width: 6px;
+}
+
+.mainContent::-webkit-scrollbar-thumb {
+background: var(--borderColor);
+border-radius: 4px;
+}
+
+/* ───────────────── RESPONSIVE ───────────────── */
+
 @media (max-width: 600px) {
-  .mainContent {
-    padding: 14px 12px 32px;
-  }
 
-  .honoursBanner {
-    padding: 18px 16px;
-    gap: 14px;
-  }
+.mainContent {
+padding: 18px 14px 36px;
+}
 
-  .honoursEmoji {
-    font-size: 2.4rem;
-  }
+.honoursBanner {
+padding: 18px 16px;
+gap: 14px;
+}
 
-  .cgpaNumber {
-    font-size: 2.2rem;
-  }
+.honoursEmoji {
+font-size: 2.5rem;
+}
 
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-  }
+.cgpaNumber {
+font-size: 2.4rem;
+}
 
-  .statValue {
-    font-size: 1.3rem;
-  }
+.statsGrid {
+grid-template-columns: repeat(2, 1fr);
+gap: 8px;
+}
 
-  .semCard {
-    padding: 12px 14px;
-  }
+.statValue {
+font-size: 1.4rem;
+}
 
-  .semGpa {
-    font-size: 1.3rem;
-  }
+.semCard {
+padding: 14px 14px;
+}
 
-  .gpaBarTrack {
-    width: 60px;
-  }
+.semGpa {
+font-size: 1.4rem;
+}
+
+.gpaBarTrack {
+width: 70px;
+}
+
 }
