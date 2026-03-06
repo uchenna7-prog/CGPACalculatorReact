@@ -24,19 +24,6 @@ function getGpaColor(gpa) {
   return "#a78bfa";
 }
 
-function GpaBar({ gpa }) {
-  const pct = Math.min((gpa / 5) * 100, 100);
-  const color = getGpaColor(gpa);
-  return (
-    <div className={styles.gpaBarTrack}>
-      <div
-        className={styles.gpaBarFill}
-        style={{ width: `${pct}%`, background: color }}
-      />
-    </div>
-  );
-}
-
 function Summary() {
   const navigate = useNavigate();
   const { semesters, cgpa } = useGpa();
@@ -84,36 +71,27 @@ function Summary() {
       <SideBar />
 
       <div className={styles.mainWrapper}>
-        <Header />
+        <Header title="Academic Summary" />
 
-        {/* Back bar */}
         <div className={styles.backBar}>
-  
-  <div className={styles.leftActions}>
-    <button className={styles.backBtn} onClick={() => navigate("/")}>
-      <span className="material-icons">arrow_back</span>
-      <span>Back</span>
-    </button>
-  </div>
-
-  <div className={styles.rightActions}>
-    
-    <button className={styles.actionBtn}>
-      <span className="material-icons">download</span>
-      <span>Export</span>
-    </button>
-
-    <button className={styles.actionBtn}>
-      <span className="material-icons">share</span>
-      <span>Share</span>
-    </button>
-
-  </div>
-
-</div>
+          <button className={styles.backBtn} onClick={() => navigate("/")}>
+            <span className="material-icons" style={{ fontSize: "0.9rem" }}>arrow_back</span>
+            <span className={styles.btnText}>Back</span>
+          </button>
+          
+          <div className={styles.actionGroup}>
+            <button className={styles.actionBtn}>
+              <span className="material-icons" style={{ fontSize: "0.9rem" }}>share</span>
+              <span className={styles.btnText}>Share</span>
+            </button>
+            <button className={`${styles.actionBtn} ${styles.exportBtn}`}>
+              <span className="material-icons" style={{ fontSize: "0.9rem" }}>file_download</span>
+              <span className={styles.btnText}>Export</span>
+            </button>
+          </div>
+        </div>
 
         <main className={styles.mainContent}>
-          {/* Page title */}
           <div className={styles.pageTitle}>
             <span className="material-icons" style={{ fontSize: "1.3rem" }}>insights</span>
             <h2>Academic Summary</h2>
@@ -121,10 +99,7 @@ function Summary() {
 
           {!hasData ? (
             <div className={styles.emptyState}>
-              <span
-                className="material-icons"
-                style={{ fontSize: "4rem", color: "var(--accentGreen)", opacity: 0.4 }}
-              >
+              <span className="material-icons" style={{ fontSize: "4rem", color: "var(--accentGreen)", opacity: 0.4 }}>
                 pending_actions
               </span>
               <h2 className={styles.emptyTitle}>Nothing to show yet</h2>
@@ -139,42 +114,24 @@ function Summary() {
           ) : (
             <>
               {/* Honours Banner */}
-              {honours && (
-                <div
-                  className={styles.honoursBanner}
-                  style={{
-                    background: `${honours.color}15`,
-                    borderColor: `${honours.color}40`,
-                  }}
-                >
-                  <span className={styles.honoursEmoji}>{honours.emoji}</span>
-                  <div className={styles.honoursMeta}>
-                    <div className={styles.cgpaNumber} style={{ color: "var(--accentGreen)" }}>
-                      {cgpa.toFixed(2)}
-                    </div>
-                    <div className={styles.cgpaLabel}>CGPA</div>
-                    <div className={styles.honoursLabel} style={{ color: honours.color }}>
-                      {honours.label}
-                    </div>
+              <div
+                className={styles.honoursBanner}
+                style={{
+                  background: honours ? `${honours.color}15` : "#a78bfa15",
+                  borderColor: honours ? `${honours.color}40` : "#a78bfa40",
+                }}
+              >
+                <span className={styles.honoursEmoji}>{honours?.emoji || "📄"}</span>
+                <div className={styles.honoursMeta}>
+                  <div className={styles.cgpaNumber} style={{ color: "var(--accentGreen)" }}>
+                    {cgpa?.toFixed(2) || "0.00"}
+                  </div>
+                  <div className={styles.cgpaLabel}>CGPA</div>
+                  <div className={styles.honoursLabel} style={{ color: honours?.color || "#a78bfa" }}>
+                    {honours?.label || "Pass"}
                   </div>
                 </div>
-              )}
-
-              {cgpa !== null && !honours && (
-                <div
-                  className={styles.honoursBanner}
-                  style={{ background: "#a78bfa15", borderColor: "#a78bfa40" }}
-                >
-                  <span className={styles.honoursEmoji}>📄</span>
-                  <div className={styles.honoursMeta}>
-                    <div className={styles.cgpaNumber} style={{ color: "var(--accentGreen)" }}>
-                      {cgpa.toFixed(2)}
-                    </div>
-                    <div className={styles.cgpaLabel}>CGPA</div>
-                    <div className={styles.honoursLabel} style={{ color: "#a78bfa" }}>Pass</div>
-                  </div>
-                </div>
-              )}
+              </div>
 
               {/* Stats Grid */}
               <div className={styles.statsGrid}>
@@ -199,19 +156,12 @@ function Summary() {
                 {Object.entries(byYear).map(([year, yearSems]) => (
                   <div key={year} className={styles.yearGroup}>
                     <div className={styles.yearChip}>YEAR {year}</div>
-
                     <div className={styles.semCards}>
                       {yearSems.map((sem) => {
-                        const gpaVal =
-                          sem.gpa !== null && sem.gpa !== "error"
-                            ? sem.gpa
-                            : sem.computedGpa;
-                        const semUnits = sem.courses.reduce(
-                          (u, c) => u + (parseFloat(c.unit) || 0),
-                          0
-                        );
-                        const gpaColor =
-                          gpaVal !== null ? getGpaColor(gpaVal) : "var(--textColor)";
+                        const gpaVal = sem.gpa !== null && sem.gpa !== "error" ? sem.gpa : sem.computedGpa;
+                        const semUnits = sem.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0);
+                        const gpaColor = gpaVal !== null ? getGpaColor(gpaVal) : "var(--textColor)";
+                        const pct = gpaVal !== null ? (gpaVal / 5) * 100 : 0;
 
                         return (
                           <div key={sem.id} className={styles.semCard}>
@@ -224,18 +174,15 @@ function Summary() {
                                 <span>{semUnits} units</span>
                               </div>
                             </div>
-
                             <div className={styles.semRight}>
-                              <div
-                                className={styles.semGpa}
-                                style={{
-                                  color: gpaColor,
-                                  opacity: gpaVal !== null ? 1 : 0.3,
-                                }}
-                              >
+                              <div className={styles.semGpa} style={{ color: gpaColor, opacity: gpaVal !== null ? 1 : 0.3 }}>
                                 {gpaVal !== null ? gpaVal.toFixed(2) : "—"}
                               </div>
-                              {gpaVal !== null && <GpaBar gpa={gpaVal} />}
+                              {gpaVal !== null && (
+                                <div className={styles.gpaBarTrack}>
+                                  <div className={styles.gpaBarFill} style={{ width: `${pct}%`, background: gpaColor }} />
+                                </div>
+                              )}
                             </div>
                           </div>
                         );
@@ -245,7 +192,6 @@ function Summary() {
                 ))}
               </div>
 
-              {/* Footer */}
               <div className={styles.footer}>
                 <div>Nigerian 5-point grading scale</div>
                 <div>A=5 · B=4 · C=3 · D=2 · E=1 · F=0</div>
