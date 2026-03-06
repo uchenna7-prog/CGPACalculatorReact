@@ -23,7 +23,6 @@ function getGpaColor(gpa) {
   return "#a78bfa";
 }
 
-// ── SVG Trajectory Chart ───────────────────────────────────────────────────
 function CgpaTrajectoryChart({ dataPoints }) {
   const maxVal = 5;
   const chartH = 130;
@@ -56,7 +55,6 @@ function CgpaTrajectoryChart({ dataPoints }) {
           <stop offset="100%" stopColor="#4caf7d" stopOpacity="0" />
         </linearGradient>
       </defs>
-
       {thresholds.map((t) => (
         <g key={t.label}>
           <line x1={padL} y1={yPos(t.value)} x2={chartW - padR} y2={yPos(t.value)} stroke={t.color} strokeWidth="1" strokeDasharray="4 3" />
@@ -81,7 +79,6 @@ function CgpaTrajectoryChart({ dataPoints }) {
   );
 }
 
-// ── Main Page ──────────────────────────────────────────────────────────────
 function CGPAPredictorSummary() {
   const navigate = useNavigate();
   const { currentCgpa, totalUnits, semesters, predictedCgpa } = usePrediction();
@@ -129,18 +126,18 @@ function CGPAPredictorSummary() {
         <Header title="Summary" />
         <div className={styles.backBar}>
           <button className={styles.backBtn} onClick={() => navigate("/cgpaPredictor")}>
-            <span className="material-icons" style={{ fontSize: "1rem" }}>arrow_back</span>
-            <span>Back</span>
+            <span className="material-icons">arrow_back</span>
+            <span className={styles.btnText}>Back</span>
           </button>
           
           <div className={styles.actionGroup}>
             <button className={styles.actionBtn}>
-              <span className="material-icons" style={{ fontSize: "1rem" }}>share</span>
-              <span>Share</span>
+              <span className="material-icons">share</span>
+              <span className={styles.btnText}>Share</span>
             </button>
             <button className={`${styles.actionBtn} ${styles.exportBtn}`}>
-              <span className="material-icons" style={{ fontSize: "1rem" }}>file_download</span>
-              <span>Export</span>
+              <span className="material-icons">file_download</span>
+              <span className={styles.btnText}>Export</span>
             </button>
           </div>
         </div>
@@ -155,7 +152,7 @@ function CGPAPredictorSummary() {
             <div className={styles.emptyState}>
               <span className="material-icons" style={{ fontSize: "4rem", color: "var(--accentGreen)", opacity: 0.4 }}> pending_actions </span>
               <h3 className={styles.emptyTitle}>No prediction yet</h3>
-              <p className={styles.emptySub}> Go to the CGPA Predictor, fill in your current CGPA, total units, add your future courses and hit Predict CGPA — then come back here. </p>
+              <p className={styles.emptySub}>Go to the CGPA Predictor, fill in your current CGPA, total units, add your future courses and hit Predict CGPA — then come back here.</p>
               <button className={styles.goBackBtn} onClick={() => navigate("/cgpaPredictor")}> Go to Predictor </button>
             </div>
           ) : (
@@ -181,7 +178,7 @@ function CGPAPredictorSummary() {
                   <div className={styles.statLabel}>PREDICTED</div>
                 </div>
                 <div className={styles.statCard}>
-                  <div className={styles.statValue} style={{ color: diff === null ? "var(--textColor)" : diff >= 0 ? "#34d399" : "#f87171", }}>
+                  <div className={styles.statValue} style={{ color: diff === null ? "var(--textColor)" : diff >= 0 ? "#34d399" : "#f87171" }}>
                     {diff === null ? "—" : `${diff >= 0 ? "+" : ""}${diff.toFixed(2)}`}
                   </div>
                   <div className={styles.statLabel}>CHANGE</div>
