@@ -19,11 +19,9 @@
 .backBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  height: 42px;
+  padding: 10px 16px;
   flex-shrink: 0;
-  background: var(--tableData);
+  background: var(--bg);
   border-bottom: 1px solid var(--borderColor);
   position: sticky;
   top: 0;
@@ -34,36 +32,25 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: transparent;
-  border: none;
+  background: var(--tableData);
+  border: 1px solid var(--borderColor);
+  border-radius: 8px;
   cursor: pointer;
   color: var(--textColor);
   font-family: Consolas, monospace;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  opacity: 0.7;
-  padding: 4px 0;
+  padding: 6px 12px;
   transition: opacity 0.2s;
 }
 
 .backBtn:hover {
-  opacity: 1;
+  opacity: 0.8;
   color: var(--accentGreen);
 }
 
-.backBarTitle {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: Consolas, monospace;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--textColor);
-  opacity: 0.6;
-  text-transform: uppercase;
-}
+
 
 /* ---------- Main Content ---------- */
 
