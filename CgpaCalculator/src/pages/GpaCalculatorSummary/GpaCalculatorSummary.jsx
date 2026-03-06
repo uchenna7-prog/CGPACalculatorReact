@@ -127,7 +127,7 @@ function GpaCalculatorSummary() {
         <div className={styles.backBar}>
           <button className={styles.backBtn} onClick={() => navigate("/gpaCalculator")}>
             <span className="material-icons" style={{ fontSize: "1rem" }}>arrow_back</span>
-            <span>GPA Calculator</span>
+            <span>Back</span>
           </button>
         </div>
 
