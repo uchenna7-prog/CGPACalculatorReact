@@ -14,12 +14,12 @@
   overflow: hidden;
 }
 
-/* ---------- Back Bar & Compact Buttons ---------- */
+/* ---------- Back Bar & Compact Buttons (Synchronized) ---------- */
 .backBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px; /* Reduced padding for a tighter feel */
+  padding: 8px 12px;
   background: var(--bg);
   border-bottom: 1px solid var(--borderColor);
   position: sticky;
@@ -36,7 +36,7 @@
   cursor: pointer;
   font-family: Consolas, monospace;
   font-weight: 700;
-  padding: 4px 8px; /* Significantly smaller padding */
+  padding: 4px 8px; /* Compact padding matching Summary page */
   transition: all 0.2s ease;
   border: 1px solid var(--borderColor);
   background: var(--bgHover);
@@ -44,7 +44,7 @@
 }
 
 .btnText {
-  font-size: 0.65rem; /* Smaller text size */
+  font-size: 0.65rem; /* Smaller text size matching Summary page */
   letter-spacing: 0.2px;
   white-space: nowrap;
   display: inline-block;
@@ -58,7 +58,7 @@
 
 .actionGroup {
   display: flex;
-  gap: 6px; /* Reduced spacing between buttons */
+  gap: 6px;
 }
 
 .exportBtn {
@@ -142,7 +142,7 @@
   margin-bottom: 16px;
 }
 
-/* ---------- Semester Breakdown (Aligned Column) ---------- */
+/* ---------- Semester Breakdown ---------- */
 .semCard {
   background: var(--tableData);
   border: 1px solid var(--borderColor);
