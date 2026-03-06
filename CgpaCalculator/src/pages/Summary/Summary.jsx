@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./Summary.module.css";
@@ -26,7 +27,6 @@ function getGpaColor(gpa) {
 function GpaBar({ gpa }) {
   const pct = Math.min((gpa / 5) * 100, 100);
   const color = getGpaColor(gpa);
-
   return (
     <div className={styles.gpaBarTrack}>
       <div
@@ -38,6 +38,7 @@ function GpaBar({ gpa }) {
 }
 
 function Summary() {
+  const navigate = useNavigate();
   const { semesters, cgpa } = useGpa();
   const honours = getHonours(cgpa);
 
@@ -53,16 +54,12 @@ function Summary() {
     const valid =
       s.courses.length > 0 &&
       s.courses.every((c) => c.unit !== "" && !isNaN(parseFloat(c.unit)));
-
     if (!valid) return { ...s, computedGpa: null };
-
     const totalUnits = s.courses.reduce((sum, c) => sum + parseFloat(c.unit), 0);
-
     const totalPoints = s.courses.reduce(
       (sum, c) => sum + parseFloat(c.unit) * GRADE_POINTS[c.grade],
       0
     );
-
     return {
       ...s,
       computedGpa: totalUnits === 0 ? null : totalPoints / totalUnits,
@@ -76,13 +73,10 @@ function Summary() {
   }, {});
 
   const totalCourses = semesters.reduce((sum, s) => sum + s.courses.length, 0);
-
   const totalUnitsAll = semesters.reduce(
-    (sum, s) =>
-      sum + s.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0),
+    (sum, s) => sum + s.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0),
     0
   );
-
   const totalYears = Object.keys(byYear).length;
 
   return (
@@ -92,22 +86,39 @@ function Summary() {
       <div className={styles.mainWrapper}>
         <Header />
 
+        {/* Fixed back bar — sits below the app Header */}
+        <div className={styles.backBar}>
+          <button className={styles.backBtn} onClick={() => navigate("/")}>
+            <span className="material-icons" style={{ fontSize: "1.1rem" }}>arrow_back</span>
+            <span>CGPA Calculator</span>
+          </button>
+          <span className={styles.backBarTitle}>
+            <span className="material-icons" style={{ fontSize: "1rem", color: "var(--accentGreen)" }}>insights</span>
+            Academic Summary
+          </span>
+        </div>
+
         <main className={styles.mainContent}>
           {!hasData ? (
             <div className={styles.emptyState}>
-              <span className="material-icons" style={{ fontSize: "4rem", opacity: 0.4 }}>
+              <span
+                className="material-icons"
+                style={{ fontSize: "4rem", color: "var(--accentGreen)", opacity: 0.4 }}
+              >
                 pending_actions
               </span>
-
               <h2 className={styles.emptyTitle}>Nothing to show yet</h2>
-
               <p className={styles.emptySub}>
                 Go to the calculator and add courses to calculate your GPA and
                 CGPA. Your full academic summary will appear here.
               </p>
+              <button className={styles.goBackBtn} onClick={() => navigate("/")}>
+                Go to Calculator
+              </button>
             </div>
           ) : (
             <>
+              {/* Honours Banner */}
               {honours && (
                 <div
                   className={styles.honoursBanner}
@@ -117,24 +128,35 @@ function Summary() {
                   }}
                 >
                   <span className={styles.honoursEmoji}>{honours.emoji}</span>
-
                   <div className={styles.honoursMeta}>
-                    <div className={styles.cgpaNumber}>
+                    <div className={styles.cgpaNumber} style={{ color: "var(--accentGreen)" }}>
                       {cgpa.toFixed(2)}
                     </div>
-
                     <div className={styles.cgpaLabel}>CGPA</div>
-
-                    <div
-                      className={styles.honoursLabel}
-                      style={{ color: honours.color }}
-                    >
+                    <div className={styles.honoursLabel} style={{ color: honours.color }}>
                       {honours.label}
                     </div>
                   </div>
                 </div>
               )}
 
+              {cgpa !== null && !honours && (
+                <div
+                  className={styles.honoursBanner}
+                  style={{ background: "#a78bfa15", borderColor: "#a78bfa40" }}
+                >
+                  <span className={styles.honoursEmoji}>📄</span>
+                  <div className={styles.honoursMeta}>
+                    <div className={styles.cgpaNumber} style={{ color: "var(--accentGreen)" }}>
+                      {cgpa.toFixed(2)}
+                    </div>
+                    <div className={styles.cgpaLabel}>CGPA</div>
+                    <div className={styles.honoursLabel} style={{ color: "#a78bfa" }}>Pass</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Stats Grid */}
               <div className={styles.statsGrid}>
                 {[
                   { label: "YEARS", value: totalYears, icon: "calendar_today" },
@@ -143,17 +165,14 @@ function Summary() {
                   { label: "TOTAL UNITS", value: totalUnitsAll, icon: "straighten" },
                 ].map(({ label, value, icon }) => (
                   <div key={label} className={styles.statCard}>
-                    <span className={`material-icons ${styles.statIcon}`}>
-                      {icon}
-                    </span>
-
+                    <span className={`material-icons ${styles.statIcon}`}>{icon}</span>
                     <div className={styles.statValue}>{value}</div>
-
                     <div className={styles.statLabel}>{label}</div>
                   </div>
                 ))}
               </div>
 
+              {/* Semester Breakdown */}
               <div className={styles.semesterSection}>
                 <h3 className={styles.sectionTitle}>SEMESTER BREAKDOWN</h3>
 
@@ -167,16 +186,12 @@ function Summary() {
                           sem.gpa !== null && sem.gpa !== "error"
                             ? sem.gpa
                             : sem.computedGpa;
-
                         const semUnits = sem.courses.reduce(
                           (u, c) => u + (parseFloat(c.unit) || 0),
                           0
                         );
-
                         const gpaColor =
-                          gpaVal !== null
-                            ? getGpaColor(gpaVal)
-                            : "var(--textColor)";
+                          gpaVal !== null ? getGpaColor(gpaVal) : "var(--textColor)";
 
                         return (
                           <div key={sem.id} className={styles.semCard}>
@@ -184,15 +199,9 @@ function Summary() {
                               <div className={styles.semName}>
                                 {SEMESTER_NAMES[sem.semesterNum]} Semester
                               </div>
-
                               <div className={styles.semMeta}>
-                                <span>
-                                  {sem.courses.length} courses
-                                </span>
-
-                                <span>
-                                  {semUnits} units
-                                </span>
+                                <span>{sem.courses.length} courses</span>
+                                <span>{semUnits} units</span>
                               </div>
                             </div>
 
@@ -206,7 +215,6 @@ function Summary() {
                               >
                                 {gpaVal !== null ? gpaVal.toFixed(2) : "—"}
                               </div>
-
                               {gpaVal !== null && <GpaBar gpa={gpaVal} />}
                             </div>
                           </div>
@@ -217,6 +225,7 @@ function Summary() {
                 ))}
               </div>
 
+              {/* Footer */}
               <div className={styles.footer}>
                 <div>Nigerian 5-point grading scale</div>
                 <div>A=5 · B=4 · C=3 · D=2 · E=1 · F=0</div>
