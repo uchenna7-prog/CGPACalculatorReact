@@ -126,17 +126,17 @@ function CGPAPredictorSummary() {
         <Header title="Summary" />
         <div className={styles.backBar}>
           <button className={styles.backBtn} onClick={() => navigate("/cgpaPredictor")}>
-            <span className="material-icons">arrow_back</span>
+            <span className="material-icons" style={{ fontSize: "0.9rem" }}>arrow_back</span>
             <span className={styles.btnText}>Back</span>
           </button>
-          
+
           <div className={styles.actionGroup}>
             <button className={styles.actionBtn}>
-              <span className="material-icons">share</span>
+              <span className="material-icons" style={{ fontSize: "0.9rem" }}>share</span>
               <span className={styles.btnText}>Share</span>
             </button>
             <button className={`${styles.actionBtn} ${styles.exportBtn}`}>
-              <span className="material-icons">file_download</span>
+              <span className="material-icons" style={{ fontSize: "0.9rem" }}>file_download</span>
               <span className={styles.btnText}>Export</span>
             </button>
           </div>
