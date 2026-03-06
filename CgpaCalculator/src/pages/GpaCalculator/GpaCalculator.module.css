@@ -131,7 +131,7 @@
 
 /* ── GPA result ── */
 .gpaResult {
-  color: #4caf7d;
+  color: var(--textColor);
   font-weight: bold;
   font-size: 1.3rem;
   margin-top: 12px;
