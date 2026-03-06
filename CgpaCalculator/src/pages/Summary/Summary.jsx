@@ -1,6 +1,7 @@
 import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./Summary.module.css";
+import { useGpa } from "../../context/GpaContext";
 
 const GRADE_POINTS = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
 const SEMESTER_NAMES = { 1: "First", 2: "Second" };
@@ -35,7 +36,8 @@ function GpaBar({ gpa }) {
   );
 }
 
-function Summary({ semesters, cgpa }) {
+function Summary() {
+  const { semesters, cgpa } = useGpa();
   const honours = getHonours(cgpa);
 
   // Show data if CGPA is calculated, OR if any semester has valid courses
