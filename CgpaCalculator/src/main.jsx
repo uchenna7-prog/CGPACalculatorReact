@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { SideBarProvider } from './contexts/SideBarContext.jsx'
 import { ThemeProvider } from './contexts/ThemeContext.jsx'
 import { GpaProvider } from './contexts/GpaContext.jsx'
+import { PredictionProvider } from './contexts/PredictionContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,10 +14,12 @@ createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <SideBarProvider>
           <GpaProvider>
-            <App />
+            <PredictionProvider>
+              <App />
+            </PredictionProvider>
           </GpaProvider>
         </SideBarProvider>
       </ThemeProvider>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 )
