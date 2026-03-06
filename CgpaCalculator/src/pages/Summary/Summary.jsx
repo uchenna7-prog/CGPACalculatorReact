@@ -90,7 +90,7 @@ function Summary() {
         <div className={styles.backBar}>
           <button className={styles.backBtn} onClick={() => navigate("/")}>
             <span className="material-icons" style={{ fontSize: "1rem" }}>arrow_back</span>
-            <span>CGPA Calculator</span>
+            <span>Back</span>
           </button>
         </div>
 
