@@ -18,36 +18,47 @@
 
 .backBar {
   display: flex;
-  align-items: center;
-  padding: 10px 16px;
+  flex-direction: column;
+  padding: 12px 16px 14px;
   flex-shrink: 0;
   background: var(--bg);
   border-bottom: 1px solid var(--borderColor);
   position: sticky;
   top: 0;
   z-index: 10;
+  gap: 10px;
 }
 
 .backBtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: var(--tableData);
-  border: 1px solid var(--borderColor);
-  border-radius: 8px;
+  gap: 5px;
+  background: var(--bgHover);
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
   color: var(--textColor);
   font-family: Consolas, monospace;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.5px;
-  padding: 6px 12px;
-  transition: opacity 0.2s;
+  padding: 5px 10px;
+  align-self: flex-start;
+  transition: color 0.2s, background 0.2s;
 }
 
 .backBtn:hover {
-  opacity: 0.8;
   color: var(--accentGreen);
+  background: var(--tableData);
+}
+
+.pageTitle {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--textColor);
+  margin: 0;
+  letter-spacing: 0.2px;
 }
 
 
