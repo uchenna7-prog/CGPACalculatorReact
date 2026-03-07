@@ -34,7 +34,6 @@ function AccordionSection({ icon, title, isOpen, onToggle, children }) {
           <path d="M3 6L8 11L13 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </button>
-
       <div className={`${styles.accordionBody} ${isOpen ? styles.accordionBodyOpen : ""}`}>
         <div className={styles.accordionContent}>{children}</div>
       </div>
@@ -66,7 +65,6 @@ function Settings() {
   };
 
   const handleReset = () => {
-    localStorage.removeItem("cgpa_settings");
     changeTheme("light-mode");
     resetSettings();
     showMsg("All settings reset to default.");
@@ -75,7 +73,7 @@ function Settings() {
   const handleClearData = () => {
     if (window.confirm("Clear all saved calculator data? This cannot be undone.")) {
       Object.keys(localStorage)
-        .filter((k) => k !== "cgpa_settings")
+        .filter((k) => k !== "cgpa_settings" && k !== "theme")
         .forEach((k) => localStorage.removeItem(k));
       showMsg("All saved data cleared.");
     }
@@ -89,6 +87,7 @@ function Settings() {
         <main className={styles.mainContent}>
           <div className={styles.accordionList}>
 
+            {/* Appearance */}
             <AccordionSection
               icon="palette"
               title="Appearance"
@@ -100,45 +99,29 @@ function Settings() {
                   <span className={styles.settingLabel}>Theme Mode</span>
                 </div>
                 <div className={styles.themeOptions}>
-                  {[
-                    { key: "dark-mode", icon: "dark_mode", label: "Dark" },
-                    { key: "light-mode", icon: "light_mode", label: "Light" },
-                    { key: "system-mode", icon: "settings_brightness", label: "System" },
-                  ].map((t) => (
+                  {["dark-mode", "light-mode", "system-mode"].map((mode) => (
                     <button
-                      key={t.key}
-                      className={`${styles.themeBtn} ${theme === t.key ? styles.themeBtnActive : ""}`}
-                      onClick={() => changeTheme(t.key)}
+                      key={mode}
+                      className={`${styles.themeBtn} ${theme === mode ? styles.themeBtnActive : ""}`}
+                      onClick={() => changeTheme(mode)}
                     >
-                      <i className="material-icons">{t.icon}</i>
-                      {t.label}
+                      <i className="material-icons">
+                        {mode === "dark-mode" ? "dark_mode" : mode === "light-mode" ? "light_mode" : "settings_brightness"}
+                      </i>
+                      {mode.split('-')[0].charAt(0).toUpperCase() + mode.split('-')[0].slice(1)}
                     </button>
                   ))}
                 </div>
               </div>
             </AccordionSection>
 
+            {/* Display Preferences */}
             <AccordionSection
               icon="tune"
               title="Display Preferences"
               isOpen={openSection === "display"}
               onToggle={() => toggleSection("display")}
             >
-              <div className={styles.settingRow}>
-                <div className={styles.settingInfo}>
-                  <span className={styles.settingLabel}>Decimal Places</span>
-                </div>
-                <select
-                  className={styles.selectInput}
-                  value={decimalPlaces}
-                  onChange={(e) => updateSetting("decimalPlaces", e.target.value)}
-                >
-                  <option value="1">1 — 4.5</option>
-                  <option value="2">2 — 4.50</option>
-                  <option value="3">3 — 4.500</option>
-                </select>
-              </div>
-
               <div className={styles.settingRow}>
                 <div className={styles.settingInfo}>
                   <span className={styles.settingLabel}>Show TCU Column</span>
@@ -160,6 +143,7 @@ function Settings() {
               </div>
             </AccordionSection>
 
+            {/* Data Management */}
             <AccordionSection
               icon="storage"
               title="Data Management"
