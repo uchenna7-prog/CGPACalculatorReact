@@ -100,7 +100,6 @@ function GPACalculator() {
 
   const dp = Number(decimalPlaces);
 
-  // ── Delete helpers that respect confirmDelete ──────────────────────────
   const handleDeleteCourse = (id) => {
     if (confirmDelete && !window.confirm("Delete this course?")) return;
     deleteCourse(id);
@@ -111,7 +110,6 @@ function GPACalculator() {
     deleteAllCourses();
   };
 
-  // ── Credit summary values ──────────────────────────────────────────────
   const totalUnits     = courses.reduce((s, c) => s + (Number(c.unit) || 0), 0);
   const weightedPoints = courses.reduce(
     (s, c) => s + (Number(c.unit) || 0) * gradePoints(c.grade), 0
@@ -169,9 +167,8 @@ function GPACalculator() {
                           ))}
                         </select>
                       </td>
-                      {/* TCU = unit × grade points */}
                       {showGradePoints && (
-                        <td style={{ textAlign: "center", fontWeight: 600 }}>
+                        <td className={styles.tcuCell}>
                           {(Number(course.unit) || 0) * gradePoints(course.grade)}
                         </td>
                       )}
@@ -188,18 +185,18 @@ function GPACalculator() {
                   ))}
                 </tbody>
 
-                {/* Summary tfoot row */}
                 {showCreditSummary && (
-                  <tfoot>
+                  <tfoot className={styles.tableFooter}>
                     <tr className={styles.summaryRow}>
-                      <td colSpan={2}><strong>TOTAL</strong></td>
-                      <td><strong>{totalUnits}</strong></td>
+                      <td colSpan={2} style={{ textAlign: "right", fontWeight: "bold" }}>TOTALS:</td>
+                      <td style={{ fontWeight: "bold" }}>{totalUnits}</td>
+                      <td></td> {/* Under Grade */}
                       {showGradePoints && (
-                        <td style={{ textAlign: "center" }}>
-                          <strong>{weightedPoints}</strong>
+                        <td style={{ textAlign: "center", fontWeight: "bold" }}>
+                          {weightedPoints}
                         </td>
                       )}
-                      <td colSpan={showGradePoints ? 1 : 2}></td>
+                      <td></td> {/* Under Delete */}
                     </tr>
                   </tfoot>
                 )}
