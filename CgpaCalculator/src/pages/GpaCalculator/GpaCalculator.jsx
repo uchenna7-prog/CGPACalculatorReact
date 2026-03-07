@@ -5,11 +5,11 @@ import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./GpaCalculator.module.css";
 import { useGpaCalculator } from "../../contexts/GpaCalculatorContext";
-import { useSettings } from "../../contexts/SettingsContext"; // Added
+import { useSettings } from "../../contexts/SettingsContext";
 
 // ── Draggable Floating Button ──────────────────────────────────────────────
 function FloatingButton({ onClick, icon, label, gradient }) {
-  const btnRef = useRef(null);
+  const btnRef   = useRef(null);
   const dragging = useRef(false);
   const startPos = useRef({});
   const [dragPos, setDragPos] = useState(null);
@@ -22,7 +22,7 @@ function FloatingButton({ onClick, icon, label, gradient }) {
     const rect = btnRef.current.getBoundingClientRect();
     startPos.current = { px: e.clientX, py: e.clientY, bx: rect.left, by: rect.top };
     window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointerup",   onPointerUp);
     e.preventDefault();
   };
 
@@ -30,14 +30,14 @@ function FloatingButton({ onClick, icon, label, gradient }) {
     const dx = e.clientX - startPos.current.px;
     const dy = e.clientY - startPos.current.py;
     if (Math.abs(dx) > 4 || Math.abs(dy) > 4) dragging.current = true;
-    const newX = Math.max(8, Math.min(window.innerWidth - 72, startPos.current.bx + dx));
+    const newX = Math.max(8, Math.min(window.innerWidth  - 72, startPos.current.bx + dx));
     const newY = Math.max(8, Math.min(window.innerHeight - 72, startPos.current.by + dy));
     setDragPos({ x: newX, y: newY });
   };
 
   const onPointerUp = () => {
     window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerup", onPointerUp);
+    window.removeEventListener("pointerup",   onPointerUp);
     if (!dragging.current) onClick();
   };
 
@@ -84,24 +84,38 @@ function FloatingButton({ onClick, icon, label, gradient }) {
 // ── Main Component ─────────────────────────────────────────────────────────
 function GPACalculator() {
   const navigate = useNavigate();
-  
-  // Use both Contexts
   const {
     courses, gpa, error,
     updateCourse, addCourse, deleteCourse, deleteAllCourses, calculateGPA,
   } = useGpaCalculator();
 
-  const { 
-    showGradePoints, 
-    showCreditSummary, 
-    availableGrades, 
+  const {
+    decimalPlaces,
+    showGradePoints,
+    showCreditSummary,
+    confirmDelete,
     gradePoints,
-    decimalPlaces 
+    availableGrades,
   } = useSettings();
 
-  // Calculate totals for the Credit Summary Row
-  const totalUnits = courses.reduce((sum, c) => sum + (Number(c.unit) || 0), 0);
-  const totalPoints = courses.reduce((sum, c) => sum + (Number(c.unit) || 0) * gradePoints(c.grade), 0);
+  const dp = Number(decimalPlaces);
+
+  // ── Delete helpers that respect confirmDelete ──────────────────────────
+  const handleDeleteCourse = (id) => {
+    if (confirmDelete && !window.confirm("Delete this course?")) return;
+    deleteCourse(id);
+  };
+
+  const handleDeleteAll = () => {
+    if (confirmDelete && !window.confirm("Delete all courses?")) return;
+    deleteAllCourses();
+  };
+
+  // ── Credit summary values ──────────────────────────────────────────────
+  const totalUnits     = courses.reduce((s, c) => s + (Number(c.unit) || 0), 0);
+  const weightedPoints = courses.reduce(
+    (s, c) => s + (Number(c.unit) || 0) * gradePoints(c.grade), 0
+  );
 
   return (
     <div className={styles.pageContainer}>
@@ -116,7 +130,7 @@ function GPACalculator() {
                   <tr>
                     <th>S/N</th>
                     <th>COURSE CODE</th>
-                    <th>UNITS</th>
+                    <th>COURSE UNITS</th>
                     <th>GRADE</th>
                     {showGradePoints && <th>TCU</th>}
                     <th></th>
@@ -127,43 +141,65 @@ function GPACalculator() {
                     <tr key={course.id}>
                       <td>{idx + 1}</td>
                       <td>
-                        <input className={styles.inputField} type="text" value={course.code}
-                          placeholder="MAT101"
-                          onChange={(e) => updateCourse(course.id, "code", e.target.value.toUpperCase())} />
+                        <input
+                          className={styles.inputField}
+                          type="text"
+                          value={course.code}
+                          onChange={(e) => updateCourse(course.id, "code", e.target.value.toUpperCase())}
+                        />
                       </td>
                       <td>
-                        <input className={styles.inputField} type="number" min="1" max="6" value={course.unit}
-                          onChange={(e) => updateCourse(course.id, "unit", e.target.value)} />
+                        <input
+                          className={styles.inputField}
+                          type="number"
+                          min="1"
+                          max="6"
+                          value={course.unit}
+                          onChange={(e) => updateCourse(course.id, "unit", e.target.value)}
+                        />
                       </td>
                       <td>
-                        <select className={styles.selectField} value={course.grade}
-                          onChange={(e) => updateCourse(course.id, "grade", e.target.value)}>
-                          {availableGrades.map((g) => <option key={g} value={g}>{g}</option>)}
+                        <select
+                          className={styles.selectField}
+                          value={course.grade}
+                          onChange={(e) => updateCourse(course.id, "grade", e.target.value)}
+                        >
+                          {availableGrades.map((g) => (
+                            <option key={g} value={g}>{g}</option>
+                          ))}
                         </select>
                       </td>
+                      {/* TCU = unit × grade points */}
                       {showGradePoints && (
-                        <td className={styles.tcuCell}>
+                        <td style={{ textAlign: "center", fontWeight: 600 }}>
                           {(Number(course.unit) || 0) * gradePoints(course.grade)}
                         </td>
                       )}
                       <td>
-                        <button className={styles.deleteRowBtn} onClick={() => deleteCourse(course.id)} title="Delete course">
+                        <button
+                          className={styles.deleteRowBtn}
+                          onClick={() => handleDeleteCourse(course.id)}
+                          title="Delete course"
+                        >
                           <i className="fa-solid fa-trash"></i>
                         </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
-                
-                {/* ── Credit Unit Summary Row ── */}
-                {showCreditSummary && courses.length > 0 && (
-                  <tfoot className={styles.tableFooter}>
-                    <tr>
-                      <td colSpan="2" style={{ textAlign: 'right', fontWeight: 'bold' }}>TOTALS:</td>
-                      <td style={{ fontWeight: 'bold' }}>{totalUnits}</td>
-                      <td></td>
-                      {showGradePoints && <td style={{ fontWeight: 'bold' }}>{totalPoints}</td>}
-                      <td></td>
+
+                {/* Summary tfoot row */}
+                {showCreditSummary && (
+                  <tfoot>
+                    <tr className={styles.summaryRow}>
+                      <td colSpan={2}><strong>TOTAL</strong></td>
+                      <td><strong>{totalUnits}</strong></td>
+                      {showGradePoints && (
+                        <td style={{ textAlign: "center" }}>
+                          <strong>{weightedPoints}</strong>
+                        </td>
+                      )}
+                      <td colSpan={showGradePoints ? 1 : 2}></td>
                     </tr>
                   </tfoot>
                 )}
@@ -174,15 +210,13 @@ function GPACalculator() {
 
             {error && <p className={styles.errorMsg}>{error}</p>}
             {gpa !== null && (
-              <div className={styles.gpaResult}>
-                GPA: {gpa.toFixed(Number(decimalPlaces))}
-              </div>
+              <div className={styles.gpaResult}>GPA: {gpa.toFixed(dp)}</div>
             )}
 
             <div className={styles.buttonContainer}>
               <button className={styles.addCourseBtn} onClick={addCourse}>ADD COURSE</button>
-              <button className={styles.deleteAllBtn} onClick={deleteAllCourses}>DELETE ALL</button>
-              <button className={styles.calcGpaBtn} onClick={calculateGPA}>CALCULATE</button>
+              <button className={styles.deleteAllBtn} onClick={handleDeleteAll}>DELETE ALL COURSES</button>
+              <button className={styles.calcGpaBtn} onClick={calculateGPA}>CALCULATE GPA</button>
             </div>
           </section>
 
