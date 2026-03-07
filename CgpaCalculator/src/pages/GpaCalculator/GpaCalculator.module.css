@@ -3,7 +3,6 @@
   display: flex;
   height: 100vh;
   overflow: hidden;
-  background: var(--bg);
 }
 
 .mainWrapper {
@@ -22,6 +21,7 @@
   color: var(--textColor);
 }
 
+
 .detailsContainer {
   border: 1px solid #1e2e26;
   background: var(--tableData);
@@ -29,6 +29,7 @@
   padding: 12px;
   font-size: 0.85rem;
 }
+
 
 .table {
   border-collapse: collapse;
@@ -61,6 +62,7 @@
   color: var(--textColor);
 }
 
+
 .inputField,
 .selectField {
   width: 100%;
@@ -78,6 +80,7 @@
   color: var(--textColor);
 }
 
+
 .deleteRowBtn {
   background: transparent;
   color: var(--textColor);
@@ -93,43 +96,26 @@
   opacity: 0.8;
 }
 
-.tcuBodyCell {
-  text-align: center;
-  font-weight: 600;
-}
-
 .noCoursesMsg {
   color: #3a7a58;
   font-size: 0.85rem;
   margin-bottom: 8px;
 }
 
-/* ── Refined Footer Row Styling ── */
-.tableFooter tr td {
-  background-color: #1a2e22 !important; /* Dark Green like Header */
-  color: #a8cfb8; /* Light Green text */
+/* ── Summary tfoot row ── */
+.summaryRow td {
+  background: rgba(0, 0, 0, 0.15);
+  color: var(--textColor);
+  font-size: 0.8rem;
   border-top: 2px solid #2f4f3d;
   font-family: Consolas, monospace;
-  padding: 8px;
 }
 
-.totalLabelCell {
-  text-align: right;
-  font-weight: 800;
-  letter-spacing: 1px;
+.summaryRow strong {
+  color: #4caf7d;
 }
 
-.totalValueCell {
-  font-weight: 800;
-  color: #4caf7d !important; /* Brighter Green for the actual numbers */
-}
 
-.emptyFooterCell {
-  border-left: none !important;
-  border-right: none !important;
-}
-
-/* ── Buttons ── */
 .buttonContainer {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -159,6 +145,7 @@
 .deleteAllBtn:hover,
 .calcGpaBtn:hover { opacity: 0.8; }
 
+/* ── GPA result ── */
 .gpaResult {
   color: var(--textColor);
   font-weight: bold;
@@ -174,6 +161,7 @@
 }
 
 @media (max-width: 600px) {
+
   .table th,
   .table td {
     padding: 4px 5px;
