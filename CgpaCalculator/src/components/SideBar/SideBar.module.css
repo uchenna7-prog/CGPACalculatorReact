@@ -3,7 +3,9 @@
   color: var(--textColor);
   width: 280px;
   height: 100dvh;
-  max-height: 100dvh;
+  /* Use 100vh as fallback for older browsers */
+  height: 100vh; 
+  height: 100dvh;
   border-right: 1px solid #1a2e22;
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   transition: width 0.3s ease, transform 0.3s ease;
@@ -24,7 +26,8 @@
   align-items: center;
   padding: 0 12px;
   border-bottom: 1px solid #1a2e22;
-  height: 70px;
+  height: 60px; /* Reduced slightly to save space on mobile */
+  flex-shrink: 0;
 }
 
 .menuBtn {
@@ -50,19 +53,19 @@
 }
 
 /* NAV CONTAINER */
-
 .navLinksContainer {
-  flex: 1;
+  flex: 1 1 auto; /* Allows it to grow and shrink */
   overflow-y: auto;
-  min-height: 0;
   padding: 12px 8px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  /* Custom scrollbar for better aesthetics */
+  scrollbar-width: thin;
+  scrollbar-color: #1a2e22 transparent;
 }
 
 /* NAV ITEMS */
-
 .navItem {
   border-radius: 12px;
   overflow: hidden;
@@ -72,7 +75,6 @@
 }
 
 /* ROW */
-
 .navRow {
   display: flex;
   align-items: center;
@@ -102,21 +104,12 @@
   color: #a8cfb8;
 }
 
-.navRowExpanded .navBtn i {
-  color: #a8cfb8;
-}
-
-.navRowExpanded .arrowBtn {
-  color: #a8cfb8;
-}
-
 .navBtnCollapsed {
   justify-content: center;
   padding: 12px 8px;
 }
 
 /* ARROW */
-
 .arrowBtn {
   background: none;
   border: none;
@@ -126,8 +119,7 @@
   align-items: center;
   justify-content: center;
   padding: 8px 10px;
-  transition: transform 0.25s ease, background 0.2s ease;
-  border-radius: 0 12px 0 0;
+  transition: transform 0.25s ease;
 }
 
 .arrowOpen {
@@ -135,7 +127,6 @@
 }
 
 /* DESCRIPTION */
-
 .description {
   max-height: 0;
   overflow: hidden;
@@ -145,7 +136,7 @@
 }
 
 .descriptionOpen {
-  max-height: 280px;
+  max-height: 400px; /* Increased to ensure content isn't cut off */
   padding: 0 14px 14px;
 }
 
@@ -163,26 +154,31 @@
 }
 
 /* FOOTER */
-
 .sidebarFooter {
   flex-shrink: 0;
-  padding: 14px 16px;
+  padding: 12px 16px;
   border-top: 1px solid #1a2e22;
   text-align: center;
   font-size: 0.7rem;
   color: var(--textColor);
   background: var(--bg);
+  margin-top: auto; /* Pushes to the very bottom */
 }
 
 .sidebarFooter p {
-  margin: 0 0 4px 0;
-  opacity: 0.7;
+  margin: 0 0 2px 0;
+  opacity: 0.8;
+}
+
+.footerText {
+    color: var(--textColor);
+    opacity: 0.7;
 }
 
 .footerLink {
   text-decoration: none;
-  color: #7dd3a0;
-  font-weight: 500;
+  color: #7dd3a0; /* Green only for the name */
+  font-weight: 600;
 }
 
 .footerLink:hover {
@@ -190,7 +186,6 @@
 }
 
 /* OVERLAY */
-
 .overlay {
   position: fixed;
   inset: 0;
@@ -199,7 +194,6 @@
 }
 
 /* MOBILE */
-
 @media (max-width: 767px) {
   .sidebar {
     position: fixed;
@@ -210,19 +204,7 @@
     box-shadow: 4px 0 16px rgba(0,0,0,0.3);
   }
 
-  .sidebarHeader {
-    justify-content: flex-start;
-  }
-
-  .sidebar.mobileOpen .sidebarHeader {
-    justify-content: flex-end;
-  }
-
   .sidebar.mobileOpen {
     transform: translateX(0);
-  }
-
-  .sidebar.mobileClosed {
-    transform: translateX(-100%);
   }
 }
