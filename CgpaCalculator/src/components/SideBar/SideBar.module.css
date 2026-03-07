@@ -2,8 +2,8 @@
   background: var(--bg);
   color: var(--textColor);
   width: 280px;
-  height: 100vh;
-  max-height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   border-right: 1px solid #1a2e22;
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   transition: width 0.3s ease, transform 0.3s ease;
