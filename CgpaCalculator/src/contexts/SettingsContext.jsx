@@ -19,31 +19,13 @@ export const GRADE_SCALES = {
   ],
 };
 
-// ── Honours thresholds ─────────────────────────────────────────────────────
-export const HONOURS_THRESHOLDS = {
-  "5point": [
-    { min: 4.5,  label: "First Class Honours",        color: "#fbbf24", emoji: "🥇" },
-    { min: 3.5,  label: "Second Class Upper (2:1)",   color: "#34d399", emoji: "🥈" },
-    { min: 2.4,  label: "Second Class Lower (2:2)",   color: "#60a5fa", emoji: "🥉" },
-    { min: 1.5,  label: "Third Class Honours",         color: "#f87171", emoji: "📋" },
-    { min: 0,    label: "Pass",                        color: "#a78bfa", emoji: "📄" },
-  ],
-  "4point": [
-    { min: 3.6,  label: "First Class Honours",        color: "#fbbf24", emoji: "🥇" },
-    { min: 3.0,  label: "Second Class Upper (2:1)",   color: "#34d399", emoji: "🥈" },
-    { min: 2.0,  label: "Second Class Lower (2:2)",   color: "#60a5fa", emoji: "🥉" },
-    { min: 1.0,  label: "Third Class Honours",         color: "#f87171", emoji: "📋" },
-    { min: 0,    label: "Pass",                        color: "#a78bfa", emoji: "📄" },
-  ],
-};
-
 // ── Defaults ───────────────────────────────────────────────────────────────
 const DEFAULTS = {
-  gradingScale:      "5point",
-  decimalPlaces:     "2",
-  showGradePoints:   true,
+  gradingScale: "5point",
+  decimalPlaces: "2",
+  showGradePoints: true,
   showCreditSummary: true,
-  confirmDelete:     true,
+  confirmDelete: true,
 };
 
 const STORAGE_KEY = "cgpa_settings";
@@ -61,56 +43,34 @@ export function SettingsProvider({ children }) {
     }
   });
 
-  // Persist whenever settings change
+  // Persist to localStorage whenever settings change
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   }, [settings]);
 
-  // Individual setters (mirrors the old local-state API so Settings.jsx stays clean)
-  const setGradingScale      = (v) => setSettings((s) => ({ ...s, gradingScale: v }));
-  const setDecimalPlaces     = (v) => setSettings((s) => ({ ...s, decimalPlaces: v }));
-  const setShowGradePoints   = (fn) =>
-    setSettings((s) => ({ ...s, showGradePoints: typeof fn === "function" ? fn(s.showGradePoints) : fn }));
-  const setShowCreditSummary = (fn) =>
-    setSettings((s) => ({ ...s, showCreditSummary: typeof fn === "function" ? fn(s.showCreditSummary) : fn }));
-  const setConfirmDelete     = (fn) =>
-    setSettings((s) => ({ ...s, confirmDelete: typeof fn === "function" ? fn(s.confirmDelete) : fn }));
+  const updateSetting = (key, value) =>
+    setSettings((prev) => ({ ...prev, [key]: value }));
 
   const resetSettings = () => setSettings(DEFAULTS);
 
-  // Derived helpers consumed by other pages
+  // Resolve a grade letter → numeric points based on active scale
   const gradePoints = (grade) => {
     const row = GRADE_SCALES[settings.gradingScale].find((r) => r.grade === grade);
     return row ? row.points : 0;
   };
 
-  const getHonours = (cgpa) => {
-    if (cgpa === null) return null;
-    const thresholds = HONOURS_THRESHOLDS[settings.gradingScale];
-    return thresholds.find((t) => cgpa >= t.min) ?? thresholds[thresholds.length - 1];
-  };
-
-  const formatGpa = (value) =>
-    typeof value === "number" ? value.toFixed(Number(settings.decimalPlaces)) : value;
-
-  const gradeList = GRADE_SCALES[settings.gradingScale].map((r) => r.grade);
+  // Grades available for the active scale (used to populate <select> in Home)
+  const availableGrades = GRADE_SCALES[settings.gradingScale].map((r) => r.grade);
 
   return (
     <SettingsContext.Provider
       value={{
         ...settings,
-        setGradingScale,
-        setDecimalPlaces,
-        setShowGradePoints,
-        setShowCreditSummary,
-        setConfirmDelete,
+        updateSetting,
         resetSettings,
-        // Derived
         gradePoints,
-        getHonours,
-        formatGpa,
-        gradeList,
-        gradeScaleRows: GRADE_SCALES[settings.gradingScale],
+        availableGrades,
+        GRADE_SCALES,
       }}
     >
       {children}
@@ -120,6 +80,6 @@ export function SettingsProvider({ children }) {
 
 export function useSettings() {
   const ctx = useContext(SettingsContext);
-  if (!ctx) throw new Error("useSettings must be used inside <SettingsProvider>");
+  if (!ctx) throw new Error("useSettings must be used within a SettingsProvider");
   return ctx;
 }
