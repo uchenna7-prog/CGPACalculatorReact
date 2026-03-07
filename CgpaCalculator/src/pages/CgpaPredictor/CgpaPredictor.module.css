@@ -1,4 +1,3 @@
-
 .pageContainer {
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   display: flex;
@@ -108,6 +107,15 @@
   border-right: 2px solid #2f4f3d;
 }
 
+.table th:last-child {
+  border-right: none;
+}
+
+.table td {
+  background: var(--tableData);
+  color: var(--textColor);
+}
+
 .inputField,
 .selectField {
   width: 100%;
@@ -144,6 +152,19 @@
   margin-bottom: 8px;
 }
 
+/* ── Summary tfoot row ── */
+.summaryRow td {
+  background: rgba(0, 0, 0, 0.15);
+  color: var(--textColor);
+  font-size: 0.8rem;
+  border-top: 2px solid #2f4f3d;
+  font-family: Consolas, monospace;
+}
+
+.summaryRow strong {
+  color: #4caf7d;
+}
+
 
 .gpaResult {
   color: var(--textColor);
@@ -173,21 +194,13 @@
   transition: all 0.2s ease;
 }
 
-.addCourseBtn  { 
-  background-color: rgb(251, 191, 36);
-  }
-.deleteAllBtn  { 
-  background-color: rgb(220, 38, 38);
- }
-.predictGpaBtn { 
-  background-color: rgb(37, 99, 235);
- }
+.addCourseBtn  { background-color: rgb(251, 191, 36); }
+.deleteAllBtn  { background-color: rgb(220, 38, 38);  }
+.predictGpaBtn { background-color: rgb(37, 99, 235);  }
 
 .addCourseBtn:hover,
 .deleteAllBtn:hover,
-.predictGpaBtn:hover { 
-  opacity: 0.8;
- }
+.predictGpaBtn:hover { opacity: 0.8; }
 
 .predictCgpaBtn {
   display: block;
@@ -214,7 +227,6 @@
   margin: 12px 0 6px;
 }
 
-/* ── Error message ── */
 .errorMsg {
   color: rgb(220, 38, 38);
   font-weight: bold;
@@ -223,7 +235,6 @@
 }
 
 @media (max-width: 600px) {
-
   .table th,
   .table td {
     padding: 4px 5px;
