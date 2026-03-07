@@ -77,17 +77,18 @@ function GpaCalculatorSummary() {
   const { gradingScale, gradePoints, availableGrades, decimalPlaces, GRADE_SCALES } = useSettings();
 
   const dp = Number(decimalPlaces);
-  const maxPoints = gradingScale === "4point" ? 4 : 5;
+  const maxScale = gradingScale === "4point" ? 4 : 5;
 
-  // AUTO-CALCULATION LOGIC
+  // Auto-calculation logic (Runs even if "Calculate" wasn't clicked)
+  const hasData = courses.length > 0 && courses.some(c => c.unit !== "");
   const totalUnits = courses.reduce((sum, c) => sum + (parseFloat(c.unit) || 0), 0);
-  const totalPoints = courses.reduce((sum, c) => sum + (parseFloat(c.unit) || 0) * gradePoints(c.grade), 0);
-  const autoGpa = totalUnits > 0 ? totalPoints / totalUnits : null;
+  const totalWeightedPoints = courses.reduce((sum, c) => sum + (parseFloat(c.unit) || 0) * gradePoints(c.grade), 0);
+  
+  const gpaDisplay = totalUnits > 0 ? totalWeightedPoints / totalUnits : null;
+  const honours = getHonours(gpaDisplay, gradingScale);
+  const gpaColor = gpaDisplay !== null ? getGpaColor(gpaDisplay, gradingScale) : "var(--accentGreen)";
 
-  const hasData = courses.length > 0 && totalUnits > 0;
-  const honours = getHonours(autoGpa, gradingScale);
-  const gpaColor = autoGpa !== null ? getGpaColor(autoGpa, gradingScale) : "var(--accentGreen)";
-
+  // Filter breakdown to only show grades valid for current scale
   const gradeBreakdown = availableGrades.map((g) => ({
     grade: g,
     count: courses.filter((c) => c.grade === g).length,
@@ -99,8 +100,8 @@ function GpaCalculatorSummary() {
     units: courses.filter((c) => c.grade === g.grade).reduce((sum, c) => sum + (parseFloat(c.unit) || 0), 0),
   }));
 
-  const highestGrade = gradeBreakdown[0]?.grade ?? "—";
-  const lowestGrade = gradeBreakdown[gradeBreakdown.length - 1]?.grade ?? "—";
+  const highestGrade = gradeBreakdown.length > 0 ? gradeBreakdown[0].grade : "—";
+  const lowestGrade = gradeBreakdown.length > 0 ? gradeBreakdown[gradeBreakdown.length - 1].grade : "—";
 
   return (
     <div className={styles.pageContainer}>
@@ -123,11 +124,16 @@ function GpaCalculatorSummary() {
         </div>
 
         <main className={styles.mainContent}>
+          <div className={styles.pageTitle}>
+            <span className="material-icons" style={{ fontSize: "1.3rem" }}>grade</span>
+            <h2>GPA Summary</h2>
+          </div>
+
           {!hasData ? (
             <div className={styles.emptyState}>
               <span className="material-icons" style={{ fontSize: "4rem", color: "var(--accentGreen)", opacity: 0.35 }}> pending_actions </span>
               <h3 className={styles.emptyTitle}>Nothing to show yet</h3>
-              <p className={styles.emptySub}>Add courses with units in the calculator to see your results.</p>
+              <p className={styles.emptySub}>Add courses and units in the calculator to see your live GPA summary here.</p>
               <button className={styles.goBackBtn} onClick={() => navigate("/gpaCalculator")}> Go to Calculator </button>
             </div>
           ) : (
@@ -136,8 +142,8 @@ function GpaCalculatorSummary() {
               <div className={styles.heroBanner} style={{ background: `${gpaColor}15`, borderColor: `${gpaColor}40` }} >
                 <span className={styles.heroEmoji}>{honours?.emoji ?? "📊"}</span>
                 <div className={styles.heroMeta}>
-                  <div className={styles.heroGpa} style={{ color: gpaColor }}> {autoGpa?.toFixed(dp) || "0.00"} </div>
-                  <div className={styles.heroGpaLabel}>OVERALL GPA ({maxPoints}.0 SCALE)</div>
+                  <div className={styles.heroGpa} style={{ color: gpaColor }}> {gpaDisplay?.toFixed(dp) || "0.00"} </div>
+                  <div className={styles.heroGpaLabel}>GPA ({maxScale}.0 SCALE)</div>
                   {honours && ( <div className={styles.heroClassLabel} style={{ color: gpaColor }}> {honours.label} </div> )}
                 </div>
               </div>
