@@ -59,14 +59,12 @@ const navItems = [
 ];
 
 export default function SideBar() {
-  const { isCollapsed, isMobile, isOpen, toggleSideBar } =
-    useSideBarContext();
-
+  const { isCollapsed, isMobile, isOpen, toggleSideBar } = useSideBarContext();
   const [expanded, setExpanded] = useState(null);
 
   const toggle = (id) => {
     if (isCollapsed) return;
-    setExpanded(prev => (prev === id ? null : id));
+    setExpanded((prev) => (prev === id ? null : id));
   };
 
   return (
@@ -77,14 +75,10 @@ export default function SideBar() {
 
       <aside
         className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ""} ${
-          isMobile
-            ? isOpen
-              ? styles.mobileOpen
-              : styles.mobileClosed
-            : ""
+          isMobile ? (isOpen ? styles.mobileOpen : styles.mobileClosed) : ""
         }`}
       >
-        <header className={`${styles.sidebarHeader} ${isMobile ? styles.mobileSideHeader : ""}`}>
+        <header className={styles.sidebarHeader}>
           <button className={styles.menuBtn} onClick={toggleSideBar}>
             <i className="material-icons">
               {isMobile && isOpen ? "close" : "menu"}
@@ -93,7 +87,7 @@ export default function SideBar() {
         </header>
 
         <nav className={styles.navLinksContainer}>
-          {navItems.map(item => {
+          {navItems.map((item) => {
             const isExpanded = expanded === item.id;
             return (
               <div
@@ -125,7 +119,12 @@ export default function SideBar() {
                       }`}
                       onClick={() => toggle(item.id)}
                     >
-                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                      >
                         <path
                           d="M3 6L8 11L13 6"
                           stroke="currentColor"
@@ -156,21 +155,21 @@ export default function SideBar() {
           })}
         </nav>
 
-        {/* Footer */}
         {!isCollapsed && (
-          <div className={styles.sidebarFooter}>
-            <p>
-              © {new Date().getFullYear()} All rights reserved
-            </p>
-            <a
-              href="https://uchendu-uchenna-portfolio.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.footerLink}
-            >
-              Built by Uchendu Uchenna
-            </a>
-          </div>
+          <footer className={styles.sidebarFooter}>
+            <p>© {new Date().getFullYear()} All rights reserved</p>
+            <span className={styles.footerText}>
+              Built by{" "}
+              <a
+                href="https://uchendu-uchenna-portfolio.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerLink}
+              >
+                Uchendu Uchenna
+              </a>
+            </span>
+          </footer>
         )}
       </aside>
     </>
