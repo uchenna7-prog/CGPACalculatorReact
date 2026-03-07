@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-// ── Grade scale definitions ────────────────────────────────────────────────
+// ── Grade scale definitions ──
 export const GRADE_SCALES = {
   "5point": [
     { grade: "A", points: 5, range: "70 – 100" },
