@@ -7,11 +7,8 @@ import { useSettings } from "../../contexts/SettingsContext";
 
 const SEMESTER_NAMES = { 1: "First", 2: "Second" };
 
-// Dynamic Honours calculation based on Scale
 function getHonours(cgpa, scale) {
-  if (cgpa === null) return null;
-  
-  // Thresholds for 4.0 scale vs 5.0 scale
+  if (!cgpa) return null;
   const is4Point = scale === "4point";
   const thresholds = is4Point 
     ? { first: 3.5, upper: 3.0, lower: 2.0, third: 1.0 } 
@@ -39,41 +36,38 @@ function getGpaColor(gpa, scale) {
 
 function Summary() {
   const navigate = useNavigate();
-  const { semesters, cgpa } = useGpa();
-  
-  // Pull dynamic settings
+  const { semesters } = useGpa();
   const { gradingScale, GRADE_SCALES, gradePoints, decimalPlaces } = useSettings();
   
   const dp = Number(decimalPlaces);
   const maxPoints = gradingScale === "4point" ? 4 : 5;
-  const honours = getHonours(cgpa, gradingScale);
 
-  const hasData =
-    cgpa !== null ||
-    semesters.some(
-      (s) =>
-        s.courses.length > 0 &&
-        s.courses.every((c) => c.unit !== "" && !isNaN(parseFloat(c.unit)))
-    );
+  // ── AUTO-CALCULATION LOGIC ──
+  // This calculates everything instantly without needing the "Calculate" button
+  let totalWeightedPoints = 0;
+  let totalUnitsAccumulated = 0;
 
   const computedSemesters = semesters.map((s) => {
-    const valid =
-      s.courses.length > 0 &&
-      s.courses.every((c) => c.unit !== "" && !isNaN(parseFloat(c.unit)));
-    
-    if (!valid) return { ...s, computedGpa: null };
-    
-    const totalUnits = s.courses.reduce((sum, c) => sum + parseFloat(c.unit), 0);
-    const totalPoints = s.courses.reduce(
-      (sum, c) => sum + parseFloat(c.unit) * gradePoints(c.grade),
+    const semUnits = s.courses.reduce((sum, c) => sum + (parseFloat(c.unit) || 0), 0);
+    const semPoints = s.courses.reduce(
+      (sum, c) => sum + (parseFloat(c.unit) || 0) * gradePoints(c.grade),
       0
     );
+
+    totalWeightedPoints += semPoints;
+    totalUnitsAccumulated += semUnits;
+
     return {
       ...s,
-      computedGpa: totalUnits === 0 ? null : totalPoints / totalUnits,
+      computedGpa: semUnits > 0 ? semPoints / semUnits : null,
+      semUnits
     };
   });
 
+  const autoCgpa = totalUnitsAccumulated > 0 ? totalWeightedPoints / totalUnitsAccumulated : null;
+  const honours = getHonours(autoCgpa, gradingScale);
+
+  // Grouping for display
   const byYear = computedSemesters.reduce((acc, s) => {
     if (!acc[s.year]) acc[s.year] = [];
     acc[s.year].push(s);
@@ -81,16 +75,11 @@ function Summary() {
   }, {});
 
   const totalCourses = semesters.reduce((sum, s) => sum + s.courses.length, 0);
-  const totalUnitsAll = semesters.reduce(
-    (sum, s) => sum + s.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0),
-    0
-  );
-  const totalYears = Object.keys(byYear).length;
+  const hasData = totalCourses > 0 && totalUnitsAccumulated > 0;
 
   return (
     <div className={styles.pageContainer}>
       <SideBar />
-
       <div className={styles.mainWrapper}>
         <Header title="Academic Summary" />
 
@@ -99,12 +88,7 @@ function Summary() {
             <span className="material-icons" style={{ fontSize: "0.9rem" }}>arrow_back</span>
             <span className={styles.btnText}>Back</span>
           </button>
-
           <div className={styles.actionGroup}>
-            <button className={styles.actionBtn}>
-              <span className="material-icons" style={{ fontSize: "0.9rem" }}>share</span>
-              <span className={styles.btnText}>Share</span>
-            </button>
             <button className={`${styles.actionBtn} ${styles.exportBtn}`}>
               <span className="material-icons" style={{ fontSize: "0.9rem" }}>file_download</span>
               <span className={styles.btnText}>Export</span>
@@ -113,28 +97,18 @@ function Summary() {
         </div>
 
         <main className={styles.mainContent}>
-          <div className={styles.pageTitle}>
-            <span className="material-icons" style={{ fontSize: "1.3rem" }}>insights</span>
-            <h2>Academic Summary</h2>
-          </div>
-
           {!hasData ? (
             <div className={styles.emptyState}>
               <span className="material-icons" style={{ fontSize: "4rem", color: "var(--accentGreen)", opacity: 0.4 }}>
                 pending_actions
               </span>
-              <h2 className={styles.emptyTitle}>Nothing to show yet</h2>
-              <p className={styles.emptySub}>
-                Go to the calculator and add courses to calculate your GPA and
-                CGPA. Your full academic summary will appear here.
-              </p>
-              <button className={styles.goBackBtn} onClick={() => navigate("/")}>
-                Go to Calculator
-              </button>
+              <h2 className={styles.emptyTitle}>No Data Found</h2>
+              <p className={styles.emptySub}>Please add courses and units in the calculator first.</p>
+              <button className={styles.goBackBtn} onClick={() => navigate("/")}>Go to Calculator</button>
             </div>
           ) : (
             <>
-              {/* Honours Banner */}
+              {/* Centered Honours Banner */}
               <div
                 className={styles.honoursBanner}
                 style={{
@@ -145,9 +119,9 @@ function Summary() {
                 <span className={styles.honoursEmoji}>{honours?.emoji || "📄"}</span>
                 <div className={styles.honoursMeta}>
                   <div className={styles.cgpaNumber} style={{ color: "var(--accentGreen)" }}>
-                    {cgpa?.toFixed(dp) || "0.00"}
+                    {autoCgpa?.toFixed(dp)}
                   </div>
-                  <div className={styles.cgpaLabel}>CGPA ({maxPoints}.0 Scale)</div>
+                  <div className={styles.cgpaLabel}>OVERALL CGPA ({maxPoints}.0 SCALE)</div>
                   <div className={styles.honoursLabel} style={{ color: honours?.color || "#a78bfa" }}>
                     {honours?.label || "Pass"}
                   </div>
@@ -157,10 +131,10 @@ function Summary() {
               {/* Stats Grid */}
               <div className={styles.statsGrid}>
                 {[
-                  { label: "YEARS", value: totalYears, icon: "calendar_today" },
+                  { label: "YEARS", value: Object.keys(byYear).length, icon: "calendar_today" },
                   { label: "SEMESTERS", value: semesters.length, icon: "date_range" },
                   { label: "COURSES", value: totalCourses, icon: "book" },
-                  { label: "TOTAL UNITS", value: totalUnitsAll, icon: "straighten" },
+                  { label: "TOTAL UNITS", value: totalUnitsAccumulated, icon: "straighten" },
                 ].map(({ label, value, icon }) => (
                   <div key={label} className={styles.statCard}>
                     <span className={`material-icons ${styles.statIcon}`}>{icon}</span>
@@ -173,38 +147,31 @@ function Summary() {
               {/* Semester Breakdown */}
               <div className={styles.semesterSection}>
                 <h3 className={styles.sectionTitle}>SEMESTER BREAKDOWN</h3>
-
                 {Object.entries(byYear).map(([year, yearSems]) => (
                   <div key={year} className={styles.yearGroup}>
                     <div className={styles.yearChip}>YEAR {year}</div>
                     <div className={styles.semCards}>
                       {yearSems.map((sem) => {
-                        const gpaVal = sem.gpa !== null && sem.gpa !== "error" ? sem.gpa : sem.computedGpa;
-                        const semUnits = sem.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0);
+                        const gpaVal = sem.computedGpa;
                         const gpaColor = gpaVal !== null ? getGpaColor(gpaVal, gradingScale) : "var(--textColor)";
-                        // Fill percentage based on current scale (4 or 5)
                         const pct = gpaVal !== null ? (gpaVal / maxPoints) * 100 : 0;
 
                         return (
                           <div key={sem.id} className={styles.semCard}>
                             <div className={styles.semLeft}>
-                              <div className={styles.semName}>
-                                {SEMESTER_NAMES[sem.semesterNum]} Semester
-                              </div>
+                              <div className={styles.semName}>{SEMESTER_NAMES[sem.semesterNum]} Semester</div>
                               <div className={styles.semMeta}>
                                 <span>{sem.courses.length} courses</span>
-                                <span>{semUnits} units</span>
+                                <span>{sem.semUnits} units</span>
                               </div>
                             </div>
                             <div className={styles.semRight}>
-                              <div className={styles.semGpa} style={{ color: gpaColor, opacity: gpaVal !== null ? 1 : 0.3 }}>
-                                {gpaVal !== null ? gpaVal.toFixed(dp) : "—"}
+                              <div className={styles.semGpa} style={{ color: gpaColor }}>
+                                {gpaVal !== null ? gpaVal.toFixed(dp) : "0.00"}
                               </div>
-                              {gpaVal !== null && (
-                                <div className={styles.gpaBarTrack}>
-                                  <div className={styles.gpaBarFill} style={{ width: `${pct}%`, background: gpaColor }} />
-                                </div>
-                              )}
+                              <div className={styles.gpaBarTrack}>
+                                <div className={styles.gpaBarFill} style={{ width: `${pct}%`, background: gpaColor }} />
+                              </div>
                             </div>
                           </div>
                         );
@@ -215,11 +182,9 @@ function Summary() {
               </div>
 
               <div className={styles.footer}>
-                <div>{gradingScale === "4point" ? "4.0 Grading Scale" : "Nigerian 5-point grading scale"}</div>
+                <div>Current Scale: {gradingScale === "4point" ? "4.0 GPA" : "5.0 GPA"}</div>
                 <div>
-                  {GRADE_SCALES[gradingScale]
-                    .map((row) => `${row.grade}=${row.points}`)
-                    .join(" · ")}
+                  {GRADE_SCALES[gradingScale].map((row) => `${row.grade}=${row.points}`).join(" · ")}
                 </div>
               </div>
             </>
