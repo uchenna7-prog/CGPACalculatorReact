@@ -142,6 +142,22 @@
   margin-bottom: 8px;
 }
 
+/* ── Credit unit summary ── */
+.creditSummary {
+  display: flex;
+  gap: 20px;
+  font-size: 0.8rem;
+  color: var(--textColor);
+  margin-bottom: 8px;
+  padding: 6px 4px;
+  border-top: 1px dashed #1e2e26;
+  font-family: Consolas, monospace;
+}
+
+.creditSummary strong {
+  color: #4caf7d;
+}
+
 /* ── Semester controls ── */
 .semesterControls {
   display: grid;
@@ -236,7 +252,6 @@
     padding-bottom: 120px;
   }
 
-  /* Smaller headings */
   .yearHeading {
     font-size: 0.9rem;
   }
@@ -245,7 +260,6 @@
     font-size: 0.85rem;
   }
 
-  /* Smaller table text */
   .table th,
   .table td {
     padding: 4px 5px;
@@ -256,7 +270,6 @@
     font-size: 0.7rem;
   }
 
-  /* Smaller buttons but same line */
   .semesterControls,
   .cgpaControls {
     gap: 4px;
@@ -274,5 +287,11 @@
   .calcCgpaBtn {
     font-size: 0.7rem;
     padding: 7px 4px;
+  }
+
+  .creditSummary {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75rem;
   }
 }
