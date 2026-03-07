@@ -5,8 +5,7 @@ import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./GpaCalculator.module.css";
 import { useGpaCalculator } from "../../contexts/GpaCalculatorContext";
-
-const GRADES = ["A", "B", "C", "D", "E", "F"];
+import { useSettings } from "../../contexts/SettingsContext"; // Added
 
 // ── Draggable Floating Button ──────────────────────────────────────────────
 function FloatingButton({ onClick, icon, label, gradient }) {
@@ -85,10 +84,24 @@ function FloatingButton({ onClick, icon, label, gradient }) {
 // ── Main Component ─────────────────────────────────────────────────────────
 function GPACalculator() {
   const navigate = useNavigate();
+  
+  // Use both Contexts
   const {
     courses, gpa, error,
     updateCourse, addCourse, deleteCourse, deleteAllCourses, calculateGPA,
   } = useGpaCalculator();
+
+  const { 
+    showGradePoints, 
+    showCreditSummary, 
+    availableGrades, 
+    gradePoints,
+    decimalPlaces 
+  } = useSettings();
+
+  // Calculate totals for the Credit Summary Row
+  const totalUnits = courses.reduce((sum, c) => sum + (Number(c.unit) || 0), 0);
+  const totalPoints = courses.reduce((sum, c) => sum + (Number(c.unit) || 0) * gradePoints(c.grade), 0);
 
   return (
     <div className={styles.pageContainer}>
@@ -103,8 +116,9 @@ function GPACalculator() {
                   <tr>
                     <th>S/N</th>
                     <th>COURSE CODE</th>
-                    <th>COURSE UNITS</th>
+                    <th>UNITS</th>
                     <th>GRADE</th>
+                    {showGradePoints && <th>TCU</th>}
                     <th></th>
                   </tr>
                 </thead>
@@ -114,6 +128,7 @@ function GPACalculator() {
                       <td>{idx + 1}</td>
                       <td>
                         <input className={styles.inputField} type="text" value={course.code}
+                          placeholder="MAT101"
                           onChange={(e) => updateCourse(course.id, "code", e.target.value.toUpperCase())} />
                       </td>
                       <td>
@@ -123,9 +138,14 @@ function GPACalculator() {
                       <td>
                         <select className={styles.selectField} value={course.grade}
                           onChange={(e) => updateCourse(course.id, "grade", e.target.value)}>
-                          {GRADES.map((g) => <option key={g} value={g}>{g}</option>)}
+                          {availableGrades.map((g) => <option key={g} value={g}>{g}</option>)}
                         </select>
                       </td>
+                      {showGradePoints && (
+                        <td className={styles.tcuCell}>
+                          {(Number(course.unit) || 0) * gradePoints(course.grade)}
+                        </td>
+                      )}
                       <td>
                         <button className={styles.deleteRowBtn} onClick={() => deleteCourse(course.id)} title="Delete course">
                           <i className="fa-solid fa-trash"></i>
@@ -134,18 +154,35 @@ function GPACalculator() {
                     </tr>
                   ))}
                 </tbody>
+                
+                {/* ── Credit Unit Summary Row ── */}
+                {showCreditSummary && courses.length > 0 && (
+                  <tfoot className={styles.tableFooter}>
+                    <tr>
+                      <td colSpan="2" style={{ textAlign: 'right', fontWeight: 'bold' }}>TOTALS:</td>
+                      <td style={{ fontWeight: 'bold' }}>{totalUnits}</td>
+                      <td></td>
+                      {showGradePoints && <td style={{ fontWeight: 'bold' }}>{totalPoints}</td>}
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                )}
               </table>
             ) : (
               <p className={styles.noCoursesMsg}>No courses added.</p>
             )}
 
             {error && <p className={styles.errorMsg}>{error}</p>}
-            {gpa !== null && <div className={styles.gpaResult}>GPA: {gpa.toFixed(2)}</div>}
+            {gpa !== null && (
+              <div className={styles.gpaResult}>
+                GPA: {gpa.toFixed(Number(decimalPlaces))}
+              </div>
+            )}
 
             <div className={styles.buttonContainer}>
               <button className={styles.addCourseBtn} onClick={addCourse}>ADD COURSE</button>
-              <button className={styles.deleteAllBtn} onClick={deleteAllCourses}>DELETE ALL COURSES</button>
-              <button className={styles.calcGpaBtn} onClick={calculateGPA}>CALCULATE GPA</button>
+              <button className={styles.deleteAllBtn} onClick={deleteAllCourses}>DELETE ALL</button>
+              <button className={styles.calcGpaBtn} onClick={calculateGPA}>CALCULATE</button>
             </div>
           </section>
 
