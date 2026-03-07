@@ -51,17 +51,18 @@ function AccordionSection({ icon, title, isOpen, onToggle, children }) {
 function Settings() {
   const { theme, changeTheme } = useTheme();
   const {
-    gradingScale,      setGradingScale,
-    decimalPlaces,     setDecimalPlaces,
-    showGradePoints,   setShowGradePoints,
-    showCreditSummary, setShowCreditSummary,
-    confirmDelete,     setConfirmDelete,
-    gradeScaleRows,
+    gradingScale,
+    decimalPlaces,
+    showGradePoints,
+    showCreditSummary,
+    confirmDelete,
+    updateSetting,
     resetSettings,
+    GRADE_SCALES,
   } = useSettings();
 
   const [openSection, setOpenSection] = useState(null);
-  const [statusMsg, setStatusMsg]     = useState("");
+  const [statusMsg, setStatusMsg] = useState("");
 
   const toggleSection = (id) =>
     setOpenSection((prev) => (prev === id ? null : id));
@@ -79,7 +80,10 @@ function Settings() {
 
   const handleClearData = () => {
     if (window.confirm("Clear all saved calculator data? This cannot be undone.")) {
-      localStorage.clear();
+      // Preserve settings — only wipe GPA/calculator data
+      Object.keys(localStorage)
+        .filter((k) => k !== "cgpa_settings")
+        .forEach((k) => localStorage.removeItem(k));
       showMsg("All saved data cleared.");
     }
   };
@@ -108,9 +112,9 @@ function Settings() {
 
                 <div className={styles.themeOptions}>
                   {[
-                    { key: "dark-mode",   icon: "dark_mode",           label: "Dark"   },
-                    { key: "light-mode",  icon: "light_mode",          label: "Light"  },
-                    { key: "system-mode", icon: "settings_brightness", label: "System" },
+                    { key: "dark-mode",    icon: "dark_mode",           label: "Dark"   },
+                    { key: "light-mode",   icon: "light_mode",          label: "Light"  },
+                    { key: "system-mode",  icon: "settings_brightness", label: "System" },
                   ].map((t) => (
                     <button
                       key={t.key}
@@ -146,7 +150,7 @@ function Settings() {
                       type="radio"
                       value="5point"
                       checked={gradingScale === "5point"}
-                      onChange={(e) => setGradingScale(e.target.value)}
+                      onChange={(e) => updateSetting("gradingScale", e.target.value)}
                     />
                     5-Point Scale
                   </label>
@@ -155,7 +159,7 @@ function Settings() {
                       type="radio"
                       value="4point"
                       checked={gradingScale === "4point"}
-                      onChange={(e) => setGradingScale(e.target.value)}
+                      onChange={(e) => updateSetting("gradingScale", e.target.value)}
                     />
                     4-Point Scale
                   </label>
@@ -175,7 +179,7 @@ function Settings() {
                     </tr>
                   </thead>
                   <tbody>
-                    {gradeScaleRows.map((row) => (
+                    {GRADE_SCALES[gradingScale].map((row) => (
                       <tr key={row.grade}>
                         <td>{row.grade}</td>
                         <td>{row.points}</td>
@@ -202,7 +206,7 @@ function Settings() {
                 <select
                   className={styles.selectInput}
                   value={decimalPlaces}
-                  onChange={(e) => setDecimalPlaces(e.target.value)}
+                  onChange={(e) => updateSetting("decimalPlaces", e.target.value)}
                 >
                   <option value="1">1 — 4.5</option>
                   <option value="2">2 — 4.50</option>
@@ -216,7 +220,7 @@ function Settings() {
                 </div>
                 <Toggle
                   on={showGradePoints}
-                  onToggle={() => setShowGradePoints((p) => !p)}
+                  onToggle={() => updateSetting("showGradePoints", !showGradePoints)}
                 />
               </div>
 
@@ -226,7 +230,7 @@ function Settings() {
                 </div>
                 <Toggle
                   on={showCreditSummary}
-                  onToggle={() => setShowCreditSummary((p) => !p)}
+                  onToggle={() => updateSetting("showCreditSummary", !showCreditSummary)}
                 />
               </div>
             </AccordionSection>
@@ -244,7 +248,7 @@ function Settings() {
                 </div>
                 <Toggle
                   on={confirmDelete}
-                  onToggle={() => setConfirmDelete((p) => !p)}
+                  onToggle={() => updateSetting("confirmDelete", !confirmDelete)}
                 />
               </div>
 
