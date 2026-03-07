@@ -119,9 +119,8 @@ function Home() {
     availableGrades,
   } = useSettings();
 
-  const dp = Number(decimalPlaces); // convert "2" → 2 for .toFixed()
+  const dp = Number(decimalPlaces);
 
-  // ── Delete helpers that respect confirmDelete setting ──────────────────
   const handleDeleteCourse = (semId, courseId) => {
     if (confirmDelete && !window.confirm("Delete this course?")) return;
     deleteCourse(semId, courseId);
@@ -132,7 +131,6 @@ function Home() {
     deleteAllCourses(semId);
   };
 
-  // ── Credit unit summary helpers ────────────────────────────────────────
   const getSemesterSummary = (courses) => {
     const totalUnits    = courses.reduce((s, c) => s + (Number(c.unit) || 0), 0);
     const weightedPoints = courses.reduce(
@@ -154,7 +152,6 @@ function Home() {
         <Header />
         <main className={styles.mainContent}>
 
-          {/* Semesters grouped by year */}
           {Object.entries(byYear).map(([year, yearSemesters]) => (
             <div key={year}>
               <h2 className={styles.yearHeading}>YEAR {year}</h2>
@@ -177,7 +174,6 @@ function Home() {
                               <th>COURSE CODE</th>
                               <th>COURSE UNITS</th>
                               <th>GRADE</th>
-                              {/* Conditionally show TCU column */}
                               {showGradePoints && <th>TCU</th>}
                               <th></th>
                             </tr>
@@ -216,13 +212,11 @@ function Home() {
                                       updateCourse(sem.id, course.id, "grade", e.target.value)
                                     }
                                   >
-                                    {/* Only show grades valid for the active scale */}
                                     {availableGrades.map((g) => (
                                       <option key={g} value={g}>{g}</option>
                                     ))}
                                   </select>
                                 </td>
-                                {/* TCU cell: unit × gradePoints */}
                                 {showGradePoints && (
                                   <td style={{ textAlign: "center", fontWeight: 600 }}>
                                     {(Number(course.unit) || 0) * gradePoints(course.grade)}
@@ -241,19 +235,23 @@ function Home() {
                             ))}
                           </tbody>
 
-                          {/* Credit summary as tfoot row */}
                           {showCreditSummary && (
                             <tfoot>
                               <tr className={styles.summaryRow}>
+                                {/* S/N and Course Code combined */}
                                 <td colSpan={2}><strong>TOTAL</strong></td>
+                                {/* Units Total - directly under units column */}
                                 <td><strong>{totalUnits}</strong></td>
+                                {/* Empty Grade column */}
+                                <td></td>
+                                {/* TCU Total - directly under TCU column if visible */}
                                 {showGradePoints && (
                                   <td style={{ textAlign: "center" }}>
                                     <strong>{weightedPoints}</strong>
                                   </td>
                                 )}
-                                {/* stretch remaining space to reach delete column end */}
-                                <td colSpan={showGradePoints ? 1 : 2}></td>
+                                {/* Empty Delete column */}
+                                <td></td>
                               </tr>
                             </tfoot>
                           )}
@@ -291,7 +289,6 @@ function Home() {
             </div>
           ))}
 
-          {/* CGPA result */}
           {cgpaError && <p className={styles.errorMsg}>{cgpaError}</p>}
           {cgpa !== null && (
             <div className={styles.cgpaResult}>
@@ -299,7 +296,6 @@ function Home() {
             </div>
           )}
 
-          {/* CGPA buttons */}
           <div className={styles.cgpaControls}>
             <button className={styles.addSemBtn} onClick={addSemester}>
               ADD SEMESTER
@@ -316,13 +312,11 @@ function Home() {
             </button>
           </div>
 
-          {/* Spacer so floating summary button never overlaps CGPA controls */}
           <div style={{ height: 80 }} />
 
         </main>
       </div>
 
-      {/* Floating draggable summary button */}
       <FloatingSummaryButton onClick={() => navigate("/summary")} />
     </div>
   );
