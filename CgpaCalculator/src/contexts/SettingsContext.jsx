@@ -23,9 +23,9 @@ export const GRADE_SCALES = {
 const DEFAULTS = {
   gradingScale: "5point",
   decimalPlaces: "2",
-  showGradePoints: true,
-  showCreditSummary: true,
-  confirmDelete: true,
+  showGradePoints: false,
+  showCreditSummary: false,
+  confirmDelete: false,
 };
 
 const STORAGE_KEY = "cgpa_settings";
