@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-// ── Grade scale definitions ────────────────────────────────────────────────
 export const GRADE_SCALES = {
   "5point": [
     { grade: "A", points: 5, range: "70 – 100" },
@@ -19,31 +18,30 @@ export const GRADE_SCALES = {
   ],
 };
 
-// ── Defaults ───────────────────────────────────────────────────────────────
+// ── DEFAULTS UPDATED ───────────────────────────────────────────────────────
 const DEFAULTS = {
   gradingScale: "5point",
   decimalPlaces: "2",
-  showGradePoints: true,
-  showCreditSummary: true,
-  confirmDelete: false,
+  showGradePoints: true,   // Show TCU Column: ON
+  showCreditSummary: true, // Show Credit Unit Summary: ON
+  confirmDelete: false,    // Confirm Before Deleting: OFF
 };
 
 const STORAGE_KEY = "cgpa_settings";
 
-// ── Context ────────────────────────────────────────────────────────────────
 const SettingsContext = createContext(null);
 
 export function SettingsProvider({ children }) {
   const [settings, setSettings] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
+      // Merging defaults with saved to ensure new keys exist
       return saved ? { ...DEFAULTS, ...JSON.parse(saved) } : DEFAULTS;
     } catch {
       return DEFAULTS;
     }
   });
 
-  // Persist to localStorage whenever settings change
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   }, [settings]);
@@ -53,13 +51,11 @@ export function SettingsProvider({ children }) {
 
   const resetSettings = () => setSettings(DEFAULTS);
 
-  // Resolve a grade letter → numeric points based on active scale
   const gradePoints = (grade) => {
     const row = GRADE_SCALES[settings.gradingScale].find((r) => r.grade === grade);
     return row ? row.points : 0;
   };
 
-  // Grades available for the active scale (used to populate <select> in Home)
   const availableGrades = GRADE_SCALES[settings.gradingScale].map((r) => r.grade);
 
   return (
