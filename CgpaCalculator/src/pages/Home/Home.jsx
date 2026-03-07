@@ -5,24 +5,13 @@ import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./Home.module.css";
 import { useGpa } from "../../contexts/GpaContext";
+import { useSettings } from "../../contexts/SettingsContext";
 
-const GRADES = ["A", "B", "C", "D", "E", "F"];
 const SEMESTER_NAMES = { 1: "First", 2: "Second" };
-
-function getHonours(cgpa) {
-  if (cgpa === null) return null;
-  if (cgpa >= 4.5) return { label: "First Class Honours", color: "#fbbf24", emoji: "🥇" };
-  if (cgpa >= 3.5) return { label: "Second Class Upper (2:1)", color: "#34d399", emoji: "🥈" };
-  if (cgpa >= 2.4) return { label: "Second Class Lower (2:2)", color: "#60a5fa", emoji: "🥉" };
-  if (cgpa >= 1.5) return { label: "Third Class Honours", color: "#f87171", emoji: "📋" };
-  return { label: "Pass", color: "#a78bfa", emoji: "📄" };
-}
-
-
 
 // ── Draggable Floating Button ──────────────────────────────────────────────
 function FloatingSummaryButton({ onClick }) {
-  const btnRef = useRef(null);
+  const btnRef   = useRef(null);
   const dragging = useRef(false);
   const startPos = useRef({});
   const [dragPos, setDragPos] = useState(null);
@@ -33,14 +22,9 @@ function FloatingSummaryButton({ onClick }) {
   const onPointerDown = (e) => {
     dragging.current = false;
     const rect = btnRef.current.getBoundingClientRect();
-    startPos.current = {
-      px: e.clientX,
-      py: e.clientY,
-      bx: rect.left,
-      by: rect.top,
-    };
+    startPos.current = { px: e.clientX, py: e.clientY, bx: rect.left, by: rect.top };
     window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointerup",   onPointerUp);
     e.preventDefault();
   };
 
@@ -48,14 +32,14 @@ function FloatingSummaryButton({ onClick }) {
     const dx = e.clientX - startPos.current.px;
     const dy = e.clientY - startPos.current.py;
     if (Math.abs(dx) > 4 || Math.abs(dy) > 4) dragging.current = true;
-    const newX = Math.max(8, Math.min(window.innerWidth - 72, startPos.current.bx + dx));
+    const newX = Math.max(8, Math.min(window.innerWidth  - 72, startPos.current.bx + dx));
     const newY = Math.max(8, Math.min(window.innerHeight - 72, startPos.current.by + dy));
     setDragPos({ x: newX, y: newY });
   };
 
   const onPointerUp = () => {
     window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerup", onPointerUp);
+    window.removeEventListener("pointerup",   onPointerUp);
     if (!dragging.current) onClick();
   };
 
@@ -72,21 +56,15 @@ function FloatingSummaryButton({ onClick }) {
       title="View Summary"
       style={{
         ...positionStyle,
-        width: 58,
-        height: 58,
+        width: 58, height: 58,
         borderRadius: "12px",
         background: "linear-gradient(135deg, #4caf7d 0%, #2d7a52 100%)",
         border: "2px solid #1e2e26",
         boxShadow: "0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(76,175,125,0.25)",
         cursor: "grab",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 3,
-        zIndex: 9999,
-        userSelect: "none",
-        touchAction: "none",
+        display: "flex", flexDirection: "column", alignItems: "center",
+        justifyContent: "center", gap: 3,
+        zIndex: 9999, userSelect: "none", touchAction: "none",
       }}
     >
       <span
@@ -94,15 +72,10 @@ function FloatingSummaryButton({ onClick }) {
         style={{ fontSize: "1.5rem", color: "#fff", pointerEvents: "none" }}
       >insights</span>
       <span style={{
-        fontSize: "0.5rem",
-        color: "#c8f0d8",
-        fontFamily: "Consolas, monospace",
-        fontWeight: 700,
-        letterSpacing: 0.5,
-        pointerEvents: "none",
-      }}>
-        SUMMARY
-      </span>
+        fontSize: "0.5rem", color: "#c8f0d8",
+        fontFamily: "Consolas, monospace", fontWeight: 700,
+        letterSpacing: 0.5, pointerEvents: "none",
+      }}>SUMMARY</span>
     </button>,
     document.body
   );
@@ -112,24 +85,41 @@ function FloatingSummaryButton({ onClick }) {
 function Home() {
   const navigate = useNavigate();
   const {
-    semesters,
-    cgpa,
-    cgpaError,
-    addSemester,
-    removeSemester,
-    calculateCGPA,
-    updateCourse,
-    addCourse,
-    deleteCourse,
-    deleteAllCourses,
+    semesters, cgpa, cgpaError,
+    addSemester, removeSemester, calculateCGPA,
+    updateCourse, addCourse, deleteCourse, deleteAllCourses,
     calculateSemesterGPA,
   } = useGpa();
 
-    const byYear = semesters.reduce((acc, s) => {
+  const {
+    showGradePoints,
+    showCreditSummary,
+    confirmDelete,
+    gradeList,
+    gradePoints,
+    getHonours,
+    formatGpa,
+  } = useSettings();
+
+  // ── Delete helpers with optional confirm ──────────────────────────────
+  const handleDeleteCourse = (semId, courseId) => {
+    if (confirmDelete && !window.confirm("Delete this course?")) return;
+    deleteCourse(semId, courseId);
+  };
+
+  const handleDeleteAllCourses = (semId) => {
+    if (confirmDelete && !window.confirm("Delete all courses in this semester?")) return;
+    deleteAllCourses(semId);
+  };
+
+  // ── Group semesters by year ────────────────────────────────────────────
+  const byYear = semesters.reduce((acc, s) => {
     if (!acc[s.year]) acc[s.year] = [];
     acc[s.year].push(s);
     return acc;
   }, {});
+
+  const honours = getHonours(cgpa);
 
   return (
     <div className={styles.homeContainer}>
@@ -138,110 +128,132 @@ function Home() {
         <Header />
         <main className={styles.mainContent}>
 
-          {/* Semesters grouped by year */}
           {Object.entries(byYear).map(([year, yearSemesters]) => (
             <div key={year}>
               <h2 className={styles.yearHeading}>YEAR {year}</h2>
 
-              {yearSemesters.map((sem) => (
-                <div key={sem.id}>
-                  <h3 className={styles.semesterHeading}>
-                    {SEMESTER_NAMES[sem.semesterNum]} Semester
-                  </h3>
+              {yearSemesters.map((sem) => {
+                // Credit unit summary values
+                const totalUnits   = sem.courses.reduce((s, c) => s + (Number(c.unit) || 0), 0);
+                const totalPoints  = sem.courses.reduce((s, c) => s + (Number(c.unit) || 0) * gradePoints(c.grade), 0);
 
-                  <section className={styles.semesterCard}>
-                    {sem.courses.length > 0 ? (
-                      <table className={styles.table}>
-                        <thead>
-                          <tr>
-                            <th>S/N</th>
-                            <th>COURSE CODE</th>
-                            <th>COURSE UNITS</th>
-                            <th>GRADE</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {sem.courses.map((course, idx) => (
-                            <tr key={course.id}>
-                              <td>{idx + 1}</td>
-                              <td>
-                                <input
-                                  className={styles.inputField}
-                                  type="text"
-                                  value={course.code}
-                                  onChange={(e) =>
-                                    updateCourse(sem.id, course.id, "code", e.target.value.toUpperCase())
-                                  }
-                                />
-                              </td>
-                              <td>
-                                <input
-                                  className={styles.inputField}
-                                  type="number"
-                                  min="1"
-                                  max="6"
-                                  value={course.unit}
-                                  onChange={(e) =>
-                                    updateCourse(sem.id, course.id, "unit", e.target.value)
-                                  }
-                                />
-                              </td>
-                              <td>
-                                <select
-                                  className={styles.selectField}
-                                  value={course.grade}
-                                  onChange={(e) =>
-                                    updateCourse(sem.id, course.id, "grade", e.target.value)
-                                  }
-                                >
-                                  {GRADES.map((g) => (
-                                    <option key={g} value={g}>{g}</option>
-                                  ))}
-                                </select>
-                              </td>
-                              <td>
-                                <button
-                                  className={styles.deleteRowBtn}
-                                  onClick={() => deleteCourse(sem.id, course.id)}
-                                  title="Delete course"
-                                >
-                                  <i className="fa-solid fa-trash"></i>
-                                </button>
-                              </td>
+                return (
+                  <div key={sem.id}>
+                    <h3 className={styles.semesterHeading}>
+                      {SEMESTER_NAMES[sem.semesterNum]} Semester
+                    </h3>
+
+                    <section className={styles.semesterCard}>
+                      {sem.courses.length > 0 ? (
+                        <table className={styles.table}>
+                          <thead>
+                            <tr>
+                              <th>S/N</th>
+                              <th>COURSE CODE</th>
+                              <th>COURSE UNITS</th>
+                              <th>GRADE</th>
+                              {showGradePoints && <th>GRADE POINTS</th>}
+                              <th></th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    ) : (
-                      <p className={styles.noCoursesMsg}>No courses added.</p>
-                    )}
+                          </thead>
+                          <tbody>
+                            {sem.courses.map((course, idx) => (
+                              <tr key={course.id}>
+                                <td>{idx + 1}</td>
+                                <td>
+                                  <input
+                                    className={styles.inputField}
+                                    type="text"
+                                    value={course.code}
+                                    onChange={(e) =>
+                                      updateCourse(sem.id, course.id, "code", e.target.value.toUpperCase())
+                                    }
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    className={styles.inputField}
+                                    type="number"
+                                    min="1"
+                                    max="6"
+                                    value={course.unit}
+                                    onChange={(e) =>
+                                      updateCourse(sem.id, course.id, "unit", e.target.value)
+                                    }
+                                  />
+                                </td>
+                                <td>
+                                  <select
+                                    className={styles.selectField}
+                                    value={course.grade}
+                                    onChange={(e) =>
+                                      updateCourse(sem.id, course.id, "grade", e.target.value)
+                                    }
+                                  >
+                                    {gradeList.map((g) => (
+                                      <option key={g} value={g}>{g}</option>
+                                    ))}
+                                  </select>
+                                </td>
+                                {showGradePoints && (
+                                  <td className={styles.gradePointsCell}>
+                                    {gradePoints(course.grade)}
+                                  </td>
+                                )}
+                                <td>
+                                  <button
+                                    className={styles.deleteRowBtn}
+                                    onClick={() => handleDeleteCourse(sem.id, course.id)}
+                                    title="Delete course"
+                                  >
+                                    <i className="fa-solid fa-trash"></i>
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      ) : (
+                        <p className={styles.noCoursesMsg}>No courses added.</p>
+                      )}
 
-                    {sem.gpa === "error" && (
-                      <p className={styles.errorMsg}>
-                        Fill all course units with valid numbers.
-                      </p>
-                    )}
-                    {sem.gpa !== null && sem.gpa !== "error" && (
-                      <div className={styles.gpaResult}>
-                        GPA: {sem.gpa.toFixed(2)}
+                      {/* Credit Unit Summary */}
+                      {showCreditSummary && sem.courses.length > 0 && (
+                        <div className={styles.creditSummary}>
+                          <span>Total Units: <strong>{totalUnits}</strong></span>
+                          <span>Total Quality Points: <strong>{totalPoints}</strong></span>
+                        </div>
+                      )}
+
+                      {sem.gpa === "error" && (
+                        <p className={styles.errorMsg}>
+                          Fill all course units with valid numbers.
+                        </p>
+                      )}
+                      {sem.gpa !== null && sem.gpa !== "error" && (
+                        <div className={styles.gpaResult}>
+                          GPA: {formatGpa(sem.gpa)}
+                        </div>
+                      )}
+
+                      <div className={styles.semesterControls}>
+                        <button className={styles.addCourseBtn} onClick={() => addCourse(sem.id)}>
+                          ADD COURSE
+                        </button>
+                        <button
+                          className={styles.deleteAllBtn}
+                          onClick={() => handleDeleteAllCourses(sem.id)}
+                        >
+                          DELETE ALL COURSES
+                        </button>
+                        <button className={styles.calcGpaBtn} onClick={() => calculateSemesterGPA(sem.id)}>
+                          CALCULATE GPA
+                        </button>
                       </div>
-                    )}
-
-                    <div className={styles.semesterControls}>
-                      <button className={styles.addCourseBtn} onClick={() => addCourse(sem.id)}>
-                        ADD COURSE
-                      </button>
-                      <button className={styles.deleteAllBtn} onClick={() => deleteAllCourses(sem.id)}>
-                        DELETE ALL COURSES
-                      </button>
-                      <button className={styles.calcGpaBtn} onClick={() => calculateSemesterGPA(sem.id)}>
-                        CALCULATE GPA
-                      </button>
-                    </div>
-                  </section>
-                </div>
-              ))}
+                    </section>
+                  </div>
+                );
+              })}
             </div>
           ))}
 
@@ -249,7 +261,12 @@ function Home() {
           {cgpaError && <p className={styles.errorMsg}>{cgpaError}</p>}
           {cgpa !== null && (
             <div className={styles.cgpaResult}>
-              CURRENT CGPA: {cgpa.toFixed(2)}
+              <span>CURRENT CGPA: {formatGpa(cgpa)}</span>
+              {honours && (
+                <span className={styles.honoursTag} style={{ color: honours.color }}>
+                  {honours.emoji} {honours.label}
+                </span>
+              )}
             </div>
           )}
 
@@ -270,16 +287,11 @@ function Home() {
             </button>
           </div>
 
-          {/* Spacer so floating summary button never overlaps CGPA controls */}
           <div style={{ height: 80 }} />
-
         </main>
       </div>
 
-      {/* Floating draggable summary button */}
       <FloatingSummaryButton onClick={() => navigate("/summary")} />
-
-
     </div>
   );
 }
