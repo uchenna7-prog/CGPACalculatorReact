@@ -168,7 +168,7 @@ function GPACalculator() {
                         </select>
                       </td>
                       {showGradePoints && (
-                        <td className={styles.tcuCell}>
+                        <td className={styles.tcuBodyCell}>
                           {(Number(course.unit) || 0) * gradePoints(course.grade)}
                         </td>
                       )}
@@ -187,16 +187,16 @@ function GPACalculator() {
 
                 {showCreditSummary && (
                   <tfoot className={styles.tableFooter}>
-                    <tr className={styles.summaryRow}>
-                      <td colSpan={2} style={{ textAlign: "right", fontWeight: "bold" }}>TOTALS:</td>
-                      <td style={{ fontWeight: "bold" }}>{totalUnits}</td>
-                      <td></td> {/* Under Grade */}
+                    <tr>
+                      <td colSpan={2} className={styles.totalLabelCell}>TOTALS</td>
+                      <td className={styles.totalValueCell}>{totalUnits}</td>
+                      <td className={styles.emptyFooterCell}></td>
                       {showGradePoints && (
-                        <td style={{ textAlign: "center", fontWeight: "bold" }}>
+                        <td className={styles.totalValueCell} style={{ textAlign: "center" }}>
                           {weightedPoints}
                         </td>
                       )}
-                      <td></td> {/* Under Delete */}
+                      <td className={styles.emptyFooterCell}></td>
                     </tr>
                   </tfoot>
                 )}
