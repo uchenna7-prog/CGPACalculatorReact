@@ -142,19 +142,16 @@
   margin-bottom: 8px;
 }
 
-/* ── Credit unit summary ── */
-.creditSummary {
-  display: flex;
-  gap: 20px;
+/* ── Summary tfoot row ── */
+.summaryRow td {
+  background-color: #1a2e22;
+  color: #a8cfb8;
   font-size: 0.8rem;
-  color: var(--textColor);
-  margin-bottom: 8px;
-  padding: 6px 4px;
-  border-top: 1px dashed #1e2e26;
+  border-top: 2px solid #2f4f3d;
   font-family: Consolas, monospace;
 }
 
-.creditSummary strong {
+.summaryRow strong {
   color: #4caf7d;
 }
 
@@ -289,9 +286,4 @@
     padding: 7px 4px;
   }
 
-  .creditSummary {
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.75rem;
-  }
 }
