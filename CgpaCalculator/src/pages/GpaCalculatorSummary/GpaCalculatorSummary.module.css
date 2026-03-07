@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-/* ---------- Back Bar & Compact Buttons (Synchronized) ---------- */
+/* ---------- Back Bar ---------- */
 .backBar {
   display: flex;
   align-items: center;
@@ -46,8 +46,6 @@
 .btnText {
   font-size: 0.65rem;
   letter-spacing: 0.2px;
-  white-space: nowrap;
-  display: inline-block;
 }
 
 .backBtn:hover, .actionBtn:hover {
@@ -67,11 +65,6 @@
   border-color: var(--accentGreen);
 }
 
-.exportBtn:hover {
-  opacity: 0.9;
-  color: #fff;
-}
-
 /* ---------- Main Content ---------- */
 .mainContent {
   flex: 1;
@@ -88,134 +81,113 @@
   margin-bottom: 20px;
 }
 
-.pageTitle h2 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-/* ---------- Hero Banner ---------- */
+/* ---------- Hero Banner (Centered Logic) ---------- */
 .heroBanner {
   display: flex;
+  flex-direction: column; /* Center everything vertically on mobile */
   align-items: center;
-  gap: 20px;
-  padding: 24px 22px;
+  justify-content: center;
+  text-align: center;
+  gap: 15px;
+  padding: 30px 20px;
   border: 1px solid;
-  border-radius: 14px;
+  border-radius: 18px;
   margin-bottom: 16px;
 }
 
-.heroEmoji { font-size: 3rem; line-height: 1; flex-shrink: 0; }
-.heroGpa { font-size: 3rem; font-weight: 900; line-height: 1; letter-spacing: -1px; }
-.heroGpaLabel { font-family: Consolas, monospace; font-size: 0.65rem; opacity: 0.45; margin: 2px 0 5px; }
-.heroClassLabel { font-family: Consolas, monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+@media (min-width: 600px) {
+  .heroBanner {
+    flex-direction: row; /* Horizontal on desktop */
+    text-align: left;
+    padding: 35px 40px;
+    gap: 30px;
+  }
+}
+
+.heroEmoji { font-size: 4rem; line-height: 1; }
+.heroMeta { display: flex; flex-direction: column; align-items: center; }
+
+@media (min-width: 600px) {
+  .heroMeta { align-items: flex-start; }
+}
+
+.heroGpa { font-size: 3.5rem; font-weight: 900; line-height: 1; letter-spacing: -2px; }
+.heroGpaLabel { font-family: Consolas, monospace; font-size: 0.7rem; opacity: 0.5; margin: 5px 0; letter-spacing: 1px; }
+.heroClassLabel { font-family: Consolas, monospace; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; }
 
 /* ---------- Stats Grid ---------- */
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
   margin-bottom: 16px;
+}
+
+@media (min-width: 768px) {
+  .statsGrid { grid-template-columns: repeat(4, 1fr); }
 }
 
 .statCard {
   background: var(--tableData);
   border: 1px solid var(--borderColor);
-  border-radius: 10px;
-  padding: 12px 6px;
-  text-align: center;
+  border-radius: 12px;
+  padding: 16px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
-.statValue { font-size: 1.45rem; font-weight: 800; line-height: 1; color: var(--accentGreen); }
-.statLabel { font-family: Consolas, monospace; font-size: 0.52rem; opacity: 0.45; text-transform: uppercase; }
-.statIcon { font-size: 1rem !important; color: var(--accentGreen); opacity: 0.65; }
+.statValue { font-size: 1.6rem; font-weight: 800; color: var(--accentGreen); line-height: 1; }
+.statLabel { font-family: Consolas, monospace; font-size: 0.55rem; opacity: 0.5; text-transform: uppercase; }
+.statIcon { font-size: 1.1rem !important; color: var(--accentGreen); opacity: 0.7; }
 
-/* ---------- Chart Section ---------- */
-.chartSection {
-  background: var(--tableData);
-  border: 1px solid var(--borderColor);
-  border-radius: 12px;
-  padding: 14px 16px 10px;
-  margin-bottom: 16px;
-}
-
+/* ---------- Sections ---------- */
+.chartSection, .breakdownSection, .courseSection { margin-bottom: 20px; }
 .sectionTitle {
   font-family: Consolas, monospace;
   font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 2.5px;
+  letter-spacing: 2px;
   opacity: 0.4;
   text-transform: uppercase;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-/* ---------- Grade Breakdown ---------- */
-.breakdownSection { margin-bottom: 16px; }
-.breakdownList { display: flex; flex-direction: column; gap: 10px; }
-.breakdownRow { display: flex; align-items: center; gap: 12px; }
+.chartSection { background: var(--tableData); border: 1px solid var(--borderColor); border-radius: 14px; padding: 20px; }
 
+/* ---------- List Items ---------- */
+.breakdownList { display: flex; flex-direction: column; gap: 12px; }
+.breakdownRow { display: flex; align-items: center; gap: 14px; }
 .gradeBadge {
-  width: 32px; height: 32px; border-radius: 7px;
+  width: 36px; height: 36px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
-  font-family: Consolas, monospace; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;
+  font-family: Consolas, monospace; font-weight: 800;
 }
 
-.breakdownMeta { flex: 1; }
-.breakdownTop { display: flex; justify-content: space-between; margin-bottom: 5px; }
-.breakdownInfo { font-family: Consolas, monospace; font-size: 0.7rem; opacity: 0.6; }
-.breakdownPct { font-family: Consolas, monospace; font-size: 0.7rem; font-weight: 700; }
-.barTrack { height: 5px; border-radius: 3px; background: var(--borderColor); overflow: hidden; }
-.barFill { height: 100%; transition: width 0.35s ease; }
-
-/* ---------- Course List ---------- */
 .courseRow {
   display: grid;
-  grid-template-columns: 28px 1fr auto auto;
+  grid-template-columns: 30px 1fr auto auto;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   background: var(--tableData);
   border: 1px solid var(--borderColor);
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin-bottom: 6px;
-}
-
-.courseIndex { font-family: Consolas, monospace; font-size: 0.72rem; opacity: 0.35; text-align: center; }
-.courseCode { font-family: Consolas, monospace; font-size: 0.82rem; font-weight: 600; }
-.courseUnit { font-family: Consolas, monospace; font-size: 0.7rem; opacity: 0.55; }
-.courseGrade {
-  width: 30px; height: 30px; border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: Consolas, monospace; font-weight: 800; font-size: 0.85rem;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
 }
 
 /* ---------- Footer ---------- */
 .footer {
-  margin-top: 28px;
-  padding-top: 16px;
+  margin-top: 40px;
+  padding-top: 20px;
   border-top: 1px solid var(--borderColor);
   text-align: center;
   font-family: Consolas, monospace;
-  font-size: 0.72rem;
-  opacity: 0.35;
+  font-size: 0.75rem;
+  opacity: 0.4;
 }
 
 /* ---------- Empty State ---------- */
-.emptyState { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 70px 30px; min-height: 60vh; text-align: center; }
-.emptyTitle { font-size: 1.1rem; font-weight: 700; }
-.emptySub { font-size: 0.88rem; opacity: 0.55; line-height: 1.7; max-width: 300px; }
-.goBackBtn { margin-top: 8px; padding: 10px 24px; background: var(--accentGreen); color: #fff; border: none; border-radius: 8px; font-family: Consolas, monospace; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
-
-/* ---------- Mobile Optimization ---------- */
-@media (max-width: 600px) {
-  .backBar { padding: 6px 10px; }
-  .btnText { font-size: 0.6rem; }
-  .backBtn, .actionBtn { padding: 3px 6px; gap: 3px; }
-  .statsGrid { grid-template-columns: repeat(2, 1fr); }
-  .heroGpa { font-size: 2.3rem; }
-  .courseRow { grid-template-columns: 22px 1fr auto auto; }
-}
+.emptyState { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 80px 20px; text-align: center; }
+.goBackBtn { margin-top: 10px; padding: 12px 28px; background: var(--accentGreen); color: #fff; border: none; border-radius: 8px; font-family: Consolas, monospace; font-weight: 700; cursor: pointer; }
