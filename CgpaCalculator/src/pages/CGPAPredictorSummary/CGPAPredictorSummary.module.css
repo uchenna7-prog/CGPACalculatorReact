@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-/* ---------- Back Bar & Compact Buttons (Synchronized) ---------- */
+/* ---------- Back Bar ---------- */
 .backBar {
   display: flex;
   align-items: center;
@@ -27,16 +27,16 @@
   z-index: 10;
 }
 
-.backBtn, .actionBtn {
+.backBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px; /* Crammed gap */
+  gap: 4px;
   border-radius: 6px;
   cursor: pointer;
   font-family: Consolas, monospace;
   font-weight: 700;
-  padding: 4px 8px; /* Compact padding matching Summary page */
+  padding: 4px 12px;
   transition: all 0.2s ease;
   border: 1px solid var(--borderColor);
   background: var(--bgHover);
@@ -44,32 +44,9 @@
 }
 
 .btnText {
-  font-size: 0.65rem; /* Smaller text size matching Summary page */
+  font-size: 0.65rem;
   letter-spacing: 0.2px;
   white-space: nowrap;
-  display: inline-block;
-}
-
-.backBtn:hover, .actionBtn:hover {
-  background: var(--tableData);
-  border-color: var(--accentGreen);
-  color: var(--accentGreen);
-}
-
-.actionGroup {
-  display: flex;
-  gap: 6px;
-}
-
-.exportBtn {
-  background: var(--accentGreen);
-  color: #fff;
-  border-color: var(--accentGreen);
-}
-
-.exportBtn:hover {
-  opacity: 0.9;
-  color: #fff;
 }
 
 /* ---------- Main Content ---------- */
@@ -94,98 +71,131 @@
   margin: 0;
 }
 
-/* ---------- Hero Banner ---------- */
+/* ---------- Hero Banner (Centered Logic) ---------- */
 .heroBanner {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 20px;
-  padding: 24px 22px;
+  justify-content: center;
+  text-align: center;
+  gap: 15px;
+  padding: 30px 20px;
   border: 1px solid;
-  border-radius: 14px;
-  margin-bottom: 16px;
+  border-radius: 18px;
+  margin-bottom: 22px;
 }
 
-.heroEmoji { font-size: 3rem; line-height: 1; }
-.heroCgpa { font-size: 3rem; font-weight: 900; line-height: 1; letter-spacing: -1px; }
-.heroCgpaLabel { font-family: Consolas, monospace; font-size: 0.65rem; opacity: 0.45; margin: 2px 0 5px; }
-.heroHonours { font-family: Consolas, monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+@media (min-width: 600px) {
+  .heroBanner {
+    flex-direction: row;
+    text-align: left;
+    padding: 35px 40px;
+    gap: 30px;
+  }
+}
+
+.heroEmoji { font-size: 4rem; line-height: 1; }
+.heroMeta { display: flex; flex-direction: column; align-items: center; }
+
+@media (min-width: 600px) {
+  .heroMeta { align-items: flex-start; }
+}
+
+.heroCgpa { font-size: 3.5rem; font-weight: 900; line-height: 1; letter-spacing: -2px; }
+.heroCgpaLabel { font-family: Consolas, monospace; font-size: 0.75rem; opacity: 0.5; margin: 8px 0; letter-spacing: 1px; }
+.heroHonours { font-family: Consolas, monospace; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; }
 
 /* ---------- Stats Grid ---------- */
-.statsRow3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
-.statsGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+.statsRow3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+.statsGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+
+@media (min-width: 768px) {
+    .statsGrid { grid-template-columns: repeat(4, 1fr); }
+}
 
 .statCard {
   background: var(--tableData);
   border: 1px solid var(--borderColor);
-  border-radius: 10px;
-  padding: 12px 6px;
+  border-radius: 12px;
+  padding: 16px 8px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
-.statValue { font-size: 1.45rem; font-weight: 800; line-height: 1; color: var(--accentGreen); }
-.statLabel { font-family: Consolas, monospace; font-size: 0.52rem; opacity: 0.45; text-transform: uppercase; }
-.statIcon { font-size: 1rem !important; color: var(--accentGreen); opacity: 0.65; }
-
-/* ---------- Classification Change ---------- */
-.classChange {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px 16px;
-  border: 1px solid;
-  border-radius: 10px;
-  margin-bottom: 16px;
-}
+.statValue { font-size: 1.6rem; font-weight: 800; line-height: 1; color: var(--accentGreen); }
+.statLabel { font-family: Consolas, monospace; font-size: 0.55rem; opacity: 0.5; text-transform: uppercase; }
+.statIcon { font-size: 1.1rem !important; color: var(--accentGreen); opacity: 0.8; }
 
 /* ---------- Semester Breakdown ---------- */
+.semCards { display: flex; flex-direction: column; gap: 12px; }
 .semCard {
   background: var(--tableData);
   border: 1px solid var(--borderColor);
-  border-radius: 10px;
-  padding: 14px 16px;
+  border-radius: 12px;
+  padding: 16px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.sectionTitle { font-family: Consolas, monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; opacity: 0.4; text-transform: uppercase; margin: 25px 0 15px; }
+
 .semLeft { display: flex; flex-direction: column; gap: 4px; }
-.semName { font-size: 0.88rem; font-weight: 600; }
-.semMeta { display: flex; gap: 10px; font-family: Consolas, monospace; font-size: 0.72rem; opacity: 0.55; }
+.semName { font-size: 0.95rem; font-weight: 600; }
+.semMeta { display: flex; gap: 10px; font-family: Consolas, monospace; font-size: 0.75rem; opacity: 0.5; }
 
 .semRight { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 .semGpa { font-size: 1.6rem; font-weight: 900; line-height: 1; }
-.gpaBarTrack { width: 70px; height: 4px; border-radius: 2px; background: var(--borderColor); overflow: hidden; }
-.gpaBarFill { height: 100%; transition: width 0.35s ease; }
+.gpaBarTrack { width: 70px; height: 5px; border-radius: 3px; background: var(--borderColor); overflow: hidden; }
+.gpaBarFill { height: 100%; transition: width 0.4s ease; }
+
+/* ---------- Chart ---------- */
+.chartSection { background: var(--tableData); border: 1px solid var(--borderColor); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
 
 /* ---------- Footer ---------- */
 .footer {
-  margin-top: 28px;
-  padding-top: 16px;
+  margin-top: 40px;
+  padding-top: 20px;
   border-top: 1px solid var(--borderColor);
   text-align: center;
   font-family: Consolas, monospace;
-  font-size: 0.72rem;
-  opacity: 0.35;
+  font-size: 0.75rem;
+  opacity: 0.4;
+  line-height: 1.8;
 }
 
 /* ---------- Empty State ---------- */
-.emptyState { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 70px 30px; text-align: center; min-height: 60vh; }
-.emptyTitle { font-size: 1.1rem; font-weight: 700; }
-.emptySub { font-size: 0.88rem; opacity: 0.55; line-height: 1.7; max-width: 300px; }
-.goBackBtn { margin-top: 8px; padding: 10px 24px; background: var(--accentGreen); color: #fff; border: none; border-radius: 8px; font-family: Consolas, monospace; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.emptyState { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 12px; 
+    padding: 60px 20px; 
+    text-align: center; 
+    min-height: 65vh; 
+}
+.emptyTitle { font-size: 1.5rem; font-weight: 800; margin: 0; }
+.emptySub { font-size: 0.95rem; opacity: 0.6; line-height: 1.6; max-width: 320px; }
+.goBackBtn { 
+    margin-top: 15px; 
+    padding: 12px 28px; 
+    background: var(--accentGreen); 
+    color: #fff; 
+    border: none; 
+    border-radius: 10px; 
+    font-family: Consolas, monospace; 
+    font-size: 0.85rem; 
+    font-weight: 700; 
+    cursor: pointer; 
+}
 
 /* ---------- Mobile Optimization ---------- */
 @media (max-width: 600px) {
-  .backBar { padding: 6px 10px; }
-  .btnText { font-size: 0.6rem; }
-  .backBtn, .actionBtn { padding: 3px 6px; gap: 3px; }
-  .statsGrid { grid-template-columns: repeat(2, 1fr); }
-  .heroCgpa { font-size: 2.3rem; }
-  .semGpa { font-size: 1.4rem; }
-  .gpaBarTrack { width: 50px; }
+  .statsRow3 { grid-template-columns: repeat(3, 1fr); font-size: 0.8rem; }
+  .statValue { font-size: 1.2rem; }
+  .heroCgpa { font-size: 2.8rem; }
 }
