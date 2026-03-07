@@ -216,7 +216,7 @@ function Settings() {
 
               <div className={styles.settingRow}>
                 <div className={styles.settingInfo}>
-                  <span className={styles.settingLabel}>Show Grade Points Column</span>
+                  <span className={styles.settingLabel}>Show TCU Column</span>
                 </div>
                 <Toggle
                   on={showGradePoints}
