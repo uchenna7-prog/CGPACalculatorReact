@@ -31,13 +31,7 @@ function AccordionSection({ icon, title, isOpen, onToggle, children }) {
           viewBox="0 0 16 16"
           fill="none"
         >
-          <path
-            d="M3 6L8 11L13 6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
+          <path d="M3 6L8 11L13 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </button>
 
@@ -64,8 +58,7 @@ function Settings() {
   const [openSection, setOpenSection] = useState(null);
   const [statusMsg, setStatusMsg] = useState("");
 
-  const toggleSection = (id) =>
-    setOpenSection((prev) => (prev === id ? null : id));
+  const toggleSection = (id) => setOpenSection((prev) => (prev === id ? null : id));
 
   const showMsg = (msg) => {
     setStatusMsg(msg);
@@ -81,7 +74,6 @@ function Settings() {
 
   const handleClearData = () => {
     if (window.confirm("Clear all saved calculator data? This cannot be undone.")) {
-      // Preserve settings — only wipe GPA/calculator data
       Object.keys(localStorage)
         .filter((k) => k !== "cgpa_settings")
         .forEach((k) => localStorage.removeItem(k));
@@ -94,11 +86,9 @@ function Settings() {
       <SideBar />
       <div className={styles.mainWrapper}>
         <Header />
-
         <main className={styles.mainContent}>
           <div className={styles.accordionList}>
 
-            {/* ───── Appearance ───── */}
             <AccordionSection
               icon="palette"
               title="Appearance"
@@ -108,14 +98,12 @@ function Settings() {
               <div className={styles.settingRow}>
                 <div className={styles.settingInfo}>
                   <span className={styles.settingLabel}>Theme Mode</span>
-                  <span className={styles.settingDesc}>Choose how the app looks</span>
                 </div>
-
                 <div className={styles.themeOptions}>
                   {[
-                    { key: "dark-mode",    icon: "dark_mode",           label: "Dark"   },
-                    { key: "light-mode",   icon: "light_mode",          label: "Light"  },
-                    { key: "system-mode",  icon: "settings_brightness", label: "System" },
+                    { key: "dark-mode", icon: "dark_mode", label: "Dark" },
+                    { key: "light-mode", icon: "light_mode", label: "Light" },
+                    { key: "system-mode", icon: "settings_brightness", label: "System" },
                   ].map((t) => (
                     <button
                       key={t.key}
@@ -130,69 +118,6 @@ function Settings() {
               </div>
             </AccordionSection>
 
-            {/* ───── Grading Scale ───── */}
-            <AccordionSection
-              icon="grade"
-              title="Grading Scale"
-              isOpen={openSection === "grading"}
-              onToggle={() => toggleSection("grading")}
-            >
-              <div className={styles.settingRow}>
-                <div className={styles.settingInfo}>
-                  <span className={styles.settingLabel}>Scale Type</span>
-                  <span className={styles.settingDesc}>
-                    Select your institution's grading system
-                  </span>
-                </div>
-
-                <div className={styles.radioGroup}>
-                  <label className={styles.radioLabel}>
-                    <input
-                      type="radio"
-                      value="5point"
-                      checked={gradingScale === "5point"}
-                      onChange={(e) => updateSetting("gradingScale", e.target.value)}
-                    />
-                    5-Point Scale
-                  </label>
-                  <label className={styles.radioLabel}>
-                    <input
-                      type="radio"
-                      value="4point"
-                      checked={gradingScale === "4point"}
-                      onChange={(e) => updateSetting("gradingScale", e.target.value)}
-                    />
-                    4-Point Scale
-                  </label>
-                </div>
-              </div>
-
-              <div className={styles.gradeTableWrap}>
-                <p className={styles.gradeTableTitle}>
-                  Preview — {gradingScale === "5point" ? "5-Point" : "4-Point"} Scale
-                </p>
-                <table className={styles.table}>
-                  <thead>
-                    <tr>
-                      <th>Grade</th>
-                      <th>Points</th>
-                      <th>Score Range (%)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {GRADE_SCALES[gradingScale].map((row) => (
-                      <tr key={row.grade}>
-                        <td>{row.grade}</td>
-                        <td>{row.points}</td>
-                        <td>{row.range}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </AccordionSection>
-
-            {/* ───── Display Preferences ───── */}
             <AccordionSection
               icon="tune"
               title="Display Preferences"
@@ -202,7 +127,6 @@ function Settings() {
               <div className={styles.settingRow}>
                 <div className={styles.settingInfo}>
                   <span className={styles.settingLabel}>Decimal Places</span>
-                  <span className={styles.settingDesc}>Number of decimal places shown</span>
                 </div>
                 <select
                   className={styles.selectInput}
@@ -236,7 +160,6 @@ function Settings() {
               </div>
             </AccordionSection>
 
-            {/* ───── Data Management ───── */}
             <AccordionSection
               icon="storage"
               title="Data Management"
@@ -252,25 +175,17 @@ function Settings() {
                   onToggle={() => updateSetting("confirmDelete", !confirmDelete)}
                 />
               </div>
-
               <div className={styles.dangerZone}>
-                <h4 className={styles.dangerTitle}>
-                  <i className="material-icons">warning</i> Danger Zone
-                </h4>
                 <button className={styles.dangerBtn} onClick={handleClearData}>
-                  <i className="material-icons">delete_forever</i>
                   Clear All Saved Data
                 </button>
               </div>
             </AccordionSection>
+
           </div>
-
           {statusMsg && <p className={styles.statusMsg}>{statusMsg}</p>}
-
           <div className={styles.actionRow}>
-            <button className={styles.resetBtn} onClick={handleReset}>
-              Reset to Default
-            </button>
+            <button className={styles.resetBtn} onClick={handleReset}>Reset to Default</button>
           </div>
         </main>
       </div>
