@@ -100,6 +100,7 @@ function GPACalculator() {
 
   const dp = Number(decimalPlaces);
 
+  // ── Delete helpers that respect confirmDelete ──────────────────────────
   const handleDeleteCourse = (id) => {
     if (confirmDelete && !window.confirm("Delete this course?")) return;
     deleteCourse(id);
@@ -110,6 +111,7 @@ function GPACalculator() {
     deleteAllCourses();
   };
 
+  // ── Credit summary values ──────────────────────────────────────────────
   const totalUnits     = courses.reduce((s, c) => s + (Number(c.unit) || 0), 0);
   const weightedPoints = courses.reduce(
     (s, c) => s + (Number(c.unit) || 0) * gradePoints(c.grade), 0
@@ -167,8 +169,9 @@ function GPACalculator() {
                           ))}
                         </select>
                       </td>
+                      {/* TCU = unit × grade points */}
                       {showGradePoints && (
-                        <td className={styles.tcuBodyCell}>
+                        <td style={{ textAlign: "center", fontWeight: 600 }}>
                           {(Number(course.unit) || 0) * gradePoints(course.grade)}
                         </td>
                       )}
@@ -185,18 +188,23 @@ function GPACalculator() {
                   ))}
                 </tbody>
 
+                {/* Summary tfoot row */}
                 {showCreditSummary && (
-                  <tfoot className={styles.tableFooter}>
-                    <tr>
-                      <td colSpan={2} className={styles.totalLabelCell}>TOTALS</td>
-                      <td className={styles.totalValueCell}>{totalUnits}</td>
-                      <td className={styles.emptyFooterCell}></td>
-                      {showGradePoints && (
-                        <td className={styles.totalValueCell} style={{ textAlign: "center" }}>
-                          {weightedPoints}
-                        </td>
+                  <tfoot>
+                    <tr className={styles.summaryRow}>
+                      <td colSpan={2}><strong>TOTAL</strong></td>
+                      <td><strong>{totalUnits}</strong></td>
+                      {showGradePoints ? (
+                        <>
+                          <td></td>
+                          <td style={{ textAlign: "center" }}>
+                            <strong>{weightedPoints}</strong>
+                          </td>
+                          <td></td>
+                        </>
+                      ) : (
+                        <td colSpan={2}></td>
                       )}
-                      <td className={styles.emptyFooterCell}></td>
                     </tr>
                   </tfoot>
                 )}
