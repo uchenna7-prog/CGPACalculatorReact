@@ -8,20 +8,23 @@ import { ThemeProvider } from './contexts/ThemeContext.jsx'
 import { GpaProvider } from './contexts/GpaContext.jsx'
 import { PredictionProvider } from './contexts/PredictionContext.jsx'
 import { GpaCalculatorProvider } from './contexts/GpaCalculatorContext.jsx'
+import { SettingsProvider } from './contexts/SettingsContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <SideBarProvider>
-          <GpaProvider>
-            <PredictionProvider>
-              <GpaCalculatorProvider>
-                <App />
-              </GpaCalculatorProvider>
-            </PredictionProvider>
-          </GpaProvider>
-        </SideBarProvider>
+        <SettingsProvider>
+          <SideBarProvider>
+            <GpaProvider>
+              <PredictionProvider>
+                <GpaCalculatorProvider>
+                  <App />
+                </GpaCalculatorProvider>
+              </PredictionProvider>
+            </GpaProvider>
+          </SideBarProvider>
+        </SettingsProvider>
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,
