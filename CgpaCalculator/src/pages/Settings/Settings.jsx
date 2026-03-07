@@ -3,24 +3,7 @@ import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./Settings.module.css";
 import { useTheme } from "../../contexts/ThemeContext";
-
-const gradeScales = {
-  "5point": [
-    { grade: "A", points: 5, range: "70 – 100" },
-    { grade: "B", points: 4, range: "60 – 69" },
-    { grade: "C", points: 3, range: "50 – 59" },
-    { grade: "D", points: 2, range: "45 – 49" },
-    { grade: "E", points: 1, range: "40 – 44" },
-    { grade: "F", points: 0, range: "0 – 39" },
-  ],
-  "4point": [
-    { grade: "A", points: 4, range: "70 – 100" },
-    { grade: "B", points: 3, range: "60 – 69" },
-    { grade: "C", points: 2, range: "50 – 59" },
-    { grade: "D", points: 1, range: "45 – 49" },
-    { grade: "F", points: 0, range: "0 – 44" },
-  ],
-};
+import { useSettings } from "../../contexts/SettingsContext";
 
 function Toggle({ on, onToggle }) {
   return (
@@ -67,14 +50,18 @@ function AccordionSection({ icon, title, isOpen, onToggle, children }) {
 
 function Settings() {
   const { theme, changeTheme } = useTheme();
-  const [openSection, setOpenSection] = useState(null);
+  const {
+    gradingScale,      setGradingScale,
+    decimalPlaces,     setDecimalPlaces,
+    showGradePoints,   setShowGradePoints,
+    showCreditSummary, setShowCreditSummary,
+    confirmDelete,     setConfirmDelete,
+    gradeScaleRows,
+    resetSettings,
+  } = useSettings();
 
-  const [gradingScale, setGradingScale] = useState("5point");
-  const [decimalPlaces, setDecimalPlaces] = useState("2");
-  const [showGradePoints, setShowGradePoints] = useState(true);
-  const [showCreditSummary, setShowCreditSummary] = useState(true);
-  const [confirmDelete, setConfirmDelete] = useState(true);
-  const [statusMsg, setStatusMsg] = useState("");
+  const [openSection, setOpenSection] = useState(null);
+  const [statusMsg, setStatusMsg]     = useState("");
 
   const toggleSection = (id) =>
     setOpenSection((prev) => (prev === id ? null : id));
@@ -86,11 +73,7 @@ function Settings() {
 
   const handleReset = () => {
     changeTheme("light-mode");
-    setGradingScale("5point");
-    setDecimalPlaces("2");
-    setShowGradePoints(true);
-    setShowCreditSummary(true);
-    setConfirmDelete(true);
+    resetSettings();
     showMsg("All settings reset to default.");
   };
 
@@ -120,22 +103,18 @@ function Settings() {
               <div className={styles.settingRow}>
                 <div className={styles.settingInfo}>
                   <span className={styles.settingLabel}>Theme Mode</span>
-                  <span className={styles.settingDesc}>
-                    Choose how the app looks
-                  </span>
+                  <span className={styles.settingDesc}>Choose how the app looks</span>
                 </div>
 
                 <div className={styles.themeOptions}>
                   {[
-                    { key: "dark-mode", icon: "dark_mode", label: "Dark" },
-                    { key: "light-mode", icon: "light_mode", label: "Light" },
+                    { key: "dark-mode",   icon: "dark_mode",           label: "Dark"   },
+                    { key: "light-mode",  icon: "light_mode",          label: "Light"  },
                     { key: "system-mode", icon: "settings_brightness", label: "System" },
                   ].map((t) => (
                     <button
                       key={t.key}
-                      className={`${styles.themeBtn} ${
-                        theme === t.key ? styles.themeBtnActive : ""
-                      }`}
+                      className={`${styles.themeBtn} ${theme === t.key ? styles.themeBtnActive : ""}`}
                       onClick={() => changeTheme(t.key)}
                     >
                       <i className="material-icons">{t.icon}</i>
@@ -171,7 +150,6 @@ function Settings() {
                     />
                     5-Point Scale
                   </label>
-
                   <label className={styles.radioLabel}>
                     <input
                       type="radio"
@@ -188,7 +166,6 @@ function Settings() {
                 <p className={styles.gradeTableTitle}>
                   Preview — {gradingScale === "5point" ? "5-Point" : "4-Point"} Scale
                 </p>
-
                 <table className={styles.table}>
                   <thead>
                     <tr>
@@ -198,7 +175,7 @@ function Settings() {
                     </tr>
                   </thead>
                   <tbody>
-                    {gradeScales[gradingScale].map((row) => (
+                    {gradeScaleRows.map((row) => (
                       <tr key={row.grade}>
                         <td>{row.grade}</td>
                         <td>{row.points}</td>
@@ -220,11 +197,8 @@ function Settings() {
               <div className={styles.settingRow}>
                 <div className={styles.settingInfo}>
                   <span className={styles.settingLabel}>Decimal Places</span>
-                  <span className={styles.settingDesc}>
-                    Number of decimal places shown
-                  </span>
+                  <span className={styles.settingDesc}>Number of decimal places shown</span>
                 </div>
-
                 <select
                   className={styles.selectInput}
                   value={decimalPlaces}
@@ -238,9 +212,7 @@ function Settings() {
 
               <div className={styles.settingRow}>
                 <div className={styles.settingInfo}>
-                  <span className={styles.settingLabel}>
-                    Show Grade Points Column
-                  </span>
+                  <span className={styles.settingLabel}>Show Grade Points Column</span>
                 </div>
                 <Toggle
                   on={showGradePoints}
@@ -250,9 +222,7 @@ function Settings() {
 
               <div className={styles.settingRow}>
                 <div className={styles.settingInfo}>
-                  <span className={styles.settingLabel}>
-                    Show Credit Unit Summary
-                  </span>
+                  <span className={styles.settingLabel}>Show Credit Unit Summary</span>
                 </div>
                 <Toggle
                   on={showCreditSummary}
@@ -270,9 +240,7 @@ function Settings() {
             >
               <div className={styles.settingRow}>
                 <div className={styles.settingInfo}>
-                  <span className={styles.settingLabel}>
-                    Confirm Before Deleting
-                  </span>
+                  <span className={styles.settingLabel}>Confirm Before Deleting</span>
                 </div>
                 <Toggle
                   on={confirmDelete}
@@ -284,11 +252,7 @@ function Settings() {
                 <h4 className={styles.dangerTitle}>
                   <i className="material-icons">warning</i> Danger Zone
                 </h4>
-
-                <button
-                  className={styles.dangerBtn}
-                  onClick={handleClearData}
-                >
+                <button className={styles.dangerBtn} onClick={handleClearData}>
                   <i className="material-icons">delete_forever</i>
                   Clear All Saved Data
                 </button>
