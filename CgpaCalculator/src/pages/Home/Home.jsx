@@ -9,6 +9,15 @@ import { useSettings } from "../../contexts/SettingsContext";
 
 const SEMESTER_NAMES = { 1: "First", 2: "Second" };
 
+function getHonours(cgpa) {
+  if (cgpa === null) return null;
+  if (cgpa >= 4.5) return { label: "First Class Honours",        color: "#fbbf24", emoji: "🥇" };
+  if (cgpa >= 3.5) return { label: "Second Class Upper (2:1)",   color: "#34d399", emoji: "🥈" };
+  if (cgpa >= 2.4) return { label: "Second Class Lower (2:2)",   color: "#60a5fa", emoji: "🥉" };
+  if (cgpa >= 1.5) return { label: "Third Class Honours",        color: "#f87171", emoji: "📋" };
+  return           { label: "Pass",                              color: "#a78bfa", emoji: "📄" };
+}
+
 // ── Draggable Floating Button ──────────────────────────────────────────────
 function FloatingSummaryButton({ onClick }) {
   const btnRef   = useRef(null);
@@ -62,20 +71,23 @@ function FloatingSummaryButton({ onClick }) {
         border: "2px solid #1e2e26",
         boxShadow: "0 4px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(76,175,125,0.25)",
         cursor: "grab",
-        display: "flex", flexDirection: "column", alignItems: "center",
-        justifyContent: "center", gap: 3,
-        zIndex: 9999, userSelect: "none", touchAction: "none",
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        gap: 3, zIndex: 9999,
+        userSelect: "none", touchAction: "none",
       }}
     >
-      <span
-        className="material-icons"
-        style={{ fontSize: "1.5rem", color: "#fff", pointerEvents: "none" }}
-      >insights</span>
+      <span className="material-icons"
+        style={{ fontSize: "1.5rem", color: "#fff", pointerEvents: "none" }}>
+        insights
+      </span>
       <span style={{
         fontSize: "0.5rem", color: "#c8f0d8",
         fontFamily: "Consolas, monospace", fontWeight: 700,
         letterSpacing: 0.5, pointerEvents: "none",
-      }}>SUMMARY</span>
+      }}>
+        SUMMARY
+      </span>
     </button>,
     document.body
   );
@@ -85,23 +97,31 @@ function FloatingSummaryButton({ onClick }) {
 function Home() {
   const navigate = useNavigate();
   const {
-    semesters, cgpa, cgpaError,
-    addSemester, removeSemester, calculateCGPA,
-    updateCourse, addCourse, deleteCourse, deleteAllCourses,
+    semesters,
+    cgpa,
+    cgpaError,
+    addSemester,
+    removeSemester,
+    calculateCGPA,
+    updateCourse,
+    addCourse,
+    deleteCourse,
+    deleteAllCourses,
     calculateSemesterGPA,
   } = useGpa();
 
   const {
+    decimalPlaces,
     showGradePoints,
     showCreditSummary,
     confirmDelete,
-    gradeList,
     gradePoints,
-    getHonours,
-    formatGpa,
+    availableGrades,
   } = useSettings();
 
-  // ── Delete helpers with optional confirm ──────────────────────────────
+  const dp = Number(decimalPlaces); // convert "2" → 2 for .toFixed()
+
+  // ── Delete helpers that respect confirmDelete setting ──────────────────
   const handleDeleteCourse = (semId, courseId) => {
     if (confirmDelete && !window.confirm("Delete this course?")) return;
     deleteCourse(semId, courseId);
@@ -112,14 +132,20 @@ function Home() {
     deleteAllCourses(semId);
   };
 
-  // ── Group semesters by year ────────────────────────────────────────────
+  // ── Credit unit summary helpers ────────────────────────────────────────
+  const getSemesterSummary = (courses) => {
+    const totalUnits    = courses.reduce((s, c) => s + (Number(c.unit) || 0), 0);
+    const weightedPoints = courses.reduce(
+      (s, c) => s + (Number(c.unit) || 0) * gradePoints(c.grade), 0
+    );
+    return { totalUnits, weightedPoints };
+  };
+
   const byYear = semesters.reduce((acc, s) => {
     if (!acc[s.year]) acc[s.year] = [];
     acc[s.year].push(s);
     return acc;
   }, {});
-
-  const honours = getHonours(cgpa);
 
   return (
     <div className={styles.homeContainer}>
@@ -128,14 +154,13 @@ function Home() {
         <Header />
         <main className={styles.mainContent}>
 
+          {/* Semesters grouped by year */}
           {Object.entries(byYear).map(([year, yearSemesters]) => (
             <div key={year}>
               <h2 className={styles.yearHeading}>YEAR {year}</h2>
 
               {yearSemesters.map((sem) => {
-                // Credit unit summary values
-                const totalUnits   = sem.courses.reduce((s, c) => s + (Number(c.unit) || 0), 0);
-                const totalPoints  = sem.courses.reduce((s, c) => s + (Number(c.unit) || 0) * gradePoints(c.grade), 0);
+                const { totalUnits, weightedPoints } = getSemesterSummary(sem.courses);
 
                 return (
                   <div key={sem.id}>
@@ -152,6 +177,7 @@ function Home() {
                               <th>COURSE CODE</th>
                               <th>COURSE UNITS</th>
                               <th>GRADE</th>
+                              {/* Conditionally show Grade Points column */}
                               {showGradePoints && <th>GRADE POINTS</th>}
                               <th></th>
                             </tr>
@@ -190,13 +216,15 @@ function Home() {
                                       updateCourse(sem.id, course.id, "grade", e.target.value)
                                     }
                                   >
-                                    {gradeList.map((g) => (
+                                    {/* Only show grades valid for the active scale */}
+                                    {availableGrades.map((g) => (
                                       <option key={g} value={g}>{g}</option>
                                     ))}
                                   </select>
                                 </td>
+                                {/* Grade points cell */}
                                 {showGradePoints && (
-                                  <td className={styles.gradePointsCell}>
+                                  <td style={{ textAlign: "center", fontWeight: 600 }}>
                                     {gradePoints(course.grade)}
                                   </td>
                                 )}
@@ -217,11 +245,11 @@ function Home() {
                         <p className={styles.noCoursesMsg}>No courses added.</p>
                       )}
 
-                      {/* Credit Unit Summary */}
+                      {/* Credit unit summary */}
                       {showCreditSummary && sem.courses.length > 0 && (
                         <div className={styles.creditSummary}>
                           <span>Total Units: <strong>{totalUnits}</strong></span>
-                          <span>Total Quality Points: <strong>{totalPoints}</strong></span>
+                          <span>Weighted Points: <strong>{weightedPoints}</strong></span>
                         </div>
                       )}
 
@@ -232,7 +260,7 @@ function Home() {
                       )}
                       {sem.gpa !== null && sem.gpa !== "error" && (
                         <div className={styles.gpaResult}>
-                          GPA: {formatGpa(sem.gpa)}
+                          GPA: {sem.gpa.toFixed(dp)}
                         </div>
                       )}
 
@@ -240,10 +268,7 @@ function Home() {
                         <button className={styles.addCourseBtn} onClick={() => addCourse(sem.id)}>
                           ADD COURSE
                         </button>
-                        <button
-                          className={styles.deleteAllBtn}
-                          onClick={() => handleDeleteAllCourses(sem.id)}
-                        >
+                        <button className={styles.deleteAllBtn} onClick={() => handleDeleteAllCourses(sem.id)}>
                           DELETE ALL COURSES
                         </button>
                         <button className={styles.calcGpaBtn} onClick={() => calculateSemesterGPA(sem.id)}>
@@ -261,12 +286,7 @@ function Home() {
           {cgpaError && <p className={styles.errorMsg}>{cgpaError}</p>}
           {cgpa !== null && (
             <div className={styles.cgpaResult}>
-              <span>CURRENT CGPA: {formatGpa(cgpa)}</span>
-              {honours && (
-                <span className={styles.honoursTag} style={{ color: honours.color }}>
-                  {honours.emoji} {honours.label}
-                </span>
-              )}
+              CURRENT CGPA: {cgpa.toFixed(dp)}
             </div>
           )}
 
@@ -287,10 +307,13 @@ function Home() {
             </button>
           </div>
 
+          {/* Spacer so floating summary button never overlaps CGPA controls */}
           <div style={{ height: 80 }} />
+
         </main>
       </div>
 
+      {/* Floating draggable summary button */}
       <FloatingSummaryButton onClick={() => navigate("/summary")} />
     </div>
   );
