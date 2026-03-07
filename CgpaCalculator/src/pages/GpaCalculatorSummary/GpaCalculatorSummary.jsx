@@ -5,7 +5,6 @@ import styles from "./GpaCalculatorSummary.module.css";
 import { useGpaCalculator } from "../../contexts/GpaCalculatorContext";
 import { useSettings } from "../../contexts/SettingsContext";
 
-// Dynamic Honours calculation based on Scale
 function getHonours(gpa, scale) {
   if (gpa === null) return null;
   const is4Point = scale === "4point";
@@ -33,7 +32,7 @@ function getGpaColor(gpa, scale) {
   return "#a78bfa";
 }
 
-function GpaBarChart({ gradeBreakdown, totalCourses, gradingScale }) {
+function GpaBarChart({ gradeBreakdown, totalCourses, gradingScale, getGpaColor }) {
   const maxCount = Math.max(...gradeBreakdown.map((g) => g.count), 1);
   const chartH = 100;
   const chartW = 300;
@@ -76,29 +75,22 @@ function GpaCalculatorSummary() {
   const { courses } = useGpaCalculator();
   const { gradingScale, gradePoints, availableGrades, decimalPlaces, GRADE_SCALES } = useSettings();
 
-  const dp = Number(decimalPlaces);
-  const maxScale = gradingScale === "4point" ? 4 : 5;
-
-  // Auto-calculation logic (Runs even if "Calculate" wasn't clicked)
-  const hasData = courses.length > 0 && courses.some(c => c.unit !== "");
-  const totalUnits = courses.reduce((sum, c) => sum + (parseFloat(c.unit) || 0), 0);
-  const totalWeightedPoints = courses.reduce((sum, c) => sum + (parseFloat(c.unit) || 0) * gradePoints(c.grade), 0);
+  // Auto-calculation logic
+  const validCourses = courses.filter(c => c.unit !== "" && !isNaN(parseFloat(c.unit)));
+  const hasData = validCourses.length > 0;
+  
+  const totalUnits = validCourses.reduce((sum, c) => sum + parseFloat(c.unit), 0);
+  const totalWeightedPoints = validCourses.reduce((sum, c) => sum + (parseFloat(c.unit) * gradePoints(c.grade)), 0);
   
   const gpaDisplay = totalUnits > 0 ? totalWeightedPoints / totalUnits : null;
   const honours = getHonours(gpaDisplay, gradingScale);
   const gpaColor = gpaDisplay !== null ? getGpaColor(gpaDisplay, gradingScale) : "var(--accentGreen)";
 
-  // Filter breakdown to only show grades valid for current scale
   const gradeBreakdown = availableGrades.map((g) => ({
     grade: g,
     count: courses.filter((c) => c.grade === g).length,
     points: gradePoints(g),
   })).filter((g) => g.count > 0);
-
-  const gradeUnits = gradeBreakdown.map((g) => ({
-    ...g,
-    units: courses.filter((c) => c.grade === g.grade).reduce((sum, c) => sum + (parseFloat(c.unit) || 0), 0),
-  }));
 
   const highestGrade = gradeBreakdown.length > 0 ? gradeBreakdown[0].grade : "—";
   const lowestGrade = gradeBreakdown.length > 0 ? gradeBreakdown[gradeBreakdown.length - 1].grade : "—";
@@ -114,7 +106,6 @@ function GpaCalculatorSummary() {
             <span className="material-icons" style={{ fontSize: "0.9rem" }}>arrow_back</span>
             <span className={styles.btnText}>Back</span>
           </button>
-
           <div className={styles.actionGroup}>
             <button className={`${styles.actionBtn} ${styles.exportBtn}`}>
               <span className="material-icons" style={{ fontSize: "0.9rem" }}>file_download</span>
@@ -124,26 +115,29 @@ function GpaCalculatorSummary() {
         </div>
 
         <main className={styles.mainContent}>
-          <div className={styles.pageTitle}>
-            <span className="material-icons" style={{ fontSize: "1.3rem" }}>grade</span>
-            <h2>GPA Summary</h2>
-          </div>
-
           {!hasData ? (
             <div className={styles.emptyState}>
-              <span className="material-icons" style={{ fontSize: "4rem", color: "var(--accentGreen)", opacity: 0.35 }}> pending_actions </span>
-              <h3 className={styles.emptyTitle}>Nothing to show yet</h3>
-              <p className={styles.emptySub}>Add courses and units in the calculator to see your live GPA summary here.</p>
-              <button className={styles.goBackBtn} onClick={() => navigate("/gpaCalculator")}> Go to Calculator </button>
+              <span className="material-icons" style={{ fontSize: "4.5rem", color: "var(--accentGreen)", opacity: 0.3 }}>
+                pending_actions
+              </span>
+              <h2 className={styles.emptyTitle}>No Data Found</h2>
+              <p className={styles.emptySub}>Please add courses and units in the calculator first.</p>
+              <button className={styles.goBackBtn} onClick={() => navigate("/gpaCalculator")}>Go to Calculator</button>
             </div>
           ) : (
             <>
-              {/* Centered Hero Banner */}
+              <div className={styles.pageTitle}>
+                <span className="material-icons" style={{ fontSize: "1.3rem" }}>grade</span>
+                <h2>GPA Summary</h2>
+              </div>
+
               <div className={styles.heroBanner} style={{ background: `${gpaColor}15`, borderColor: `${gpaColor}40` }} >
                 <span className={styles.heroEmoji}>{honours?.emoji ?? "📊"}</span>
                 <div className={styles.heroMeta}>
-                  <div className={styles.heroGpa} style={{ color: gpaColor }}> {gpaDisplay?.toFixed(dp) || "0.00"} </div>
-                  <div className={styles.heroGpaLabel}>GPA ({maxScale}.0 SCALE)</div>
+                  <div className={styles.heroGpa} style={{ color: gpaColor }}> 
+                    {gpaDisplay?.toFixed(Number(decimalPlaces)) || "0.00"} 
+                  </div>
+                  <div className={styles.heroGpaLabel}>GPA ({gradingScale === "4point" ? "4.0" : "5.0"} SCALE)</div>
                   {honours && ( <div className={styles.heroClassLabel} style={{ color: gpaColor }}> {honours.label} </div> )}
                 </div>
               </div>
@@ -166,7 +160,12 @@ function GpaCalculatorSummary() {
               <div className={styles.chartSection}>
                 <div className={styles.sectionTitle}>GRADE DISTRIBUTION</div>
                 <div className={styles.chartWrap}>
-                  <GpaBarChart gradeBreakdown={gradeBreakdown} totalCourses={courses.length} gradingScale={gradingScale} />
+                  <GpaBarChart 
+                    gradeBreakdown={gradeBreakdown} 
+                    totalCourses={courses.length} 
+                    gradingScale={gradingScale} 
+                    getGpaColor={getGpaColor} 
+                  />
                 </div>
               </div>
 
@@ -176,7 +175,7 @@ function GpaCalculatorSummary() {
                   {gradeBreakdown.map(({ grade, count, points }) => {
                     const pct = Math.round((count / courses.length) * 100);
                     const gradeCol = getGpaColor(points, gradingScale);
-                    const unitSum = gradeUnits.find((g) => g.grade === grade)?.units ?? 0;
+                    const unitSum = courses.filter(c => c.grade === grade).reduce((s, c) => s + (parseFloat(c.unit) || 0), 0);
                     return (
                       <div key={grade} className={styles.breakdownRow}>
                         <div className={styles.gradeBadge} style={{ background: `${gradeCol}20`, border: `1px solid ${gradeCol}50`, color: gradeCol }} > {grade} </div>
@@ -189,23 +188,6 @@ function GpaCalculatorSummary() {
                             <div className={styles.barFill} style={{ width: `${pct}%`, background: gradeCol }} />
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className={styles.courseSection}>
-                <div className={styles.sectionTitle}>ALL COURSES</div>
-                <div className={styles.courseList}>
-                  {courses.map((course, idx) => {
-                    const col = getGpaColor(gradePoints(course.grade), gradingScale);
-                    return (
-                      <div key={course.id} className={styles.courseRow}>
-                        <div className={styles.courseIndex}>{idx + 1}</div>
-                        <div className={styles.courseCode}> {course.code || <span style={{ opacity: 0.3 }}>—</span>} </div>
-                        <div className={styles.courseUnit}>{course.unit} unit{parseFloat(course.unit) !== 1 ? "s" : ""}</div>
-                        <div className={styles.courseGrade} style={{ background: `${col}20`, border: `1px solid ${col}50`, color: col }} > {course.grade} </div>
                       </div>
                     );
                   })}
