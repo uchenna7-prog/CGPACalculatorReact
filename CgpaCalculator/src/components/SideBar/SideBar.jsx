@@ -86,7 +86,9 @@ export default function SideBar() {
       >
         <header className={`${styles.sidebarHeader} ${isMobile ? styles.mobileSideHeader : ""}`}>
           <button className={styles.menuBtn} onClick={toggleSideBar}>
-            <i className="material-icons">{isMobile && isOpen ? "close" : "menu"}</i>
+            <i className="material-icons">
+              {isMobile && isOpen ? "close" : "menu"}
+            </i>
           </button>
         </header>
 
@@ -96,12 +98,20 @@ export default function SideBar() {
             return (
               <div
                 key={item.id}
-                className={`${styles.navItem} ${isExpanded ? styles.navItemExpanded : ""}`}
+                className={`${styles.navItem} ${
+                  isExpanded ? styles.navItemExpanded : ""
+                }`}
               >
-                <div className={`${styles.navRow} ${isExpanded ? styles.navRowExpanded : ""}`}>
+                <div
+                  className={`${styles.navRow} ${
+                    isExpanded ? styles.navRowExpanded : ""
+                  }`}
+                >
                   <Link
                     to={item.to}
-                    className={`${styles.navBtn} ${isCollapsed ? styles.navBtnCollapsed : ""}`}
+                    className={`${styles.navBtn} ${
+                      isCollapsed ? styles.navBtnCollapsed : ""
+                    }`}
                     onClick={() => isMobile && toggleSideBar()}
                   >
                     <i className="material-icons">{item.icon}</i>
@@ -110,7 +120,9 @@ export default function SideBar() {
 
                   {!isCollapsed && (
                     <button
-                      className={`${styles.arrowBtn} ${isExpanded ? styles.arrowOpen : ""}`}
+                      className={`${styles.arrowBtn} ${
+                        isExpanded ? styles.arrowOpen : ""
+                      }`}
                       onClick={() => toggle(item.id)}
                     >
                       <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
@@ -127,7 +139,11 @@ export default function SideBar() {
                 </div>
 
                 {!isCollapsed && (
-                  <div className={`${styles.description} ${isExpanded ? styles.descriptionOpen : ""}`}>
+                  <div
+                    className={`${styles.description} ${
+                      isExpanded ? styles.descriptionOpen : ""
+                    }`}
+                  >
                     <ul className={styles.descriptionList}>
                       {item.description.map((point, index) => (
                         <li key={index}>{point}</li>
@@ -136,9 +152,26 @@ export default function SideBar() {
                   </div>
                 )}
               </div>
-            )
+            );
           })}
         </nav>
+
+        {/* Footer */}
+        {!isCollapsed && (
+          <div className={styles.sidebarFooter}>
+            <p>
+              © {new Date().getFullYear()} All rights reserved
+            </p>
+            <a
+              href="https://uchendu-uchenna-portfolio.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.footerLink}
+            >
+              Built by Uchendu Uchenna
+            </a>
+          </div>
+        )}
       </aside>
     </>
   );
