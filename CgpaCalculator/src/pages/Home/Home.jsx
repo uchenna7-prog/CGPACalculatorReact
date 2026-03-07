@@ -247,8 +247,13 @@ function Home() {
                               <tr className={styles.summaryRow}>
                                 <td colSpan={2}><strong>TOTAL</strong></td>
                                 <td><strong>{totalUnits}</strong></td>
-                                {showGradePoints && <td style={{ textAlign: "center" }}><strong>{weightedPoints}</strong></td>}
-                                <td></td>
+                                {showGradePoints && (
+                                  <td style={{ textAlign: "center" }}>
+                                    <strong>{weightedPoints}</strong>
+                                  </td>
+                                )}
+                                {/* stretch remaining space to reach delete column end */}
+                                <td colSpan={showGradePoints ? 1 : 2}></td>
                               </tr>
                             </tfoot>
                           )}
