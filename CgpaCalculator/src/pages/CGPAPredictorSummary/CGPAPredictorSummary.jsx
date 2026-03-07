@@ -3,28 +3,37 @@ import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./CGPAPredictorSummary.module.css";
 import { usePrediction } from "../../contexts/PredictionContext";
+import { useSettings } from "../../contexts/SettingsContext";
 
-const GRADE_POINTS = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
-
-function getHonours(cgpa) {
+function getHonours(cgpa, scale) {
   if (cgpa === null) return null;
-  if (cgpa >= 4.5) return { label: "First Class Honours", color: "#fbbf24", emoji: "🥇" };
-  if (cgpa >= 3.5) return { label: "Second Class Upper (2:1)", color: "#34d399", emoji: "🥈" };
-  if (cgpa >= 2.4) return { label: "Second Class Lower (2:2)", color: "#60a5fa", emoji: "🥉" };
-  if (cgpa >= 1.5) return { label: "Third Class Honours", color: "#f87171", emoji: "📋" };
+  const is4Point = scale === "4point";
+  const thresholds = is4Point 
+    ? { first: 3.5, upper: 3.0, lower: 2.0, third: 1.0 } 
+    : { first: 4.5, upper: 3.5, lower: 2.4, third: 1.5 };
+
+  if (cgpa >= thresholds.first) return { label: "First Class Honours", color: "#fbbf24", emoji: "🥇" };
+  if (cgpa >= thresholds.upper) return { label: "Second Class Upper (2:1)", color: "#34d399", emoji: "🥈" };
+  if (cgpa >= thresholds.lower) return { label: "Second Class Lower (2:2)", color: "#60a5fa", emoji: "🥉" };
+  if (cgpa >= thresholds.third) return { label: "Third Class Honours", color: "#f87171", emoji: "📋" };
   return { label: "Pass", color: "#a78bfa", emoji: "📄" };
 }
 
-function getGpaColor(gpa) {
-  if (gpa >= 4.5) return "#fbbf24";
-  if (gpa >= 3.5) return "#34d399";
-  if (gpa >= 2.4) return "#60a5fa";
-  if (gpa >= 1.5) return "#f87171";
+function getGpaColor(gpa, scale) {
+  const is4Point = scale === "4point";
+  const thresholds = is4Point 
+    ? { first: 3.5, upper: 3.0, lower: 2.0, third: 1.0 } 
+    : { first: 4.5, upper: 3.5, lower: 2.4, third: 1.5 };
+
+  if (gpa >= thresholds.first) return "#fbbf24";
+  if (gpa >= thresholds.upper) return "#34d399";
+  if (gpa >= thresholds.lower) return "#60a5fa";
+  if (gpa >= thresholds.third) return "#f87171";
   return "#a78bfa";
 }
 
-function CgpaTrajectoryChart({ dataPoints }) {
-  const maxVal = 5;
+function CgpaTrajectoryChart({ dataPoints, gradingScale }) {
+  const maxVal = gradingScale === "4point" ? 4 : 5;
   const chartH = 130;
   const chartW = 340;
   const padL = 32;
@@ -40,12 +49,18 @@ function CgpaTrajectoryChart({ dataPoints }) {
 
   const pts = dataPoints.map((d, i) => `${xPos(i)},${yPos(d.value)}`).join(" ");
 
-  const thresholds = [
-    { label: "1st", value: 4.5, color: "#fbbf2455" },
-    { label: "2:1", value: 3.5, color: "#34d39955" },
-    { label: "2:2", value: 2.4, color: "#60a5fa55" },
-    { label: "3rd", value: 1.5, color: "#f8717155" },
-  ];
+  const thresholds = gradingScale === "4point" 
+    ? [
+        { label: "1st", value: 3.5, color: "#fbbf2455" },
+        { label: "2:1", value: 3.0, color: "#34d39955" },
+        { label: "2:2", value: 2.0, color: "#60a5fa55" },
+      ]
+    : [
+        { label: "1st", value: 4.5, color: "#fbbf2455" },
+        { label: "2:1", value: 3.5, color: "#34d39955" },
+        { label: "2:2", value: 2.4, color: "#60a5fa55" },
+        { label: "3rd", value: 1.5, color: "#f8717155" },
+      ];
 
   return (
     <svg viewBox={`0 0 ${chartW} ${chartH}`} style={{ width: "100%", height: "auto", display: "block" }}>
@@ -82,19 +97,20 @@ function CgpaTrajectoryChart({ dataPoints }) {
 function CGPAPredictorSummary() {
   const navigate = useNavigate();
   const { currentCgpa, totalUnits, semesters, predictedCgpa } = usePrediction();
+  const { gradingScale, gradePoints, GRADE_SCALES, decimalPlaces } = useSettings();
 
-  const hasData = predictedCgpa !== null;
+  const hasData = predictedCgpa !== null && predictedCgpa !== 0;
   const currentVal = parseFloat(currentCgpa);
-  const currentHonours = getHonours(isNaN(currentVal) ? null : currentVal);
-  const predictedHonours = getHonours(predictedCgpa);
+  const currentHonours = getHonours(isNaN(currentVal) ? null : currentVal, gradingScale);
+  const predictedHonours = getHonours(predictedCgpa, gradingScale);
   const diff = hasData && !isNaN(currentVal) ? predictedCgpa - currentVal : null;
-  const predictedColor = predictedCgpa !== null ? getGpaColor(predictedCgpa) : "var(--accentGreen)";
+  const predictedColor = predictedCgpa !== null ? getGpaColor(predictedCgpa, gradingScale) : "var(--accentGreen)";
 
   const semSummaries = semesters.map((s) => {
     const valid = s.courses.length > 0 && s.courses.every((c) => c.unit !== "" && !isNaN(parseFloat(c.unit)));
     if (!valid) return { ...s, computedGpa: null };
     const tu = s.courses.reduce((sum, c) => sum + parseFloat(c.unit), 0);
-    const tp = s.courses.reduce((sum, c) => sum + parseFloat(c.unit) * GRADE_POINTS[c.grade], 0);
+    const tp = s.courses.reduce((sum, c) => sum + parseFloat(c.unit) * gradePoints(c.grade), 0);
     return { ...s, computedGpa: tu === 0 ? null : tp / tu };
   });
 
@@ -103,17 +119,17 @@ function CGPAPredictorSummary() {
 
   const chartPoints = (() => {
     if (!hasData || isNaN(currentVal)) return [];
-    const points = [{ label: "Now", value: currentVal, color: getGpaColor(currentVal) }];
+    const points = [{ label: "Now", value: currentVal, color: getGpaColor(currentVal, gradingScale) }];
     let cumPts = currentVal * parseFloat(totalUnits);
     let cumUnits = parseFloat(totalUnits);
     semSummaries.forEach((s, i) => {
-      const gpaVal = s.gpa !== null && s.gpa !== "error" ? s.gpa : s.computedGpa;
+      const gpaVal = s.computedGpa;
       const semUnits = s.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0);
       if (gpaVal !== null && semUnits > 0) {
         cumPts += gpaVal * semUnits;
         cumUnits += semUnits;
         const rolling = cumPts / cumUnits;
-        points.push({ label: `S${i + 1}`, value: parseFloat(rolling.toFixed(3)), color: getGpaColor(rolling) });
+        points.push({ label: `S${i + 1}`, value: parseFloat(rolling.toFixed(3)), color: getGpaColor(rolling, gradingScale) });
       }
     });
     return points;
@@ -129,46 +145,35 @@ function CGPAPredictorSummary() {
             <span className="material-icons" style={{ fontSize: "0.9rem" }}>arrow_back</span>
             <span className={styles.btnText}>Back</span>
           </button>
-
-          <div className={styles.actionGroup}>
-            <button className={styles.actionBtn}>
-              <span className="material-icons" style={{ fontSize: "0.9rem" }}>share</span>
-              <span className={styles.btnText}>Share</span>
-            </button>
-            <button className={`${styles.actionBtn} ${styles.exportBtn}`}>
-              <span className="material-icons" style={{ fontSize: "0.9rem" }}>file_download</span>
-              <span className={styles.btnText}>Export</span>
-            </button>
-          </div>
         </div>
 
         <main className={styles.mainContent}>
-          <div className={styles.pageTitle}>
-            <span className="material-icons" style={{ fontSize: "1.3rem" }}>trending_up</span>
-            <h2>Prediction Summary</h2>
-          </div>
-
           {!hasData ? (
             <div className={styles.emptyState}>
-              <span className="material-icons" style={{ fontSize: "4rem", color: "var(--accentGreen)", opacity: 0.4 }}> pending_actions </span>
-              <h3 className={styles.emptyTitle}>No prediction yet</h3>
-              <p className={styles.emptySub}>Go to the CGPA Predictor, fill in your current CGPA, total units, add your future courses and hit Predict CGPA — then come back here.</p>
+              <span className="material-icons" style={{ fontSize: "4.5rem", color: "var(--accentGreen)", opacity: 0.3 }}> pending_actions </span>
+              <h2 className={styles.emptyTitle}>No Data Found</h2>
+              <p className={styles.emptySub}>Please add your current CGPA, total units, and future courses in the predictor first.</p>
               <button className={styles.goBackBtn} onClick={() => navigate("/cgpaPredictor")}> Go to Predictor </button>
             </div>
           ) : (
             <>
+              <div className={styles.pageTitle}>
+                <span className="material-icons" style={{ fontSize: "1.3rem" }}>trending_up</span>
+                <h2>Prediction Summary</h2>
+              </div>
+
               <div className={styles.heroBanner} style={{ background: `${predictedColor}15`, borderColor: `${predictedColor}40` }} >
                 <span className={styles.heroEmoji}>{predictedHonours?.emoji ?? "📈"}</span>
                 <div className={styles.heroMeta}>
-                  <div className={styles.heroCgpa} style={{ color: predictedColor }}> {predictedCgpa.toFixed(2)} </div>
-                  <div className={styles.heroCgpaLabel}>PREDICTED CGPA</div>
+                  <div className={styles.heroCgpa} style={{ color: predictedColor }}> {predictedCgpa.toFixed(Number(decimalPlaces))} </div>
+                  <div className={styles.heroCgpaLabel}>PREDICTED CGPA ({gradingScale === '4point' ? '4.0' : '5.0'} SCALE)</div>
                   {predictedHonours && ( <div className={styles.heroHonours} style={{ color: predictedColor }}> {predictedHonours.label} </div> )}
                 </div>
               </div>
 
               <div className={styles.statsRow3}>
                 <div className={styles.statCard}>
-                  <div className={styles.statValue} style={{ color: !isNaN(currentVal) ? getGpaColor(currentVal) : "var(--accentGreen)" }}>
+                  <div className={styles.statValue} style={{ color: !isNaN(currentVal) ? getGpaColor(currentVal, gradingScale) : "var(--accentGreen)" }}>
                     {!isNaN(currentVal) ? currentVal.toFixed(2) : "—"}
                   </div>
                   <div className={styles.statLabel}>CURRENT</div>
@@ -185,19 +190,11 @@ function CGPAPredictorSummary() {
                 </div>
               </div>
 
-              {currentHonours && predictedHonours && currentHonours.label !== predictedHonours.label && (
-                <div className={styles.classChange} style={{ background: `${predictedColor}0d`, borderColor: `${predictedColor}30` }}>
-                  <span style={{ fontFamily: "Consolas, monospace", fontSize: "0.72rem", color: getGpaColor(currentVal), fontWeight: 700 }}> {currentHonours.emoji} {currentHonours.label} </span>
-                  <span className="material-icons" style={{ fontSize: "1rem", color: "var(--accentGreen)", opacity: 0.7 }}> arrow_forward </span>
-                  <span style={{ fontFamily: "Consolas, monospace", fontSize: "0.72rem", color: predictedColor, fontWeight: 700 }}> {predictedHonours.emoji} {predictedHonours.label} </span>
-                </div>
-              )}
-
               {chartPoints.length >= 2 && (
                 <div className={styles.chartSection}>
                   <div className={styles.sectionTitle}>CGPA TRAJECTORY</div>
                   <div className={styles.chartWrap}>
-                    <CgpaTrajectoryChart dataPoints={chartPoints} />
+                    <CgpaTrajectoryChart dataPoints={chartPoints} gradingScale={gradingScale} />
                   </div>
                 </div>
               )}
@@ -221,10 +218,11 @@ function CGPAPredictorSummary() {
                 <div className={styles.sectionTitle}>SEMESTER BREAKDOWN</div>
                 <div className={styles.semCards}>
                   {semSummaries.map((sem) => {
-                    const gpaVal = sem.gpa !== null && sem.gpa !== "error" ? sem.gpa : sem.computedGpa;
+                    const gpaVal = sem.computedGpa;
                     const semUnits = sem.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0);
-                    const gpaCol = gpaVal !== null ? getGpaColor(gpaVal) : "var(--textColor)";
-                    const pct = gpaVal !== null ? (gpaVal / 5) * 100 : 0;
+                    const gpaCol = gpaVal !== null ? getGpaColor(gpaVal, gradingScale) : "var(--textColor)";
+                    const max = gradingScale === "4point" ? 4 : 5;
+                    const pct = gpaVal !== null ? (gpaVal / max) * 100 : 0;
                     return (
                       <div key={sem.id} className={styles.semCard}>
                         <div className={styles.semLeft}>
@@ -251,8 +249,10 @@ function CGPAPredictorSummary() {
               </div>
 
               <div className={styles.footer}>
-                <div>Nigerian 5-point grading scale</div>
-                <div>A=5 · B=4 · C=3 · D=2 · E=1 · F=0</div>
+                <div>{gradingScale === '4point' ? '4.0 Grading Scale' : 'Nigerian 5-point grading scale'}</div>
+                <div>
+                    {GRADE_SCALES[gradingScale].map((row) => `${row.grade}=${row.points}`).join(" · ")}
+                </div>
               </div>
             </>
           )}
