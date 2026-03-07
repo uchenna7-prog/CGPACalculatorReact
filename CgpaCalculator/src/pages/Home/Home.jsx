@@ -177,8 +177,8 @@ function Home() {
                               <th>COURSE CODE</th>
                               <th>COURSE UNITS</th>
                               <th>GRADE</th>
-                              {/* Conditionally show Grade Points column */}
-                              {showGradePoints && <th>GRADE POINTS</th>}
+                              {/* Conditionally show TCU column */}
+                              {showGradePoints && <th>TCU</th>}
                               <th></th>
                             </tr>
                           </thead>
@@ -222,10 +222,10 @@ function Home() {
                                     ))}
                                   </select>
                                 </td>
-                                {/* Grade points cell */}
+                                {/* TCU cell: unit × gradePoints */}
                                 {showGradePoints && (
                                   <td style={{ textAlign: "center", fontWeight: 600 }}>
-                                    {gradePoints(course.grade)}
+                                    {(Number(course.unit) || 0) * gradePoints(course.grade)}
                                   </td>
                                 )}
                                 <td>
@@ -240,17 +240,21 @@ function Home() {
                               </tr>
                             ))}
                           </tbody>
+
+                          {/* Credit summary as tfoot row */}
+                          {showCreditSummary && (
+                            <tfoot>
+                              <tr className={styles.summaryRow}>
+                                <td colSpan={2}><strong>TOTAL</strong></td>
+                                <td><strong>{totalUnits}</strong></td>
+                                {showGradePoints && <td style={{ textAlign: "center" }}><strong>{weightedPoints}</strong></td>}
+                                <td></td>
+                              </tr>
+                            </tfoot>
+                          )}
                         </table>
                       ) : (
                         <p className={styles.noCoursesMsg}>No courses added.</p>
-                      )}
-
-                      {/* Credit unit summary */}
-                      {showCreditSummary && sem.courses.length > 0 && (
-                        <div className={styles.creditSummary}>
-                          <span>Total Units: <strong>{totalUnits}</strong></span>
-                          <span>Weighted Points: <strong>{weightedPoints}</strong></span>
-                        </div>
                       )}
 
                       {sem.gpa === "error" && (
