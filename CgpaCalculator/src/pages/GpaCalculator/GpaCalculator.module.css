@@ -1,4 +1,3 @@
-
 .pageContainer {
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   display: flex;
@@ -28,7 +27,7 @@
   background: var(--tableData);
   border-radius: 8px;
   padding: 12px;
-  font-size: 0.85rem; 
+  font-size: 0.85rem;
 }
 
 
@@ -54,6 +53,16 @@
   border-right: 2px solid #2f4f3d;
 }
 
+.table th:last-child {
+  border-right: none;
+}
+
+.table td {
+  background: var(--tableData);
+  color: var(--textColor);
+}
+
+
 .inputField,
 .selectField {
   width: 100%;
@@ -74,7 +83,7 @@
 
 .deleteRowBtn {
   background: transparent;
-  color: var(--textColor); 
+  color: var(--textColor);
   border: none;
   border-radius: 5px;
   padding: 4px 8px;
@@ -83,14 +92,27 @@
   transition: opacity 0.2s;
 }
 
-.deleteRowBtn:hover { 
-  opacity: 0.8; 
+.deleteRowBtn:hover {
+  opacity: 0.8;
 }
 
 .noCoursesMsg {
   color: #3a7a58;
   font-size: 0.85rem;
   margin-bottom: 8px;
+}
+
+/* ── Summary tfoot row ── */
+.summaryRow td {
+  background: var(--bg);
+  color: var(--textColor);
+  font-size: 0.8rem;
+  border-top: 2px solid #2f4f3d;
+  font-family: Consolas, monospace;
+}
+
+.summaryRow strong {
+  color: #4caf7d;
 }
 
 
@@ -115,15 +137,9 @@
   transition: all 0.2s ease;
 }
 
-.addCourseBtn  { 
-  background-color: rgb(251, 191, 36);
- }
-.deleteAllBtn  { 
-  background-color: rgb(220, 38, 38);
- }
-.calcGpaBtn { 
-  background-color: rgb(37, 99, 235);
- }
+.addCourseBtn  { background-color: rgb(251, 191, 36); }
+.deleteAllBtn  { background-color: rgb(220, 38, 38);  }
+.calcGpaBtn    { background-color: rgb(37, 99, 235);  }
 
 .addCourseBtn:hover,
 .deleteAllBtn:hover,
@@ -162,33 +178,5 @@
   .calcGpaBtn {
     font-size: 0.7rem;
     padding: 6px 4px;
-  }
-}
-
-/* ... existing styles ... */
-
-.tcuCell {
-  text-align: center;
-  font-weight: bold;
-  color: var(--accentGreen);
-  background: rgba(168, 207, 184, 0.05);
-}
-
-.tableFooter {
-  background-color: #1a2e22;
-  color: #a8cfb8;
-  font-family: Consolas, monospace;
-  font-size: 0.8rem;
-}
-
-.tableFooter td {
-  border-top: 2px solid #2f4f3d;
-  padding: 8px;
-}
-
-/* Adjust button container for very small screens */
-@media (max-width: 400px) {
-  .buttonContainer {
-    grid-template-columns: 1fr;
   }
 }
