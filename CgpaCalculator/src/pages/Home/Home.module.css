@@ -144,8 +144,8 @@
 
 /* ── Summary tfoot row ── */
 .summaryRow td {
-  background-color: #1a2e22;
-  color: #a8cfb8;
+  background: var(--bg);
+  color: var(--textColor);
   font-size: 0.8rem;
   border-top: 2px solid #2f4f3d;
   font-family: Consolas, monospace;
