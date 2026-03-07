@@ -23,8 +23,8 @@ export const GRADE_SCALES = {
 const DEFAULTS = {
   gradingScale: "5point",
   decimalPlaces: "2",
-  showGradePoints: false,
-  showCreditSummary: false,
+  showGradePoints: true,
+  showCreditSummary: true,
   confirmDelete: false,
 };
 
