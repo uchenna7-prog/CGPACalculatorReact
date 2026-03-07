@@ -3,31 +3,50 @@ import SideBar from "../../components/SideBar/SideBar";
 import Header from "../../components/Header/Header";
 import styles from "./Summary.module.css";
 import { useGpa } from "../../contexts/GpaContext";
+import { useSettings } from "../../contexts/SettingsContext";
 
-const GRADE_POINTS = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
 const SEMESTER_NAMES = { 1: "First", 2: "Second" };
 
-function getHonours(cgpa) {
+// Dynamic Honours calculation based on Scale
+function getHonours(cgpa, scale) {
   if (cgpa === null) return null;
-  if (cgpa >= 4.5) return { label: "First Class Honours", color: "#fbbf24", emoji: "🥇" };
-  if (cgpa >= 3.5) return { label: "Second Class Upper (2:1)", color: "#34d399", emoji: "🥈" };
-  if (cgpa >= 2.4) return { label: "Second Class Lower (2:2)", color: "#60a5fa", emoji: "🥉" };
-  if (cgpa >= 1.5) return { label: "Third Class Honours", color: "#f87171", emoji: "📋" };
+  
+  // Thresholds for 4.0 scale vs 5.0 scale
+  const is4Point = scale === "4point";
+  const thresholds = is4Point 
+    ? { first: 3.5, upper: 3.0, lower: 2.0, third: 1.0 } 
+    : { first: 4.5, upper: 3.5, lower: 2.4, third: 1.5 };
+
+  if (cgpa >= thresholds.first) return { label: "First Class Honours", color: "#fbbf24", emoji: "🥇" };
+  if (cgpa >= thresholds.upper) return { label: "Second Class Upper (2:1)", color: "#34d399", emoji: "🥈" };
+  if (cgpa >= thresholds.lower) return { label: "Second Class Lower (2:2)", color: "#60a5fa", emoji: "🥉" };
+  if (cgpa >= thresholds.third) return { label: "Third Class Honours", color: "#f87171", emoji: "📋" };
   return { label: "Pass", color: "#a78bfa", emoji: "📄" };
 }
 
-function getGpaColor(gpa) {
-  if (gpa >= 4.5) return "#fbbf24";
-  if (gpa >= 3.5) return "#34d399";
-  if (gpa >= 2.4) return "#60a5fa";
-  if (gpa >= 1.5) return "#f87171";
+function getGpaColor(gpa, scale) {
+  const is4Point = scale === "4point";
+  const thresholds = is4Point 
+    ? { first: 3.5, upper: 3.0, lower: 2.0, third: 1.0 } 
+    : { first: 4.5, upper: 3.5, lower: 2.4, third: 1.5 };
+
+  if (gpa >= thresholds.first) return "#fbbf24";
+  if (gpa >= thresholds.upper) return "#34d399";
+  if (gpa >= thresholds.lower) return "#60a5fa";
+  if (gpa >= thresholds.third) return "#f87171";
   return "#a78bfa";
 }
 
 function Summary() {
   const navigate = useNavigate();
   const { semesters, cgpa } = useGpa();
-  const honours = getHonours(cgpa);
+  
+  // Pull dynamic settings
+  const { gradingScale, GRADE_SCALES, gradePoints, decimalPlaces } = useSettings();
+  
+  const dp = Number(decimalPlaces);
+  const maxPoints = gradingScale === "4point" ? 4 : 5;
+  const honours = getHonours(cgpa, gradingScale);
 
   const hasData =
     cgpa !== null ||
@@ -41,10 +60,12 @@ function Summary() {
     const valid =
       s.courses.length > 0 &&
       s.courses.every((c) => c.unit !== "" && !isNaN(parseFloat(c.unit)));
+    
     if (!valid) return { ...s, computedGpa: null };
+    
     const totalUnits = s.courses.reduce((sum, c) => sum + parseFloat(c.unit), 0);
     const totalPoints = s.courses.reduce(
-      (sum, c) => sum + parseFloat(c.unit) * GRADE_POINTS[c.grade],
+      (sum, c) => sum + parseFloat(c.unit) * gradePoints(c.grade),
       0
     );
     return {
@@ -78,7 +99,7 @@ function Summary() {
             <span className="material-icons" style={{ fontSize: "0.9rem" }}>arrow_back</span>
             <span className={styles.btnText}>Back</span>
           </button>
-          
+
           <div className={styles.actionGroup}>
             <button className={styles.actionBtn}>
               <span className="material-icons" style={{ fontSize: "0.9rem" }}>share</span>
@@ -124,9 +145,9 @@ function Summary() {
                 <span className={styles.honoursEmoji}>{honours?.emoji || "📄"}</span>
                 <div className={styles.honoursMeta}>
                   <div className={styles.cgpaNumber} style={{ color: "var(--accentGreen)" }}>
-                    {cgpa?.toFixed(2) || "0.00"}
+                    {cgpa?.toFixed(dp) || "0.00"}
                   </div>
-                  <div className={styles.cgpaLabel}>CGPA</div>
+                  <div className={styles.cgpaLabel}>CGPA ({maxPoints}.0 Scale)</div>
                   <div className={styles.honoursLabel} style={{ color: honours?.color || "#a78bfa" }}>
                     {honours?.label || "Pass"}
                   </div>
@@ -160,8 +181,9 @@ function Summary() {
                       {yearSems.map((sem) => {
                         const gpaVal = sem.gpa !== null && sem.gpa !== "error" ? sem.gpa : sem.computedGpa;
                         const semUnits = sem.courses.reduce((u, c) => u + (parseFloat(c.unit) || 0), 0);
-                        const gpaColor = gpaVal !== null ? getGpaColor(gpaVal) : "var(--textColor)";
-                        const pct = gpaVal !== null ? (gpaVal / 5) * 100 : 0;
+                        const gpaColor = gpaVal !== null ? getGpaColor(gpaVal, gradingScale) : "var(--textColor)";
+                        // Fill percentage based on current scale (4 or 5)
+                        const pct = gpaVal !== null ? (gpaVal / maxPoints) * 100 : 0;
 
                         return (
                           <div key={sem.id} className={styles.semCard}>
@@ -176,7 +198,7 @@ function Summary() {
                             </div>
                             <div className={styles.semRight}>
                               <div className={styles.semGpa} style={{ color: gpaColor, opacity: gpaVal !== null ? 1 : 0.3 }}>
-                                {gpaVal !== null ? gpaVal.toFixed(2) : "—"}
+                                {gpaVal !== null ? gpaVal.toFixed(dp) : "—"}
                               </div>
                               {gpaVal !== null && (
                                 <div className={styles.gpaBarTrack}>
@@ -193,8 +215,12 @@ function Summary() {
               </div>
 
               <div className={styles.footer}>
-                <div>Nigerian 5-point grading scale</div>
-                <div>A=5 · B=4 · C=3 · D=2 · E=1 · F=0</div>
+                <div>{gradingScale === "4point" ? "4.0 Grading Scale" : "Nigerian 5-point grading scale"}</div>
+                <div>
+                  {GRADE_SCALES[gradingScale]
+                    .map((row) => `${row.grade}=${row.points}`)
+                    .join(" · ")}
+                </div>
               </div>
             </>
           )}
