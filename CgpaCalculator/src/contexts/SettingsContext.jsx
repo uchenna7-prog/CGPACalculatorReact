@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-// Grade scale definitions
+// ── Grade scale definitions ────────────────────────────────────────────────
 export const GRADE_SCALES = {
   "5point": [
     { grade: "A", points: 5, range: "70 – 100" },
@@ -19,31 +19,31 @@ export const GRADE_SCALES = {
   ],
 };
 
-// ── FIXED DEFAULTS ────────────────────────────────────────────────────────
+// ── Defaults ───────────────────────────────────────────────────────────────
 const DEFAULTS = {
   gradingScale: "5point",
   decimalPlaces: "2",
-  showGradePoints: true,   // ON by default (TCU Column)
-  showCreditSummary: true, // ON by default (Credit Summary)
-  confirmDelete: false,    // OFF by default
+  showGradePoints: true,
+  showCreditSummary: true,
+  confirmDelete: false,
 };
 
 const STORAGE_KEY = "cgpa_settings";
 
+// ── Context ────────────────────────────────────────────────────────────────
 const SettingsContext = createContext(null);
 
 export function SettingsProvider({ children }) {
   const [settings, setSettings] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      // We use spread to ensure even if 'saved' is old, 
-      // missing keys are filled by DEFAULTS
       return saved ? { ...DEFAULTS, ...JSON.parse(saved) } : DEFAULTS;
-    } catch {
+    } catch (_e) {
       return DEFAULTS;
     }
   });
 
+  // Persist to localStorage whenever settings change
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
   }, [settings]);
@@ -51,16 +51,15 @@ export function SettingsProvider({ children }) {
   const updateSetting = (key, value) =>
     setSettings((prev) => ({ ...prev, [key]: value }));
 
-  const resetSettings = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setSettings(DEFAULTS);
-  };
+  const resetSettings = () => setSettings(DEFAULTS);
 
+  // Resolve a grade letter → numeric points based on active scale
   const gradePoints = (grade) => {
     const row = GRADE_SCALES[settings.gradingScale].find((r) => r.grade === grade);
     return row ? row.points : 0;
   };
 
+  // Grades available for the active scale (used to populate <select> in Home)
   const availableGrades = GRADE_SCALES[settings.gradingScale].map((r) => r.grade);
 
   return (
