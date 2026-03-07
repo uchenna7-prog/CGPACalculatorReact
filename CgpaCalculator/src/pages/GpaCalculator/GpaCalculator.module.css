@@ -164,3 +164,31 @@
     padding: 6px 4px;
   }
 }
+
+/* ... existing styles ... */
+
+.tcuCell {
+  text-align: center;
+  font-weight: bold;
+  color: var(--accentGreen);
+  background: rgba(168, 207, 184, 0.05);
+}
+
+.tableFooter {
+  background-color: #1a2e22;
+  color: #a8cfb8;
+  font-family: Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.tableFooter td {
+  border-top: 2px solid #2f4f3d;
+  padding: 8px;
+}
+
+/* Adjust button container for very small screens */
+@media (max-width: 400px) {
+  .buttonContainer {
+    grid-template-columns: 1fr;
+  }
+}
