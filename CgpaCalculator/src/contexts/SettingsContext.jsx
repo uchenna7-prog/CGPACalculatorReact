@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
+// Grade scale definitions
 export const GRADE_SCALES = {
   "5point": [
     { grade: "A", points: 5, range: "70 – 100" },
@@ -18,13 +19,13 @@ export const GRADE_SCALES = {
   ],
 };
 
-// ── DEFAULTS UPDATED ───────────────────────────────────────────────────────
+// ── FIXED DEFAULTS ────────────────────────────────────────────────────────
 const DEFAULTS = {
   gradingScale: "5point",
   decimalPlaces: "2",
-  showGradePoints: true,   // Show TCU Column: ON
-  showCreditSummary: true, // Show Credit Unit Summary: ON
-  confirmDelete: false,    // Confirm Before Deleting: OFF
+  showGradePoints: true,   // ON by default (TCU Column)
+  showCreditSummary: true, // ON by default (Credit Summary)
+  confirmDelete: false,    // OFF by default
 };
 
 const STORAGE_KEY = "cgpa_settings";
@@ -35,7 +36,8 @@ export function SettingsProvider({ children }) {
   const [settings, setSettings] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      // Merging defaults with saved to ensure new keys exist
+      // We use spread to ensure even if 'saved' is old, 
+      // missing keys are filled by DEFAULTS
       return saved ? { ...DEFAULTS, ...JSON.parse(saved) } : DEFAULTS;
     } catch {
       return DEFAULTS;
@@ -49,7 +51,10 @@ export function SettingsProvider({ children }) {
   const updateSetting = (key, value) =>
     setSettings((prev) => ({ ...prev, [key]: value }));
 
-  const resetSettings = () => setSettings(DEFAULTS);
+  const resetSettings = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setSettings(DEFAULTS);
+  };
 
   const gradePoints = (grade) => {
     const row = GRADE_SCALES[settings.gradingScale].find((r) => r.grade === grade);
