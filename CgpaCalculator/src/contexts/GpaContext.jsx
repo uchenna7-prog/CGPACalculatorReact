@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
+import { useSettings } from "./SettingsContext"; // Ensure path is correct
 
-const GRADE_POINTS = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
+// REMOVED: const GRADE_POINTS = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
 
 function createCourse() {
   return { id: Date.now() + Math.random(), code: "", unit: "", grade: "A" };
@@ -19,6 +20,9 @@ function createSemester(semesterNum, year) {
 const GpaContext = createContext(null);
 
 export function GpaProvider({ children }) {
+  // Pull the dynamic grade points function from your settings
+  const { gradePoints } = useSettings();
+
   const [semesters, setSemesters] = useState([createSemester(1, 1)]);
   const [cgpa, setCgpa] = useState(null);
   const [cgpaError, setCgpaError] = useState("");
@@ -54,10 +58,13 @@ export function GpaProvider({ children }) {
       return;
     }
     const totalUnits = allCourses.reduce((sum, c) => sum + parseFloat(c.unit), 0);
+    
+    // UPDATED: Now uses the gradePoints function from settings
     const totalPoints = allCourses.reduce(
-      (sum, c) => sum + parseFloat(c.unit) * GRADE_POINTS[c.grade],
+      (sum, c) => sum + parseFloat(c.unit) * gradePoints(c.grade),
       0
     );
+    
     setCgpaError("");
     setCgpa(totalUnits === 0 ? null : totalPoints / totalUnits);
   };
@@ -123,10 +130,13 @@ export function GpaProvider({ children }) {
           (sum, c) => sum + parseFloat(c.unit),
           0
         );
+        
+        // UPDATED: Now uses the gradePoints function from settings
         const totalPoints = s.courses.reduce(
-          (sum, c) => sum + parseFloat(c.unit) * GRADE_POINTS[c.grade],
+          (sum, c) => sum + parseFloat(c.unit) * gradePoints(c.grade),
           0
         );
+        
         return {
           ...s,
           gpa: totalUnits === 0 ? null : totalPoints / totalUnits,
