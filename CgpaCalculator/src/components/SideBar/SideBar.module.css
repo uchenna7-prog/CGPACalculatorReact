@@ -3,8 +3,7 @@
   color: var(--textColor);
   width: 280px;
   height: 100vh;
-  max-height: 100vh;   /* prevents exceeding viewport */
-  overflow: hidden;    /* prevents vertical overflow */
+  max-height: 100vh;
   border-right: 1px solid #1a2e22;
   font-family: 'DM Sans', 'Segoe UI', sans-serif;
   transition: width 0.3s ease, transform 0.3s ease;
@@ -12,6 +11,7 @@
   flex-direction: column;
   position: relative;
   z-index: 1001;
+  overflow: hidden;
 }
 
 .sidebar.collapsed {
@@ -49,15 +49,19 @@
   font-size: 22px;
 }
 
-/* Nav links */
+/* NAV CONTAINER */
+
 .navLinksContainer {
-  display: flex;
-  flex-direction: column;
-  padding: 12px 8px;
-  gap: 6px;
   flex: 1;
   overflow-y: auto;
+  min-height: 0;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
+
+/* NAV ITEMS */
 
 .navItem {
   border-radius: 12px;
@@ -66,6 +70,8 @@
   border: 1px solid #1e2e26;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
+
+/* ROW */
 
 .navRow {
   display: flex;
@@ -109,6 +115,8 @@
   padding: 12px 8px;
 }
 
+/* ARROW */
+
 .arrowBtn {
   background: none;
   border: none;
@@ -126,7 +134,8 @@
   transform: rotate(180deg);
 }
 
-/* Description section */
+/* DESCRIPTION */
+
 .description {
   max-height: 0;
   overflow: hidden;
@@ -153,14 +162,16 @@
   color: var(--textColor);
 }
 
-/* Footer */
+/* FOOTER */
+
 .sidebarFooter {
-  margin-top: auto;
+  flex-shrink: 0;
   padding: 14px 16px;
   border-top: 1px solid #1a2e22;
   text-align: center;
   font-size: 0.7rem;
   color: var(--textColor);
+  background: var(--bg);
 }
 
 .sidebarFooter p {
@@ -178,7 +189,8 @@
   text-decoration: underline;
 }
 
-/* Overlay */
+/* OVERLAY */
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -186,7 +198,8 @@
   z-index: 1000;
 }
 
-/* Responsive */
+/* MOBILE */
+
 @media (max-width: 767px) {
   .sidebar {
     position: fixed;
