@@ -73,6 +73,7 @@ function Settings() {
   };
 
   const handleReset = () => {
+    localStorage.removeItem("cgpa_settings");
     changeTheme("light-mode");
     resetSettings();
     showMsg("All settings reset to default.");
