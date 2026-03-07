@@ -1,9 +1,7 @@
-/* ---------- Page Shell ---------- */
 .pageContainer {
   display: flex;
   height: 100vh;
   overflow: hidden;
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
   background: var(--bg);
 }
 
@@ -14,7 +12,6 @@
   overflow: hidden;
 }
 
-/* ---------- Back Bar ---------- */
 .backBar {
   display: flex;
   align-items: center;
@@ -22,180 +19,111 @@
   padding: 8px 12px;
   background: var(--bg);
   border-bottom: 1px solid var(--borderColor);
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 
-.backBtn {
+.backBtn, .actionBtn {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 4px;
   border-radius: 6px;
   cursor: pointer;
   font-family: Consolas, monospace;
   font-weight: 700;
-  padding: 4px 12px;
-  transition: all 0.2s ease;
+  padding: 5px 10px;
   border: 1px solid var(--borderColor);
   background: var(--bgHover);
   color: var(--textColor);
 }
 
-.btnText {
-  font-size: 0.65rem;
-  letter-spacing: 0.2px;
-  white-space: nowrap;
-}
+.actionGroup { display: flex; gap: 8px; }
 
-/* ---------- Main Content ---------- */
+.exportBtn { background: var(--accentGreen) !important; color: white !important; border: none; }
+
+.btnText { font-size: 0.65rem; text-transform: uppercase; }
+
 .mainContent {
   flex: 1;
   overflow-y: auto;
-  padding: 22px 18px 48px;
-  background: var(--bg);
-  color: var(--textColor);
+  padding: 20px;
 }
 
-.pageTitle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.pageTitle h2 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin: 0;
-}
-
-/* ---------- Hero Banner (Centered Logic) ---------- */
+/* Centered Hero Result */
 .heroBanner {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 15px;
-  padding: 30px 20px;
+  padding: 40px 20px;
   border: 1px solid;
-  border-radius: 18px;
-  margin-bottom: 22px;
+  border-radius: 20px;
+  margin-bottom: 25px;
 }
 
-@media (min-width: 600px) {
-  .heroBanner {
-    flex-direction: row;
-    text-align: left;
-    padding: 35px 40px;
-    gap: 30px;
-  }
-}
-
-.heroEmoji { font-size: 4rem; line-height: 1; }
-.heroMeta { display: flex; flex-direction: column; align-items: center; }
-
-@media (min-width: 600px) {
-  .heroMeta { align-items: flex-start; }
-}
-
-.heroCgpa { font-size: 3.5rem; font-weight: 900; line-height: 1; letter-spacing: -2px; }
-.heroCgpaLabel { font-family: Consolas, monospace; font-size: 0.75rem; opacity: 0.5; margin: 8px 0; letter-spacing: 1px; }
+.heroEmoji { font-size: 4rem; margin-bottom: 10px; }
+.heroCgpa { font-size: 4rem; font-weight: 900; line-height: 1; }
+.heroCgpaLabel { font-family: Consolas, monospace; font-size: 0.7rem; opacity: 0.6; margin: 10px 0; letter-spacing: 1px; }
 .heroHonours { font-family: Consolas, monospace; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; }
 
-/* ---------- Stats Grid ---------- */
-.statsRow3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
-.statsGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-
-@media (min-width: 768px) {
-    .statsGrid { grid-template-columns: repeat(4, 1fr); }
-}
+.statsRow3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+.statsGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 
 .statCard {
   background: var(--tableData);
   border: 1px solid var(--borderColor);
   border-radius: 12px;
-  padding: 16px 8px;
+  padding: 20px 10px;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
 }
 
-.statValue { font-size: 1.6rem; font-weight: 800; line-height: 1; color: var(--accentGreen); }
-.statLabel { font-family: Consolas, monospace; font-size: 0.55rem; opacity: 0.5; text-transform: uppercase; }
-.statIcon { font-size: 1.1rem !important; color: var(--accentGreen); opacity: 0.8; }
+.statValue { font-size: 1.5rem; font-weight: 800; }
+.statLabel { font-family: Consolas, monospace; font-size: 0.55rem; opacity: 0.5; margin-top: 5px; }
 
-/* ---------- Semester Breakdown ---------- */
-.semCards { display: flex; flex-direction: column; gap: 12px; }
-.semCard {
-  background: var(--tableData);
-  border: 1px solid var(--borderColor);
-  border-radius: 12px;
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.chartSection { 
+    background: var(--tableData); 
+    border: 1px solid var(--borderColor); 
+    border-radius: 15px; 
+    padding: 20px; 
+    margin: 25px 0; 
 }
 
-.sectionTitle { font-family: Consolas, monospace; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; opacity: 0.4; text-transform: uppercase; margin: 25px 0 15px; }
+.sectionTitle { 
+    font-family: Consolas, monospace; 
+    font-size: 0.6rem; 
+    opacity: 0.4; 
+    letter-spacing: 2px; 
+    margin-bottom: 15px; 
+}
 
-.semLeft { display: flex; flex-direction: column; gap: 4px; }
-.semName { font-size: 0.95rem; font-weight: 600; }
-.semMeta { display: flex; gap: 10px; font-family: Consolas, monospace; font-size: 0.75rem; opacity: 0.5; }
-
-.semRight { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-.semGpa { font-size: 1.6rem; font-weight: 900; line-height: 1; }
-.gpaBarTrack { width: 70px; height: 5px; border-radius: 3px; background: var(--borderColor); overflow: hidden; }
-.gpaBarFill { height: 100%; transition: width 0.4s ease; }
-
-/* ---------- Chart ---------- */
-.chartSection { background: var(--tableData); border: 1px solid var(--borderColor); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
-
-/* ---------- Footer ---------- */
 .footer {
   margin-top: 40px;
-  padding-top: 20px;
+  padding: 20px;
   border-top: 1px solid var(--borderColor);
   text-align: center;
   font-family: Consolas, monospace;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   opacity: 0.4;
-  line-height: 1.8;
 }
 
-/* ---------- Empty State ---------- */
 .emptyState { 
     display: flex; 
     flex-direction: column; 
     align-items: center; 
     justify-content: center; 
-    gap: 12px; 
-    padding: 60px 20px; 
+    min-height: 60vh; 
     text-align: center; 
-    min-height: 65vh; 
-}
-.emptyTitle { font-size: 1.5rem; font-weight: 800; margin: 0; }
-.emptySub { font-size: 0.95rem; opacity: 0.6; line-height: 1.6; max-width: 320px; }
-.goBackBtn { 
-    margin-top: 15px; 
-    padding: 12px 28px; 
-    background: var(--accentGreen); 
-    color: #fff; 
-    border: none; 
-    border-radius: 10px; 
-    font-family: Consolas, monospace; 
-    font-size: 0.85rem; 
-    font-weight: 700; 
-    cursor: pointer; 
 }
 
-/* ---------- Mobile Optimization ---------- */
-@media (max-width: 600px) {
-  .statsRow3 { grid-template-columns: repeat(3, 1fr); font-size: 0.8rem; }
-  .statValue { font-size: 1.2rem; }
-  .heroCgpa { font-size: 2.8rem; }
+.emptyTitle { font-size: 1.6rem; font-weight: 800; margin: 15px 0 5px; }
+.emptySub { opacity: 0.6; max-width: 300px; font-size: 0.9rem; line-height: 1.5; }
+
+.goBackBtn {
+    margin-top: 20px;
+    padding: 12px 30px;
+    background: var(--accentGreen);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
 }
