@@ -78,10 +78,10 @@ function GpaCalculatorSummary() {
   // Auto-calculation logic
   const validCourses = courses.filter(c => c.unit !== "" && !isNaN(parseFloat(c.unit)));
   const hasData = validCourses.length > 0;
-  
+
   const totalUnits = validCourses.reduce((sum, c) => sum + parseFloat(c.unit), 0);
   const totalWeightedPoints = validCourses.reduce((sum, c) => sum + (parseFloat(c.unit) * gradePoints(c.grade)), 0);
-  
+
   const gpaDisplay = totalUnits > 0 ? totalWeightedPoints / totalUnits : null;
   const honours = getHonours(gpaDisplay, gradingScale);
   const gpaColor = gpaDisplay !== null ? getGpaColor(gpaDisplay, gradingScale) : "var(--accentGreen)";
@@ -95,6 +95,254 @@ function GpaCalculatorSummary() {
   const highestGrade = gradeBreakdown.length > 0 ? gradeBreakdown[0].grade : "—";
   const lowestGrade = gradeBreakdown.length > 0 ? gradeBreakdown[gradeBreakdown.length - 1].grade : "—";
 
+  // ── EXPORT TO PDF ──
+  async function handleExport() {
+    if (!window.jspdf) {
+      await new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: "pt", format: "a4" });
+
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const margin = 48;
+    const contentW = pageW - margin * 2;
+    let y = margin;
+
+    const checkPage = (needed = 20) => {
+      if (y + needed > pageH - margin) {
+        doc.addPage();
+        y = margin;
+      }
+    };
+
+    const hex2rgb = (hex) => {
+      const h = hex.replace("#", "");
+      return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+    };
+
+    const dp = Number(decimalPlaces);
+    const maxPoints = gradingScale === "4point" ? 4 : 5;
+    const resolvedGpaColor = gpaDisplay !== null ? getGpaColor(gpaDisplay, gradingScale) : "#34d399";
+    const hColour = honours?.color || "#a78bfa";
+    const [hr, hg, hb] = hex2rgb(hColour);
+
+    // ── Header Banner ──
+    doc.setFillColor(18, 18, 18);
+    doc.rect(0, 0, pageW, 90, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("GPA Summary Report", margin, 38);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(160, 160, 160);
+    doc.text(
+      `Generated on ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}`,
+      margin, 56
+    );
+    doc.text(`Grading Scale: ${gradingScale === "4point" ? "4.0 GPA" : "5.0 GPA (Nigerian)"}`, margin, 70);
+
+    y = 110;
+
+    // ── GPA Hero Banner ──
+    const [gr2, gg2, gb2] = hex2rgb(resolvedGpaColor);
+    doc.setFillColor(gr2, gg2, gb2);
+    doc.setDrawColor(gr2, gg2, gb2);
+    doc.setLineWidth(1);
+    // Use explicit rgba-style fill with low alpha by drawing a semi-transparent rect
+    doc.setFillColor(gr2, gg2, gb2, 0.1);
+    doc.roundedRect(margin, y, contentW, 62, 6, 6, "FD");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(30);
+    doc.setTextColor(gr2, gg2, gb2);
+    doc.text(gpaDisplay?.toFixed(dp) ?? "0.00", margin + 16, y + 38);
+
+    doc.setFontSize(9);
+    doc.setTextColor(130, 130, 130);
+    doc.text(`GPA  (${maxPoints}.0 SCALE)`, margin + 16, y + 52);
+
+    if (honours) {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.setTextColor(hr, hg, hb);
+      doc.text(honours.label, pageW - margin - 16, y + 38, { align: "right" });
+    }
+
+    y += 80;
+
+    // ── Stats Row ──
+    const stats = [
+      { label: "COURSES", value: courses.length },
+      { label: "TOTAL UNITS", value: totalUnits },
+      { label: "HIGHEST GRADE", value: highestGrade },
+      { label: "LOWEST GRADE", value: lowestGrade },
+    ];
+    const cardW = (contentW - 12) / 4;
+    stats.forEach((stat, i) => {
+      const x = margin + i * (cardW + 4);
+      doc.setFillColor(28, 28, 28);
+      doc.setDrawColor(50, 50, 50);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(x, y, cardW, 48, 4, 4, "FD");
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(52, 211, 153);
+      doc.text(String(stat.value), x + cardW / 2, y + 26, { align: "center" });
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7);
+      doc.setTextColor(130, 130, 130);
+      doc.text(stat.label, x + cardW / 2, y + 40, { align: "center" });
+    });
+
+    y += 64;
+
+    // ── Grade Distribution (bar chart drawn with jsPDF) ──
+    checkPage(140);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(130, 130, 130);
+    doc.text("GRADE DISTRIBUTION", margin, y);
+    y += 4;
+    doc.setDrawColor(50, 50, 50);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, margin + contentW, y);
+    y += 16;
+
+    if (gradeBreakdown.length > 0) {
+      const chartH = 90;
+      const chartY = y;
+      const maxCount = Math.max(...gradeBreakdown.map((g) => g.count), 1);
+      const barAreaW = contentW;
+      const barSlot = barAreaW / gradeBreakdown.length;
+      const barW = Math.min(28, barSlot * 0.5);
+      const innerH = chartH - 30; // leave room for labels
+
+      gradeBreakdown.forEach((g, i) => {
+        const col = getGpaColor(g.points, gradingScale);
+        const [cr, cg, cb] = hex2rgb(col);
+        const barH = (g.count / maxCount) * innerH;
+        const x = margin + i * barSlot + barSlot / 2 - barW / 2;
+        const barTop = chartY + (innerH - barH);
+
+        doc.setFillColor(cr, cg, cb);
+        doc.roundedRect(x, barTop, barW, barH, 2, 2, "F");
+
+        // Count label above bar
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        doc.setTextColor(cr, cg, cb);
+        doc.text(String(g.count), x + barW / 2, barTop - 4, { align: "center" });
+
+        // Grade label below
+        doc.setFontSize(9);
+        doc.text(g.grade, x + barW / 2, chartY + innerH + 14, { align: "center" });
+
+        // Points sub-label
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`${g.points}pt`, x + barW / 2, chartY + innerH + 24, { align: "center" });
+      });
+
+      // Baseline
+      doc.setDrawColor(50, 50, 50);
+      doc.setLineWidth(0.5);
+      doc.line(margin, chartY + innerH, margin + contentW, chartY + innerH);
+
+      y += chartH + 16;
+    }
+
+    // ── Grade Breakdown ──
+    checkPage(60);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(130, 130, 130);
+    doc.text("GRADE BREAKDOWN", margin, y);
+    y += 4;
+    doc.setDrawColor(50, 50, 50);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, margin + contentW, y);
+    y += 14;
+
+    gradeBreakdown.forEach(({ grade, count, points }) => {
+      checkPage(36);
+      const pct = Math.round((count / courses.length) * 100);
+      const gradeCol = getGpaColor(points, gradingScale);
+      const [cr, cg, cb] = hex2rgb(gradeCol);
+      const unitSum = courses
+        .filter((c) => c.grade === grade)
+        .reduce((s, c) => s + (parseFloat(c.unit) || 0), 0);
+
+      // Row background
+      doc.setFillColor(24, 24, 24);
+      doc.setDrawColor(40, 40, 40);
+      doc.roundedRect(margin, y, contentW, 30, 4, 4, "FD");
+
+      // Grade badge
+      doc.setFillColor(cr, cg, cb, 0.15);
+      doc.setDrawColor(cr, cg, cb, 0.4);
+      doc.roundedRect(margin + 8, y + 6, 28, 18, 3, 3, "FD");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(cr, cg, cb);
+      doc.text(grade, margin + 22, y + 18, { align: "center" });
+
+      // Meta text
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(180, 180, 180);
+      doc.text(`${count} course${count !== 1 ? "s" : ""}  ·  ${unitSum} units`, margin + 46, y + 13);
+
+      // Pct
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(cr, cg, cb);
+      doc.text(`${pct}%`, pageW - margin - 8, y + 13, { align: "right" });
+
+      // Progress bar
+      const barX = margin + 46;
+      const barW = contentW - 46 - 36;
+      const barY2 = y + 21;
+      doc.setFillColor(50, 50, 50);
+      doc.roundedRect(barX, barY2, barW, 4, 2, 2, "F");
+      if (pct > 0) {
+        doc.setFillColor(cr, cg, cb);
+        doc.roundedRect(barX, barY2, barW * (pct / 100), 4, 2, 2, "F");
+      }
+
+      y += 36;
+    });
+
+    // ── Footer ──
+    checkPage(40);
+    y += 8;
+    doc.setDrawColor(50, 50, 50);
+    doc.line(margin, y, margin + contentW, y);
+    y += 14;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    const gradeKey = GRADE_SCALES[gradingScale].map((r) => `${r.grade}=${r.points}`).join("  ·  ");
+    doc.text(`Grade Key: ${gradeKey}`, margin, y);
+    y += 14;
+    doc.text("Generated by GPA Calculator", margin, y);
+
+    doc.save("gpa_summary.pdf");
+  }
+
   return (
     <div className={styles.pageContainer}>
       <SideBar />
@@ -107,9 +355,13 @@ function GpaCalculatorSummary() {
             <span className={styles.btnText}>Back</span>
           </button>
           <div className={styles.actionGroup}>
-            <button className={`${styles.actionBtn} ${styles.exportBtn}`}>
-              <span className="material-icons" style={{ fontSize: "0.9rem" }}>file_download</span>
-              <span className={styles.btnText}>Export</span>
+            <button
+              className={`${styles.actionBtn} ${styles.exportBtn}`}
+              onClick={handleExport}
+              disabled={!hasData}
+            >
+              <span className="material-icons" style={{ fontSize: "0.9rem" }}>picture_as_pdf</span>
+              <span className={styles.btnText}>Export PDF</span>
             </button>
           </div>
         </div>
