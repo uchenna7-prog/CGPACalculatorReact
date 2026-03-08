@@ -138,15 +138,14 @@
 
 /* ── Summary tfoot row ── */
 .summaryRow td {
-  background: rgba(0, 0, 0, 0.15); /* Slightly darker to distinguish from rows */
+  background: rgba(0, 0, 0, 0.15); 
   color: var(--textColor);
   font-size: 0.8rem;
   border-top: 2px solid #2f4f3d;
-  font-family: Consolas, monospace;
 }
 
 .summaryRow strong {
-  color: #4caf7d;
+  color: var(--textColor);
 }
 
 /* ── Semester controls ── */
