@@ -162,7 +162,7 @@
 }
 
 .summaryRow strong {
-  color: #4caf7d;
+  color: var(--textColor);
 }
 
 
