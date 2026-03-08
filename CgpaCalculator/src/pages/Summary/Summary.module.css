@@ -49,11 +49,6 @@
   display: inline-block;
 }
 
-.backBtn:hover, .actionBtn:hover {
-  background: var(--tableData);
-  border-color: var(--accentGreen);
-  color: var(--accentGreen);
-}
 
 .actionGroup {
   display: flex;
