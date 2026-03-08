@@ -453,10 +453,6 @@ function CGPAPredictorSummary() {
           </button>
 
           <div className={styles.actionGroup}>
-            <button className={styles.actionBtn}>
-              <span className="material-icons" style={{ fontSize: "0.9rem" }}>share</span>
-              <span className={styles.btnText}>Share</span>
-            </button>
             <button
               className={`${styles.actionBtn} ${styles.exportBtn}`}
               onClick={handleExport}
