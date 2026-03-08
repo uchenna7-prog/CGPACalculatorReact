@@ -144,7 +144,7 @@ function GPACalculator() {
                         <input
                           className={styles.inputField}
                           type="text"
-                          placeholder="COS 101"
+                          
                           value={course.code}
                           onChange={(e) => updateCourse(course.id, "code", e.target.value.toUpperCase())}
                         />
@@ -155,7 +155,7 @@ function GPACalculator() {
                           type="number"
                           min="1"
                           max="6"
-                          placeholder="Eg 1"
+                       
                           value={course.unit}
                           onChange={(e) => updateCourse(course.id, "unit", e.target.value)}
                         />
