@@ -38,7 +38,7 @@ function Summary() {
   const navigate = useNavigate();
   const { semesters } = useGpa();
   const { gradingScale, GRADE_SCALES, gradePoints, decimalPlaces } = useSettings();
-  
+
   const dp = Number(decimalPlaces);
   const maxPoints = gradingScale === "4point" ? 4 : 5;
 
@@ -77,6 +77,57 @@ function Summary() {
   const totalCourses = semesters.reduce((sum, s) => sum + s.courses.length, 0);
   const hasData = totalCourses > 0 && totalUnitsAccumulated > 0;
 
+  // ── EXPORT LOGIC ──
+  function handleExport() {
+    const rows = [];
+
+    // Header row
+    rows.push(["Year", "Semester", "Course", "Unit", "Grade", "Grade Points", "Semester GPA", "CGPA", "Honours"]);
+
+    computedSemesters.forEach((sem) => {
+      const semLabel = `${SEMESTER_NAMES[sem.semesterNum]} Semester`;
+      const semGpa = sem.computedGpa !== null ? sem.computedGpa.toFixed(dp) : "";
+
+      sem.courses.forEach((course, idx) => {
+        const gp = gradePoints(course.grade);
+        rows.push([
+          `Year ${sem.year}`,
+          semLabel,
+          course.name || `Course ${idx + 1}`,
+          course.unit,
+          course.grade,
+          gp,
+          // Only show semester GPA on the first row of each semester
+          idx === 0 ? semGpa : "",
+          // Only show CGPA and honours on the very first row
+          idx === 0 && sem === computedSemesters[0] ? (autoCgpa?.toFixed(dp) ?? "") : "",
+          idx === 0 && sem === computedSemesters[0] ? (honours?.label ?? "") : "",
+        ]);
+      });
+    });
+
+    // Convert rows to CSV string
+    const csvContent = rows
+      .map((row) =>
+        row.map((cell) => {
+          const val = String(cell ?? "");
+          // Wrap in quotes if the value contains a comma, quote, or newline
+          return val.includes(",") || val.includes('"') || val.includes("\n")
+            ? `"${val.replace(/"/g, '""')}"`
+            : val;
+        }).join(",")
+      )
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "academic_summary.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className={styles.pageContainer}>
       <SideBar />
@@ -89,7 +140,11 @@ function Summary() {
             <span className={styles.btnText}>Back</span>
           </button>
           <div className={styles.actionGroup}>
-            <button className={`${styles.actionBtn} ${styles.exportBtn}`}>
+            <button
+              className={`${styles.actionBtn} ${styles.exportBtn}`}
+              onClick={handleExport}
+              disabled={!hasData}
+            >
               <span className="material-icons" style={{ fontSize: "0.9rem" }}>file_download</span>
               <span className={styles.btnText}>Export</span>
             </button>
