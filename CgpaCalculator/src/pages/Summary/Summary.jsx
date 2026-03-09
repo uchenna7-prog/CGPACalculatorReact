@@ -42,8 +42,6 @@ function Summary() {
   const dp = Number(decimalPlaces);
   const maxPoints = gradingScale === "4point" ? 4 : 5;
 
-  // ── AUTO-CALCULATION LOGIC ──
-  // This calculates everything instantly without needing the "Calculate" button
   let totalWeightedPoints = 0;
   let totalUnitsAccumulated = 0;
 
@@ -67,7 +65,6 @@ function Summary() {
   const autoCgpa = totalUnitsAccumulated > 0 ? totalWeightedPoints / totalUnitsAccumulated : null;
   const honours = getHonours(autoCgpa, gradingScale);
 
-  // Grouping for display
   const byYear = computedSemesters.reduce((acc, s) => {
     if (!acc[s.year]) acc[s.year] = [];
     acc[s.year].push(s);
@@ -77,9 +74,7 @@ function Summary() {
   const totalCourses = semesters.reduce((sum, s) => sum + s.courses.length, 0);
   const hasData = totalCourses > 0 && totalUnitsAccumulated > 0;
 
-  // ── EXPORT TO PDF ──
   async function handleExport() {
-    // Dynamically load jsPDF from CDN
     if (!window.jspdf) {
       await new Promise((resolve, reject) => {
         const script = document.createElement("script");
@@ -99,7 +94,6 @@ function Summary() {
     const contentW = pageW - margin * 2;
     let y = margin;
 
-    // ── Helpers ──
     const checkPage = (needed = 20) => {
       if (y + needed > pageH - margin) {
         doc.addPage();
@@ -112,15 +106,12 @@ function Summary() {
       return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
     };
 
-    // ── Header Banner ──
     doc.setFillColor(18, 18, 18);
     doc.rect(0, 0, pageW, 90, "F");
-
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
     doc.setFont("helvetica", "bold");
     doc.text("Academic Summary Report", margin, 38);
-
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(160, 160, 160);
@@ -129,23 +120,19 @@ function Summary() {
 
     y = 110;
 
-    // ── Honours Banner ──
     const hColour = honours?.color || "#a78bfa";
     const [hr, hg, hb] = hex2rgb(hColour);
     doc.setFillColor(hr, hg, hb, 0.12);
     doc.setDrawColor(hr, hg, hb);
     doc.setLineWidth(1);
     doc.roundedRect(margin, y, contentW, 62, 6, 6, "FD");
-
     doc.setFont("helvetica", "bold");
     doc.setFontSize(28);
     doc.setTextColor(hr, hg, hb);
     doc.text(autoCgpa?.toFixed(dp) ?? "—", margin + 16, y + 36);
-
     doc.setFontSize(9);
     doc.setTextColor(130, 130, 130);
     doc.text(`OVERALL CGPA  (${maxPoints}.0 SCALE)`, margin + 16, y + 50);
-
     doc.setFont("helvetica", "bold");
     doc.setFontSize(13);
     doc.setTextColor(hr, hg, hb);
@@ -153,7 +140,6 @@ function Summary() {
 
     y += 80;
 
-    // ── Stats Row ──
     const stats = [
       { label: "YEARS", value: Object.keys(byYear).length },
       { label: "SEMESTERS", value: semesters.length },
@@ -167,12 +153,10 @@ function Summary() {
       doc.setDrawColor(50, 50, 50);
       doc.setLineWidth(0.5);
       doc.roundedRect(x, y, cardW, 48, 4, 4, "FD");
-
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
-      doc.setTextColor(52, 211, 153); // accentGreen
+      doc.setTextColor(52, 211, 153);
       doc.text(String(stat.value), x + cardW / 2, y + 26, { align: "center" });
-
       doc.setFont("helvetica", "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(130, 130, 130);
@@ -181,7 +165,6 @@ function Summary() {
 
     y += 64;
 
-    // ── Semester Breakdown ──
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
     doc.setTextColor(130, 130, 130);
@@ -194,8 +177,6 @@ function Summary() {
 
     Object.entries(byYear).forEach(([year, yearSems]) => {
       checkPage(40);
-
-      // Year chip
       doc.setFillColor(40, 40, 40);
       doc.roundedRect(margin, y - 12, 52, 18, 4, 4, "F");
       doc.setFont("helvetica", "bold");
@@ -206,53 +187,47 @@ function Summary() {
 
       yearSems.forEach((sem) => {
         checkPage(120);
-
         const semLabel = `${SEMESTER_NAMES[sem.semesterNum]} Semester`;
         const gpaVal = sem.computedGpa;
         const gpaColor = gpaVal !== null ? getGpaColor(gpaVal, gradingScale) : "#888888";
         const [gr, gg, gb] = hex2rgb(gpaColor);
         const pct = gpaVal !== null ? gpaVal / maxPoints : 0;
 
-        // Sem card background
         doc.setFillColor(24, 24, 24);
         doc.setDrawColor(45, 45, 45);
-        doc.roundedRect(margin, y, contentW, 36, 4, 4, "FD");
+        doc.roundedRect(margin, y, contentW, 42, 4, 4, "FD");
 
-        // Sem name
         doc.setFont("helvetica", "bold");
         doc.setFontSize(10);
         doc.setTextColor(230, 230, 230);
-        doc.text(semLabel, margin + 12, y + 14);
+        doc.text(semLabel, margin + 12, y + 16);
 
-        // Meta
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(130, 130, 130);
-        doc.text(`${sem.courses.length} courses  ·  ${sem.semUnits} units`, margin + 12, y + 26);
+        doc.text(`${sem.courses.length} courses  ·  ${sem.semUnits} units`, margin + 12, y + 28);
 
-        // GPA value
+        // ── STACKED GPA & PROGRESS BAR ──
+        const columnX = pageW - margin - 12; 
+        const barWidth = 60;
+        const barX = columnX - barWidth;
+
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
         doc.setTextColor(gr, gg, gb);
-        doc.text(gpaVal !== null ? gpaVal.toFixed(dp) : "—", pageW - margin - 80, y + 20, { align: "right" });
+        doc.text(gpaVal !== null ? gpaVal.toFixed(dp) : "0.00", columnX, y + 18, { align: "right" });
 
-        // GPA bar track
-        const barX = pageW - margin - 72;
-        const barW = 60;
-        const barY = y + 26;
         doc.setFillColor(50, 50, 50);
-        doc.roundedRect(barX, barY, barW, 4, 2, 2, "F");
+        doc.roundedRect(barX, y + 26, barWidth, 4, 2, 2, "F");
         if (pct > 0) {
           doc.setFillColor(gr, gg, gb);
-          doc.roundedRect(barX, barY, barW * pct, 4, 2, 2, "F");
+          doc.roundedRect(barX, y + 26, barWidth * pct, 4, 2, 2, "F");
         }
 
-        y += 42;
+        y += 48;
 
-        // Course table header
         checkPage(20);
         const cols = { name: margin + 8, unit: margin + contentW * 0.62, grade: margin + contentW * 0.75, gp: margin + contentW * 0.88 };
-
         doc.setFillColor(35, 35, 35);
         doc.rect(margin, y, contentW, 16, "F");
         doc.setFont("helvetica", "bold");
@@ -264,13 +239,11 @@ function Summary() {
         doc.text("POINTS", cols.gp, y + 10);
         y += 16;
 
-        // Course rows
         sem.courses.forEach((course, idx) => {
           checkPage(18);
           const rowBg = idx % 2 === 0 ? [22, 22, 22] : [26, 26, 26];
           doc.setFillColor(...rowBg);
           doc.rect(margin, y, contentW, 16, "F");
-
           doc.setFont("helvetica", "normal");
           doc.setFontSize(8);
           doc.setTextColor(210, 210, 210);
@@ -280,19 +253,15 @@ function Summary() {
           doc.text(String(gradePoints(course.grade)), cols.gp, y + 10);
           y += 16;
         });
-
         y += 12;
       });
-
       y += 6;
     });
 
-    // ── Footer ──
     checkPage(40);
     doc.setDrawColor(50, 50, 50);
     doc.line(margin, y, margin + contentW, y);
     y += 14;
-
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
@@ -309,7 +278,6 @@ function Summary() {
       <SideBar />
       <div className={styles.mainWrapper}>
         <Header title="Academic Summary" />
-
         <div className={styles.backBar}>
           <button className={styles.backBtn} onClick={() => navigate("/")}>
             <span className="material-icons" style={{ fontSize: "0.9rem" }}>arrow_back</span>
@@ -326,7 +294,6 @@ function Summary() {
             </button>
           </div>
         </div>
-
         <main className={styles.mainContent}>
           {!hasData ? (
             <div className={styles.emptyState}>
@@ -339,7 +306,6 @@ function Summary() {
             </div>
           ) : (
             <>
-              {/* Centered Honours Banner */}
               <div
                 className={styles.honoursBanner}
                 style={{
@@ -359,7 +325,6 @@ function Summary() {
                 </div>
               </div>
 
-              {/* Stats Grid */}
               <div className={styles.statsGrid}>
                 {[
                   { label: "YEARS", value: Object.keys(byYear).length, icon: "calendar_today" },
@@ -375,7 +340,6 @@ function Summary() {
                 ))}
               </div>
 
-              {/* Semester Breakdown */}
               <div className={styles.semesterSection}>
                 <h3 className={styles.sectionTitle}>SEMESTER BREAKDOWN</h3>
                 {Object.entries(byYear).map(([year, yearSems]) => (
@@ -386,7 +350,6 @@ function Summary() {
                         const gpaVal = sem.computedGpa;
                         const gpaColor = gpaVal !== null ? getGpaColor(gpaVal, gradingScale) : "var(--textColor)";
                         const pct = gpaVal !== null ? (gpaVal / maxPoints) * 100 : 0;
-
                         return (
                           <div key={sem.id} className={styles.semCard}>
                             <div className={styles.semLeft}>
