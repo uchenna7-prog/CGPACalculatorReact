@@ -84,7 +84,6 @@ function CGPAPredictorSummary() {
   const { currentCgpa, totalUnits, semesters } = usePrediction();
   const { gradingScale, gradePoints, GRADE_SCALES, decimalPlaces } = useSettings();
 
-  // ── Auto-Calculation Logic ──
   const currentVal = parseFloat(currentCgpa);
   const totalUnitsVal = parseFloat(totalUnits);
 
@@ -133,7 +132,6 @@ function CGPAPredictorSummary() {
     return points;
   })();
 
-  // ── EXPORT TO PDF ──
   async function handleExport() {
     if (!window.jspdf) {
       await new Promise((resolve, reject) => {
@@ -171,37 +169,28 @@ function CGPAPredictorSummary() {
     const [hr, hg, hb] = hex2rgb(hColour);
     const [pr, pg, pb] = hex2rgb(resolvedPredColor);
 
-    // ── Header Banner ──
     doc.setFillColor(18, 18, 18);
     doc.rect(0, 0, pageW, 90, "F");
-
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
     doc.setFont("helvetica", "bold");
     doc.text("CGPA Prediction Report", margin, 38);
-
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(160, 160, 160);
-    doc.text(
-      `Generated on ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}`,
-      margin, 56
-    );
+    doc.text(`Generated on ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}`, margin, 56);
     doc.text(`Grading Scale: ${gradingScale === "4point" ? "4.0 GPA" : "5.0 GPA (Nigerian)"}`, margin, 70);
 
     y = 110;
 
-    // ── Predicted CGPA Hero Banner ──
     doc.setFillColor(pr, pg, pb, 0.1);
     doc.setDrawColor(pr, pg, pb);
     doc.setLineWidth(1);
     doc.roundedRect(margin, y, contentW, 62, 6, 6, "FD");
-
     doc.setFont("helvetica", "bold");
     doc.setFontSize(30);
     doc.setTextColor(pr, pg, pb);
     doc.text(autoPredictedCgpa?.toFixed(dp) ?? "—", margin + 16, y + 38);
-
     doc.setFontSize(9);
     doc.setTextColor(130, 130, 130);
     doc.text(`PREDICTED CGPA  (${maxScale}.0 SCALE)`, margin + 16, y + 52);
@@ -215,7 +204,6 @@ function CGPAPredictorSummary() {
 
     y += 80;
 
-    // ── Current / Predicted / Change row ──
     const card3W = (contentW - 8) / 3;
     const cards3 = [
       { label: "CURRENT CGPA", value: currentVal.toFixed(dp), color: resolvedCurColor },
@@ -230,12 +218,10 @@ function CGPAPredictorSummary() {
       doc.setDrawColor(50, 50, 50);
       doc.setLineWidth(0.5);
       doc.roundedRect(x, y, card3W, 52, 4, 4, "FD");
-
       doc.setFont("helvetica", "bold");
       doc.setFontSize(20);
       doc.setTextColor(cr, cg, cb);
       doc.text(card.value, x + card3W / 2, y + 28, { align: "center" });
-
       doc.setFont("helvetica", "normal");
       doc.setFontSize(7.5);
       doc.setTextColor(130, 130, 130);
@@ -244,10 +230,8 @@ function CGPAPredictorSummary() {
 
     y += 68;
 
-    // ── CGPA Trajectory Chart (drawn natively) ──
     if (chartPoints.length >= 2) {
       checkPage(140);
-
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
       doc.setTextColor(130, 130, 130);
@@ -259,12 +243,11 @@ function CGPAPredictorSummary() {
       y += 12;
 
       const chartAreaH = 90;
-      const innerH = chartAreaH - 24; // bottom label space
+      const innerH = chartAreaH - 24;
       const n = chartPoints.length;
       const xPos = (i) => margin + (i / Math.max(n - 1, 1)) * contentW;
       const yPos = (v) => y + innerH - (v / maxScale) * innerH;
 
-      // Threshold dashed lines
       const threshLines = gradingScale === "4point"
         ? [{ val: 3.5, color: "#fbbf24" }, { val: 3.0, color: "#34d399" }]
         : [{ val: 4.5, color: "#fbbf24" }, { val: 3.5, color: "#34d399" }];
@@ -278,41 +261,32 @@ function CGPAPredictorSummary() {
       });
       doc.setLineDashPattern([], 0);
 
-      // Line connecting points
       doc.setDrawColor(76, 175, 125);
       doc.setLineWidth(2);
       for (let i = 0; i < n - 1; i++) {
         doc.line(xPos(i), yPos(chartPoints[i].value), xPos(i + 1), yPos(chartPoints[i + 1].value));
       }
 
-      // Dots + labels
       chartPoints.forEach((pt, i) => {
         const [cr, cg, cb] = hex2rgb(pt.color);
         doc.setFillColor(cr, cg, cb);
         doc.circle(xPos(i), yPos(pt.value), 4, "F");
-
-        // Value label above dot
         doc.setFont("helvetica", "bold");
         doc.setFontSize(7);
         doc.setTextColor(cr, cg, cb);
         doc.text(pt.value.toFixed(dp), xPos(i), yPos(pt.value) - 7, { align: "center" });
-
-        // X-axis label
         doc.setFont("helvetica", "normal");
         doc.setFontSize(7.5);
         doc.setTextColor(150, 150, 150);
         doc.text(pt.label, xPos(i), y + innerH + 14, { align: "center" });
       });
 
-      // Baseline
       doc.setDrawColor(50, 50, 50);
       doc.setLineWidth(0.5);
       doc.line(margin, y + innerH, margin + contentW, y + innerH);
-
       y += chartAreaH + 16;
     }
 
-    // ── Units Stats ──
     checkPage(70);
     const card2W = (contentW - 8) / 2;
     const unitCards = [
@@ -326,12 +300,10 @@ function CGPAPredictorSummary() {
       doc.setDrawColor(50, 50, 50);
       doc.setLineWidth(0.5);
       doc.roundedRect(x, y, card2W, 52, 4, 4, "FD");
-
       doc.setFont("helvetica", "bold");
       doc.setFontSize(22);
       doc.setTextColor(52, 211, 153);
       doc.text(String(card.value), x + card2W / 2, y + 28, { align: "center" });
-
       doc.setFont("helvetica", "normal");
       doc.setFontSize(8);
       doc.setTextColor(130, 130, 130);
@@ -340,7 +312,6 @@ function CGPAPredictorSummary() {
 
     y += 68;
 
-    // ── Semester Breakdown ──
     if (semSummaries.length > 0) {
       checkPage(50);
       doc.setFont("helvetica", "bold");
@@ -361,37 +332,37 @@ function CGPAPredictorSummary() {
         const [scr, scg, scb] = hex2rgb(semGpaColor);
         const pct = sem.computedGpa / maxScale;
 
-        // Sem card
         doc.setFillColor(24, 24, 24);
         doc.setDrawColor(45, 45, 45);
-        doc.roundedRect(margin, y, contentW, 36, 4, 4, "FD");
+        doc.roundedRect(margin, y, contentW, 42, 4, 4, "FD");
 
         doc.setFont("helvetica", "bold");
         doc.setFontSize(10);
         doc.setTextColor(230, 230, 230);
-        doc.text(`Semester ${idx + 1}`, margin + 12, y + 14);
+        doc.text(`Semester ${idx + 1}`, margin + 12, y + 16);
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
         doc.setTextColor(130, 130, 130);
-        doc.text(`${sem.courses.length} courses  ·  ${sem.semUnits} units`, margin + 12, y + 26);
+        doc.text(`${sem.courses.length} courses  ·  ${sem.semUnits} units`, margin + 12, y + 28);
+
+        // ── STACKED GPA & PROGRESS BAR ──
+        const columnX = pageW - margin - 12; 
+        const barWidth = 60;
+        const barX = columnX - barWidth;
 
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
         doc.setTextColor(scr, scg, scb);
-        doc.text(sem.computedGpa.toFixed(dp), pageW - margin - 80, y + 20, { align: "right" });
+        doc.text(sem.computedGpa.toFixed(dp), columnX, y + 18, { align: "right" });
 
-        const barX = pageW - margin - 72;
-        const barW = 60;
-        const barY = y + 26;
         doc.setFillColor(50, 50, 50);
-        doc.roundedRect(barX, barY, barW, 4, 2, 2, "F");
+        doc.roundedRect(barX, y + 26, barWidth, 4, 2, 2, "F");
         doc.setFillColor(scr, scg, scb);
-        doc.roundedRect(barX, barY, barW * pct, 4, 2, 2, "F");
+        doc.roundedRect(barX, y + 26, barWidth * pct, 4, 2, 2, "F");
 
-        y += 42;
+        y += 48;
 
-        // Course table header
         checkPage(20);
         doc.setFillColor(35, 35, 35);
         doc.rect(margin, y, contentW, 16, "F");
@@ -418,12 +389,10 @@ function CGPAPredictorSummary() {
           doc.text(String(gradePoints(course.grade)), cols.gp, y + 10);
           y += 16;
         });
-
         y += 12;
       });
     }
 
-    // ── Footer ──
     checkPage(40);
     y += 8;
     doc.setDrawColor(50, 50, 50);
@@ -445,13 +414,11 @@ function CGPAPredictorSummary() {
       <SideBar />
       <div className={styles.mainWrapper}>
         <Header title="Prediction Summary" />
-
         <div className={styles.backBar}>
           <button className={styles.backBtn} onClick={() => navigate("/cgpaPredictor")}>
             <span className="material-icons" style={{ fontSize: "0.9rem" }}>arrow_back</span>
             <span className={styles.btnText}>Back</span>
           </button>
-
           <div className={styles.actionGroup}>
             <button
               className={`${styles.actionBtn} ${styles.exportBtn}`}
@@ -463,7 +430,6 @@ function CGPAPredictorSummary() {
             </button>
           </div>
         </div>
-
         <main className={styles.mainContent}>
           {!hasData ? (
             <div className={styles.emptyState}>
@@ -484,7 +450,6 @@ function CGPAPredictorSummary() {
                   {predictedHonours && ( <div className={styles.heroHonours} style={{ color: predictedColor }}> {predictedHonours.label} </div> )}
                 </div>
               </div>
-
               <div className={styles.statsRow3}>
                 <div className={styles.statCard}>
                   <div className={styles.statValue} style={{ color: getGpaColor(currentVal, gradingScale) }}> {currentVal.toFixed(2)} </div>
@@ -501,7 +466,6 @@ function CGPAPredictorSummary() {
                   <div className={styles.statLabel}>CHANGE</div>
                 </div>
               </div>
-
               {chartPoints.length >= 2 && (
                 <div className={styles.chartSection}>
                   <div className={styles.sectionTitle}>CGPA TRAJECTORY</div>
@@ -510,7 +474,6 @@ function CGPAPredictorSummary() {
                   </div>
                 </div>
               )}
-
               <div className={styles.statsGrid}>
                 <div className={styles.statCard}>
                    <span className="material-icons">straighten</span>
@@ -523,7 +486,6 @@ function CGPAPredictorSummary() {
                    <div className={styles.statLabel}>UNITS SO FAR</div>
                 </div>
               </div>
-
               <div className={styles.footer}>
                 <div>{gradingScale === '4point' ? '4.0 Grading Scale' : 'Nigerian 5-point grading scale'}</div>
                 <div>{GRADE_SCALES[gradingScale].map((row) => `${row.grade}=${row.points}`).join(" · ")}</div>
