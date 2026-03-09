@@ -207,7 +207,6 @@ function Summary() {
         doc.setTextColor(130, 130, 130);
         doc.text(`${sem.courses.length} courses  ·  ${sem.semUnits} units`, margin + 12, y + 28);
 
-        // ── STACKED GPA & PROGRESS BAR ──
         const columnX = pageW - margin - 12; 
         const barWidth = 60;
         const barX = columnX - barWidth;
@@ -247,7 +246,9 @@ function Summary() {
           doc.setFont("helvetica", "normal");
           doc.setFontSize(8);
           doc.setTextColor(210, 210, 210);
-          doc.text(course.name || `Course ${idx + 1}`, cols.name, y + 10);
+          // Corrected mapping: try course.course first, then course.name
+          const courseDisplay = course.course || course.name || `Course ${idx + 1}`;
+          doc.text(courseDisplay, cols.name, y + 10);
           doc.text(String(course.unit || ""), cols.unit, y + 10);
           doc.text(course.grade || "—", cols.grade, y + 10);
           doc.text(String(gradePoints(course.grade)), cols.gp, y + 10);
