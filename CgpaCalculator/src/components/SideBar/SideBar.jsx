@@ -44,6 +44,19 @@ const navItems = [
     ],
   },
   {
+    id: "guide",
+    to: "/guide",
+    icon: "menu_book",
+    label: "Guide & FAQ",
+    description: [
+      "Learn how CGPA is calculated step by step",
+      "Understand Nigeria's 5.0 and 4.0 grading scales",
+      "See grade point tables for both systems",
+      "Get answers to frequently asked questions",
+      "Tips to improve your CGPA",
+    ],
+  },
+  {
     id: "settings",
     to: "/settings",
     icon: "settings",
