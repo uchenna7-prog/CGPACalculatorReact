@@ -1,1 +1,470 @@
-...
+/* ── Page ─────────────────────────────────────────────────────────────── */
+
+.page {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--textColor);
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+
+.hero {
+  background: linear-gradient(135deg, #0d1f14 0%, #1a2e22 60%, #0f2318 100%);
+  border-bottom: 1px solid #1a2e22;
+  padding: 48px 24px 40px;
+}
+
+.heroInner {
+  max-width: 720px;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1e3a2a;
+  border: 1px solid #2e4d3a;
+  color: #7dd3a0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+.heroBadge i {
+  font-size: 15px;
+}
+
+.heroTitle {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 0 14px;
+  color: var(--textColor);
+}
+
+.heroAccent {
+  color: #7dd3a0;
+}
+
+.heroSub {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--textColor);
+  opacity: 0.7;
+  margin: 0;
+  max-width: 580px;
+}
+
+/* ── Content ──────────────────────────────────────────────────────────── */
+
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+/* ── Section ──────────────────────────────────────────────────────────── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.sectionIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #1a2e22;
+  border: 1px solid #2e4d3a;
+  border-radius: 10px;
+  color: #7dd3a0;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.sectionIconWrap i {
+  font-size: 20px;
+}
+
+.sectionTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--textColor);
+}
+
+.sectionSubtitle {
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.65;
+  line-height: 1.5;
+  color: var(--textColor);
+}
+
+/* ── Steps Grid ───────────────────────────────────────────────────────── */
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--tableData);
+  border: 1px solid #1e2e26;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.stepNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1a2e22;
+  border: 1px solid #7dd3a0;
+  color: #7dd3a0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step h4 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin: 0 0 5px;
+  color: var(--textColor);
+}
+
+.step p {
+  font-size: 0.8rem;
+  margin: 0;
+  opacity: 0.7;
+  line-height: 1.5;
+  color: var(--textColor);
+}
+
+.step code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.78rem;
+  background: #1a2e22;
+  color: #7dd3a0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ── Example Box ──────────────────────────────────────────────────────── */
+
+.exampleBox {
+  background: var(--tableData);
+  border: 1px solid #1e2e26;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.exampleLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: #1a2e22;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #7dd3a0;
+  border-bottom: 1px solid #1e2e26;
+}
+
+.exampleLabel i {
+  font-size: 16px;
+}
+
+.exampleTableWrap {
+  overflow-x: auto;
+}
+
+.exampleResult {
+  padding: 14px 18px;
+  border-top: 1px solid #1e2e26;
+  font-size: 0.88rem;
+  color: var(--textColor);
+  opacity: 0.85;
+}
+
+.exampleGpa {
+  color: #7dd3a0;
+  font-size: 1.05rem;
+  margin-left: 4px;
+}
+
+/* ── Grade Tables ─────────────────────────────────────────────────────── */
+
+.tablesRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.tableWrap {
+  border: 1px solid #1e2e26;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.tableLabel {
+  padding: 10px 16px;
+  background: #1a2e22;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #7dd3a0;
+  border-bottom: 1px solid #1e2e26;
+}
+
+.gradeTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.gradeTable thead tr {
+  background: #0f1f17;
+}
+
+.gradeTable th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--textColor);
+  opacity: 0.55;
+  border-bottom: 1px solid #1e2e26;
+}
+
+.gradeTable td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #1a2420;
+  color: var(--textColor);
+  vertical-align: middle;
+}
+
+.gradeTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.gradeTable tbody tr:hover {
+  background: #1a2e22;
+}
+
+.gradeTable tfoot tr td {
+  padding: 10px 14px;
+  border-top: 1px solid #2e4d3a;
+  background: #0f1f17;
+  color: var(--textColor);
+}
+
+.tfootRow td {
+  font-weight: 600;
+}
+
+.gradeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: #1a2e22;
+  border: 1px solid #2e4d3a;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #7dd3a0;
+}
+
+.failText {
+  color: #f87171;
+}
+
+.clsDot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Note ─────────────────────────────────────────────────────────────── */
+
+.noteText {
+  font-size: 0.8rem;
+  color: var(--textColor);
+  opacity: 0.6;
+  margin: 0;
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* ── Tips ─────────────────────────────────────────────────────────────── */
+
+.tipsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tipItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--tableData);
+  border: 1px solid #1e2e26;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.tipIcon {
+  color: #7dd3a0;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.tipIcon i {
+  font-size: 18px;
+}
+
+.tipItem p {
+  margin: 0;
+  font-size: 0.87rem;
+  line-height: 1.6;
+  color: var(--textColor);
+  opacity: 0.85;
+}
+
+/* ── FAQ ──────────────────────────────────────────────────────────────── */
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.faqItem {
+  background: var(--tableData);
+  border: 1px solid #1e2e26;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.faqOpen {
+  border-color: #2e4d3a;
+}
+
+.faqQuestion {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--textColor);
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.faqQuestion:hover {
+  background: #1a2e22;
+}
+
+.faqArrow {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+  color: var(--textColor);
+  opacity: 0.5;
+}
+
+.faqArrowOpen {
+  transform: rotate(180deg);
+  opacity: 1;
+  color: #7dd3a0;
+}
+
+.faqAnswer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  padding: 0 18px;
+  background: var(--bg);
+}
+
+.faqAnswerOpen {
+  max-height: 200px;
+  padding: 0 18px 16px;
+}
+
+.faqAnswer p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--textColor);
+  opacity: 0.75;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 32px 18px 28px;
+  }
+
+  .content {
+    padding: 28px 16px 48px;
+    gap: 40px;
+  }
+
+  .stepsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tablesRow {
+    grid-template-columns: 1fr;
+  }
+
+  .gradeTable th,
+  .gradeTable td {
+    padding: 9px 10px;
+    font-size: 0.8rem;
+  }
+}
