@@ -1,10 +1,54 @@
-/* ── Page ─────────────────────────────────────────────────────────────── */
+.pageContainer {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  background: var(--bg);
+}
 
-.page {
-  min-height: 100vh;
+.mainWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ---------- Navigation Bar ---------- */
+.backBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--borderColor);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: Consolas, monospace;
+  font-weight: 700;
+  padding: 6px 12px;
+  border: 1px solid var(--borderColor);
+  background: var(--bgHover);
+  color: var(--textColor);
+  transition: all 0.2s ease;
+}
+
+.btnText { font-size: 0.65rem; letter-spacing: 0.2px; }
+
+/* ---------- Main Content ---------- */
+.mainContent {
+  flex: 1;
+  overflow-y: auto;
   background: var(--bg);
   color: var(--textColor);
-  font-family: 'DM Sans', 'Segoe UI', sans-serif;
 }
 
 /* ── Hero ─────────────────────────────────────────────────────────────── */
@@ -17,6 +61,7 @@
 
 .heroInner {
   max-width: 720px;
+  margin: 0 auto;
 }
 
 .heroBadge {
@@ -35,9 +80,7 @@
   margin-bottom: 20px;
 }
 
-.heroBadge i {
-  font-size: 15px;
-}
+.heroBadge i { font-size: 15px; }
 
 .heroTitle {
   font-size: clamp(1.6rem, 4vw, 2.2rem);
@@ -47,9 +90,7 @@
   color: var(--textColor);
 }
 
-.heroAccent {
-  color: #7dd3a0;
-}
+.heroAccent { color: #7dd3a0; }
 
 .heroSub {
   font-size: 0.95rem;
@@ -99,9 +140,7 @@
   margin-top: 2px;
 }
 
-.sectionIconWrap i {
-  font-size: 20px;
-}
+.sectionIconWrap i { font-size: 20px; }
 
 .sectionTitle {
   font-size: 1.2rem;
@@ -163,7 +202,6 @@
   margin: 0;
   opacity: 0.7;
   line-height: 1.5;
-  color: var(--textColor);
 }
 
 .step code {
@@ -196,20 +234,14 @@
   border-bottom: 1px solid #1e2e26;
 }
 
-.exampleLabel i {
-  font-size: 16px;
-}
+.exampleLabel i { font-size: 16px; }
 
-.exampleTableWrap {
-  overflow-x: auto;
-}
+.exampleTableWrap { overflow-x: auto; }
 
 .exampleResult {
   padding: 14px 18px;
   border-top: 1px solid #1e2e26;
   font-size: 0.88rem;
-  color: var(--textColor);
-  opacity: 0.85;
 }
 
 .exampleGpa {
@@ -249,9 +281,7 @@
   font-size: 0.85rem;
 }
 
-.gradeTable thead tr {
-  background: #0f1f17;
-}
+.gradeTable thead tr { background: #0f1f17; }
 
 .gradeTable th {
   padding: 10px 14px;
@@ -260,7 +290,6 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--textColor);
   opacity: 0.55;
   border-bottom: 1px solid #1e2e26;
 }
@@ -268,28 +297,19 @@
 .gradeTable td {
   padding: 10px 14px;
   border-bottom: 1px solid #1a2420;
-  color: var(--textColor);
   vertical-align: middle;
 }
 
-.gradeTable tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.gradeTable tbody tr:hover {
-  background: #1a2e22;
-}
+.gradeTable tbody tr:last-child td { border-bottom: none; }
+.gradeTable tbody tr:hover { background: #1a2e22; }
 
 .gradeTable tfoot tr td {
   padding: 10px 14px;
   border-top: 1px solid #2e4d3a;
   background: #0f1f17;
-  color: var(--textColor);
 }
 
-.tfootRow td {
-  font-weight: 600;
-}
+.tfootRow td { font-weight: 600; }
 
 .gradeBadge {
   display: inline-flex;
@@ -305,9 +325,7 @@
   color: #7dd3a0;
 }
 
-.failText {
-  color: #f87171;
-}
+.failText { color: #f87171; }
 
 .clsDot {
   display: inline-block;
@@ -322,7 +340,6 @@
 
 .noteText {
   font-size: 0.8rem;
-  color: var(--textColor);
   opacity: 0.6;
   margin: 0;
   line-height: 1.6;
@@ -355,15 +372,12 @@
   margin-top: 1px;
 }
 
-.tipIcon i {
-  font-size: 18px;
-}
+.tipIcon i { font-size: 18px; }
 
 .tipItem p {
   margin: 0;
   font-size: 0.87rem;
   line-height: 1.6;
-  color: var(--textColor);
   opacity: 0.85;
 }
 
@@ -383,9 +397,7 @@
   transition: border-color 0.2s ease;
 }
 
-.faqOpen {
-  border-color: #2e4d3a;
-}
+.faqOpen { border-color: #2e4d3a; }
 
 .faqQuestion {
   width: 100%;
@@ -404,14 +416,11 @@
   text-align: left;
 }
 
-.faqQuestion:hover {
-  background: #1a2e22;
-}
+.faqQuestion:hover { background: #1a2e22; }
 
 .faqArrow {
   flex-shrink: 0;
   transition: transform 0.25s ease;
-  color: var(--textColor);
   opacity: 0.5;
 }
 
@@ -438,33 +447,14 @@
   margin: 0;
   font-size: 0.85rem;
   line-height: 1.7;
-  color: var(--textColor);
   opacity: 0.75;
 }
 
 /* ── Responsive ───────────────────────────────────────────────────────── */
 
 @media (max-width: 600px) {
-  .hero {
-    padding: 32px 18px 28px;
-  }
-
-  .content {
-    padding: 28px 16px 48px;
-    gap: 40px;
-  }
-
-  .stepsGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .tablesRow {
-    grid-template-columns: 1fr;
-  }
-
-  .gradeTable th,
-  .gradeTable td {
-    padding: 9px 10px;
-    font-size: 0.8rem;
-  }
+  .hero { padding: 32px 18px 28px; }
+  .content { padding: 28px 16px 48px; gap: 40px; }
+  .stepsGrid, .tablesRow { grid-template-columns: 1fr; }
+  .gradeTable th, .gradeTable td { padding: 9px 10px; font-size: 0.8rem; }
 }
