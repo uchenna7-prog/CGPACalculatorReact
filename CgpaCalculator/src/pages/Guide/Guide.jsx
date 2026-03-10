@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import SideBar from "../../components/SideBar/SideBar";
+import Header from "../../components/Header/Header";
 import styles from "./Guide.module.css";
 
 // ── Data ────────────────────────────────────────────────────────────────────
@@ -21,19 +24,19 @@ const scale4 = [
 ];
 
 const honours5 = [
-  { cls: "First Class",            min: "4.50", max: "5.00", color: "#7dd3a0" },
-  { cls: "Second Class Upper (2:1)", min: "3.50", max: "4.49", color: "#a3c4f3" },
-  { cls: "Second Class Lower (2:2)", min: "2.40", max: "3.49", color: "#f9d87a" },
-  { cls: "Third Class",            min: "1.50", max: "2.39", color: "#f4a97a" },
+  { cls: "First Class",            min: "4.50", max: "5.00", color: "#fbbf24" },
+  { cls: "Second Class Upper (2:1)", min: "3.50", max: "4.49", color: "#34d399" },
+  { cls: "Second Class Lower (2:2)", min: "2.40", max: "3.49", color: "#60a5fa" },
+  { cls: "Third Class",            min: "1.50", max: "2.39", color: "#f87171" },
   { cls: "Pass",                   min: "1.00", max: "1.49", color: "#c4b5fd" },
   { cls: "Fail",                   min: "0.00", max: "0.99", color: "#f87171" },
 ];
 
 const honours4 = [
-  { cls: "First Class",            min: "3.60", max: "4.00", color: "#7dd3a0" },
-  { cls: "Second Class Upper (2:1)", min: "3.00", max: "3.59", color: "#a3c4f3" },
-  { cls: "Second Class Lower (2:2)", min: "2.00", max: "2.99", color: "#f9d87a" },
-  { cls: "Third Class",            min: "1.00", max: "1.99", color: "#f4a97a" },
+  { cls: "First Class",            min: "3.60", max: "4.00", color: "#fbbf24" },
+  { cls: "Second Class Upper (2:1)", min: "3.00", max: "3.59", color: "#34d399" },
+  { cls: "Second Class Lower (2:2)", min: "2.00", max: "2.99", color: "#60a5fa" },
+  { cls: "Third Class",            min: "1.00", max: "1.99", color: "#f87171" },
   { cls: "Fail",                   min: "0.00", max: "0.99", color: "#f87171" },
 ];
 
@@ -79,8 +82,6 @@ const tips = [
   { icon: "school", text: "If your school allows grade substitution for retakes, prioritise the courses where you scored E or F." },
   { icon: "lightbulb", text: "First Class on the 5.0 scale requires ≥ 4.50. That means mostly A grades with very few Bs." },
 ];
-
-// ── Example calculation data ──────────────────────────────────────────────
 
 const exampleCourses = [
   { code: "MTH 101", unit: 3, grade: "A", gp: 5.0, qp: 15.0 },
@@ -189,177 +190,190 @@ function FaqItem({ q, a }) {
 // ── Page ─────────────────────────────────────────────────────────────────
 
 export default function Guide() {
+  const navigate = useNavigate();
+
   return (
-    <main className={styles.page} role="main">
+    <div className={styles.pageContainer}>
+      <SideBar />
+      <div className={styles.mainWrapper}>
+        <Header title="Guide" />
 
-      {/* Hero */}
-      <div className={styles.hero}>
-        <div className={styles.heroInner}>
-          <div className={styles.heroBadge}>
-            <i className="material-icons">menu_book</i>
-            <span>Guide & FAQ</span>
-          </div>
-          <h1 className={styles.heroTitle}>
-            Everything you need to know about <span className={styles.heroAccent}>CGPA</span>
-          </h1>
-          <p className={styles.heroSub}>
-            Grading scales, calculation methods, honours classifications, and answers to common questions — all in one place.
-          </p>
+        <div className={styles.backBar}>
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            <span className="material-icons" style={{ fontSize: "0.9rem" }}>arrow_back</span>
+            <span className={styles.btnText}>Back</span>
+          </button>
         </div>
-      </div>
 
-      <div className={styles.content}>
-
-        {/* ── How CGPA is Calculated ── */}
-        <section className={styles.section}>
-          <SectionHeader
-            icon="functions"
-            title="How CGPA is Calculated"
-            subtitle="A step-by-step walkthrough of the formula Nigerian universities use"
-          />
-
-          <div className={styles.stepsGrid}>
-            <div className={styles.step}>
-              <div className={styles.stepNum}>1</div>
-              <div>
-                <h4>Get your grade point</h4>
-                <p>Each letter grade maps to a grade point depending on your school's scale (see tables below).</p>
+        <main className={styles.mainContent}>
+          {/* Hero */}
+          <div className={styles.hero}>
+            <div className={styles.heroInner}>
+              <div className={styles.heroBadge}>
+                <i className="material-icons">menu_book</i>
+                <span>Guide & FAQ</span>
               </div>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNum}>2</div>
-              <div>
-                <h4>Calculate Quality Points (QP)</h4>
-                <p>For each course: <code>QP = Credit Unit × Grade Point</code></p>
-              </div>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNum}>3</div>
-              <div>
-                <h4>Sum across all courses</h4>
-                <p>Add up all QPs and all credit units for every semester you've completed.</p>
-              </div>
-            </div>
-            <div className={styles.step}>
-              <div className={styles.stepNum}>4</div>
-              <div>
-                <h4>Divide to get CGPA</h4>
-                <p><code>CGPA = Total QP ÷ Total Credit Units</code></p>
-              </div>
+              <h1 className={styles.heroTitle}>
+                Everything you need to know about <span className={styles.heroAccent}>CGPA</span>
+              </h1>
+              <p className={styles.heroSub}>
+                Grading scales, calculation methods, honours classifications, and answers to common questions — all in one place.
+              </p>
             </div>
           </div>
 
-          {/* Worked Example */}
-          <div className={styles.exampleBox}>
-            <div className={styles.exampleLabel}>
-              <i className="material-icons">info</i>
-              Worked Example — Semester 1 (5.0 Scale)
-            </div>
-            <div className={styles.exampleTableWrap}>
-              <table className={styles.gradeTable}>
-                <thead>
-                  <tr>
-                    <th>Course</th>
-                    <th>Units</th>
-                    <th>Grade</th>
-                    <th>Grade Points</th>
-                    <th>Quality Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {exampleCourses.map(c => (
-                    <tr key={c.code}>
-                      <td>{c.code}</td>
-                      <td>{c.unit}</td>
-                      <td><span className={styles.gradeBadge}>{c.grade}</span></td>
-                      <td>{c.gp.toFixed(1)}</td>
-                      <td>{c.qp.toFixed(1)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr className={styles.tfootRow}>
-                    <td colSpan={1}><strong>Total</strong></td>
-                    <td><strong>{totalUnits}</strong></td>
-                    <td colSpan={2}></td>
-                    <td><strong>{totalQP.toFixed(1)}</strong></td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-            <div className={styles.exampleResult}>
-              <span>GPA = {totalQP.toFixed(1)} ÷ {totalUnits} = </span>
-              <strong className={styles.exampleGpa}>{exampleGPA}</strong>
-            </div>
-          </div>
-        </section>
+          <div className={styles.content}>
+            {/* ── How CGPA is Calculated ── */}
+            <section className={styles.section}>
+              <SectionHeader
+                icon="functions"
+                title="How CGPA is Calculated"
+                subtitle="A step-by-step walkthrough of the formula Nigerian universities use"
+              />
 
-        {/* ── Grading Scales ── */}
-        <section className={styles.section}>
-          <SectionHeader
-            icon="grade"
-            title="Nigerian Grading Scales"
-            subtitle="Grade-to-point mappings for both systems used across Nigerian universities"
-          />
-          <div className={styles.tablesRow}>
-            <GradeTable data={scale5} scale="5.0" />
-            <GradeTable data={scale4} scale="4.0" />
-          </div>
-          <p className={styles.noteText}>
-            <i className="material-icons" style={{ fontSize: "15px", verticalAlign: "middle", marginRight: "5px" }}>info</i>
-            Not sure which scale your school uses? Check your result portal or student handbook. You can also change the active scale in <strong>Settings</strong>.
-          </p>
-        </section>
-
-        {/* ── Honours Classification ── */}
-        <section className={styles.section}>
-          <SectionHeader
-            icon="emoji_events"
-            title="Honours Classification"
-            subtitle="CGPA ranges for degree classifications on both scales"
-          />
-          <div className={styles.tablesRow}>
-            <HonoursTable data={honours5} scale="5.0" />
-            <HonoursTable data={honours4} scale="4.0" />
-          </div>
-          <p className={styles.noteText}>
-            <i className="material-icons" style={{ fontSize: "15px", verticalAlign: "middle", marginRight: "5px" }}>warning</i>
-            Some universities set slightly different cut-offs. These are the most widely used thresholds across Nigerian institutions.
-          </p>
-        </section>
-
-        {/* ── Tips ── */}
-        <section className={styles.section}>
-          <SectionHeader
-            icon="lightbulb"
-            title="Tips to Protect & Improve Your CGPA"
-          />
-          <div className={styles.tipsList}>
-            {tips.map((tip, i) => (
-              <div key={i} className={styles.tipItem}>
-                <div className={styles.tipIcon}>
-                  <i className="material-icons">check_circle</i>
+              <div className={styles.stepsGrid}>
+                <div className={styles.step}>
+                  <div className={styles.stepNum}>1</div>
+                  <div>
+                    <h4>Get your grade point</h4>
+                    <p>Each letter grade maps to a grade point depending on your school's scale (see tables below).</p>
+                  </div>
                 </div>
-                <p>{tip.text}</p>
+                <div className={styles.step}>
+                  <div className={styles.stepNum}>2</div>
+                  <div>
+                    <h4>Calculate Quality Points (QP)</h4>
+                    <p>For each course: <code>QP = Credit Unit × Grade Point</code></p>
+                  </div>
+                </div>
+                <div className={styles.step}>
+                  <div className={styles.stepNum}>3</div>
+                  <div>
+                    <h4>Sum across all courses</h4>
+                    <p>Add up all QPs and all credit units for every semester you've completed.</p>
+                  </div>
+                </div>
+                <div className={styles.step}>
+                  <div className={styles.stepNum}>4</div>
+                  <div>
+                    <h4>Divide to get CGPA</h4>
+                    <p><code>CGPA = Total QP ÷ Total Credit Units</code></p>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
-        </section>
 
-        {/* ── FAQ ── */}
-        <section className={styles.section}>
-          <SectionHeader
-            icon="help_outline"
-            title="Frequently Asked Questions"
-          />
-          <div className={styles.faqList}>
-            {faqs.map((faq, i) => (
-              <FaqItem key={i} q={faq.q} a={faq.a} />
-            ))}
-          </div>
-        </section>
+              {/* Worked Example */}
+              <div className={styles.exampleBox}>
+                <div className={styles.exampleLabel}>
+                  <i className="material-icons">info</i>
+                  Worked Example — Semester 1 (5.0 Scale)
+                </div>
+                <div className={styles.exampleTableWrap}>
+                  <table className={styles.gradeTable}>
+                    <thead>
+                      <tr>
+                        <th>Course</th>
+                        <th>Units</th>
+                        <th>Grade</th>
+                        <th>Grade Points</th>
+                        <th>Quality Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {exampleCourses.map(c => (
+                        <tr key={c.code}>
+                          <td>{c.code}</td>
+                          <td>{c.unit}</td>
+                          <td><span className={styles.gradeBadge}>{c.grade}</span></td>
+                          <td>{c.gp.toFixed(1)}</td>
+                          <td>{c.qp.toFixed(1)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr className={styles.tfootRow}>
+                        <td colSpan={1}><strong>Total</strong></td>
+                        <td><strong>{totalUnits}</strong></td>
+                        <td colSpan={2}></td>
+                        <td><strong>{totalQP.toFixed(1)}</strong></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <div className={styles.exampleResult}>
+                  <span>GPA = {totalQP.toFixed(1)} ÷ {totalUnits} = </span>
+                  <strong className={styles.exampleGpa}>{exampleGPA}</strong>
+                </div>
+              </div>
+            </section>
 
+            {/* ── Grading Scales ── */}
+            <section className={styles.section}>
+              <SectionHeader
+                icon="grade"
+                title="Nigerian Grading Scales"
+                subtitle="Grade-to-point mappings for both systems used across Nigerian universities"
+              />
+              <div className={styles.tablesRow}>
+                <GradeTable data={scale5} scale="5.0" />
+                <GradeTable data={scale4} scale="4.0" />
+              </div>
+              <p className={styles.noteText}>
+                <i className="material-icons" style={{ fontSize: "15px", verticalAlign: "middle", marginRight: "5px" }}>info</i>
+                Not sure which scale your school uses? Check your result portal or student handbook. You can also change the active scale in <strong>Settings</strong>.
+              </p>
+            </section>
+
+            {/* ── Honours Classification ── */}
+            <section className={styles.section}>
+              <SectionHeader
+                icon="emoji_events"
+                title="Honours Classification"
+                subtitle="CGPA ranges for degree classifications on both scales"
+              />
+              <div className={styles.tablesRow}>
+                <HonoursTable data={honours5} scale="5.0" />
+                <HonoursTable data={honours4} scale="4.0" />
+              </div>
+              <p className={styles.noteText}>
+                <i className="material-icons" style={{ fontSize: "15px", verticalAlign: "middle", marginRight: "5px" }}>warning</i>
+                Some universities set slightly different cut-offs. These are the most widely used thresholds across Nigerian institutions.
+              </p>
+            </section>
+
+            {/* ── Tips ── */}
+            <section className={styles.section}>
+              <SectionHeader
+                icon="lightbulb"
+                title="Tips to Protect & Improve Your CGPA"
+              />
+              <div className={styles.tipsList}>
+                {tips.map((tip, i) => (
+                  <div key={i} className={styles.tipItem}>
+                    <div className={styles.tipIcon}>
+                      <i className="material-icons">check_circle</i>
+                    </div>
+                    <p>{tip.text}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* ── FAQ ── */}
+            <section className={styles.section}>
+              <SectionHeader
+                icon="help_outline"
+                title="Frequently Asked Questions"
+              />
+              <div className={styles.faqList}>
+                {faqs.map((faq, i) => (
+                  <FaqItem key={i} q={faq.q} a={faq.a} />
+                ))}
+              </div>
+            </section>
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
   );
 }
