@@ -6,11 +6,14 @@ import Settings from './pages/Settings/Settings'
 import Summary from './pages/Summary/Summary'
 import CGPAPredictorSummary from './pages/CGPAPredictorSummary/CGPAPredictorSummary'
 import GpaCalculatorSummary from './pages/GpaCalculatorSummary/GpaCalculatorSummary'
+import Guide from './pages/Guide/Guide'
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+           
+     <Route path="/guide" element={<Guide />} />
       <Route path="/gpaCalculator" element={<GPACalculator />} />
       <Route path="/cgpaPredictor" element={<CGPAPredictor />} />
       <Route path="/settings" element={<Settings />} />
