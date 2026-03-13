@@ -1,7 +1,5 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useRef } from "react";
 import { useSettings } from "./SettingsContext"; // Ensure path is correct
-
-// REMOVED: const GRADE_POINTS = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
 
 function createCourse() {
   return { id: Date.now() + Math.random(), code: "", unit: "", grade: "A" };
@@ -20,8 +18,12 @@ function createSemester(semesterNum, year) {
 const GpaContext = createContext(null);
 
 export function GpaProvider({ children }) {
-  // Pull the dynamic grade points function from your settings
   const { gradePoints } = useSettings();
+
+  // Keep a ref that always points to the latest gradePoints function.
+  // This prevents stale-closure bugs when the grading scale changes.
+  const gradePointsRef = useRef(gradePoints);
+  gradePointsRef.current = gradePoints;
 
   const [semesters, setSemesters] = useState([createSemester(1, 1)]);
   const [cgpa, setCgpa] = useState(null);
@@ -48,6 +50,7 @@ export function GpaProvider({ children }) {
   };
 
   const calculateCGPA = () => {
+    const gp = gradePointsRef.current;
     const allCourses = semesters.flatMap((s) => s.courses);
     const hasInvalid = allCourses.some(
       (c) => c.unit === "" || isNaN(parseFloat(c.unit))
@@ -58,13 +61,10 @@ export function GpaProvider({ children }) {
       return;
     }
     const totalUnits = allCourses.reduce((sum, c) => sum + parseFloat(c.unit), 0);
-    
-    // UPDATED: Now uses the gradePoints function from settings
     const totalPoints = allCourses.reduce(
-      (sum, c) => sum + parseFloat(c.unit) * gradePoints(c.grade),
+      (sum, c) => sum + parseFloat(c.unit) * gp(c.grade),
       0
     );
-    
     setCgpaError("");
     setCgpa(totalUnits === 0 ? null : totalPoints / totalUnits);
   };
@@ -119,6 +119,7 @@ export function GpaProvider({ children }) {
   };
 
   const calculateSemesterGPA = (semId) => {
+    const gp = gradePointsRef.current;
     setSemesters((prev) =>
       prev.map((s) => {
         if (s.id !== semId) return s;
@@ -130,13 +131,10 @@ export function GpaProvider({ children }) {
           (sum, c) => sum + parseFloat(c.unit),
           0
         );
-        
-        // UPDATED: Now uses the gradePoints function from settings
         const totalPoints = s.courses.reduce(
-          (sum, c) => sum + parseFloat(c.unit) * gradePoints(c.grade),
+          (sum, c) => sum + parseFloat(c.unit) * gp(c.grade),
           0
         );
-        
         return {
           ...s,
           gpa: totalUnits === 0 ? null : totalPoints / totalUnits,
