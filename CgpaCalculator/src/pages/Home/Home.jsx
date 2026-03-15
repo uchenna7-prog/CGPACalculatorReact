@@ -300,7 +300,7 @@ function Home() {
               onClick={removeSemester}
               disabled={semesters.length === 1}
             >
-              REMOVE SEMESTER
+              REMOVE LAST SEMESTER
             </button>
             <button className={styles.calcCgpaBtn} onClick={calculateCGPA}>
               CALCULATE CGPA
